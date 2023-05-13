@@ -1,11 +1,15 @@
 from typing import Optional, Any
 from objectid import PydanticObjectId
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 import inspect
 from fastapi.encoders import jsonable_encoder
 
-class Model(BaseModel):
+class User(BaseModel):
     id: Optional[PydanticObjectId] = Field(None, alias="_id")
+    name: str
+    surname: str
+    mail: str
+    password:SecretStr
     database: Optional[Any] = None
 
     def set_db(self, database):
@@ -28,3 +32,12 @@ class Model(BaseModel):
         if "_id" in data and data["_id"] is None:
             data.pop("_id")
         return data
+
+    def __eq__(self, other):
+        return self.mail == other.mail
+
+    def __hash__(self):
+        return hash(self.mail)
+
+    def get_password(self):
+        return self.password.get_secret_value()
