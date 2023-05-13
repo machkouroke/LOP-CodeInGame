@@ -4,7 +4,7 @@ import requests
 
 def lopsubmit(args):
     #avec 3 options --file --kind et --name à préciser
-    if args.kind == 'résolu':
+    if args.kind == 'solved':
         print(f"Soumission du fichier '{args.name}' comme exercice résolu...")
         # Logique spécifique pour les exercices résolus
         chemin_fichier = args.file
@@ -19,7 +19,7 @@ def lopsubmit(args):
                 print("Erreur lors de la soumission du fichier au serveur distant.")
         else:
             print("Le fichier spécifié n'existe pas.")
-    elif args.kind == 'à_traiter':
+    elif args.kind == 'to solve':
         print(f"Soumission du fichier '{args.name}' comme exercice à traiter...")
         chemin_fichier = args.file
         if os.path.exists(chemin_fichier):
@@ -34,12 +34,12 @@ def lopsubmit(args):
         else:
             print("Le fichier spécifié n'existe pas.")
     else:
-        print("Valeur invalide pour l'option --kind. Veuillez spécifier 'résolu' ou 'à_traiter'.")
+        print("Valeur invalide pour l'option --kind. Veuillez spécifier 'solved' ou 'to solve'.")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Commande lopsubmit')
-    parser.add_argument('--kind', choices=['résolu', 'à_traiter'], required=True,
-                        help='Spécifiez le type (résolu ou à_traiter)')
+    parser.add_argument('--kind', choices=['solved', 'to solve'], required=True,
+                        help='Please specify the type (solved or to solve)')
     parser.add_argument('--name', required=True, help='Spécifiez le nom du fichier')
     parser.add_argument('--file', required=True, help='Spécifiez le chemin du fichier')
     args = parser.parse_args()

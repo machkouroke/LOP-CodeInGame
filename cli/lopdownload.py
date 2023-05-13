@@ -3,7 +3,7 @@ import os
 import requests
 
 def lopdownload(args):
-    if args.kind == 'étudiant':
+    if args.kind == 'student':
         print(f"Téléchargement du fichier '{args.name}' en tant qu'étudiant...")
         repertoire_local = args.directory
         chemin_fichier = os.path.join(repertoire_local, args.name)
@@ -18,7 +18,7 @@ def lopdownload(args):
                 print("Erreur lors de l'envoi du fichier au serveur distant.")
         else:
             print("Le fichier spécifié n'existe pas.")
-    elif args.kind == 'professeur':
+    elif args.kind == 'professor':
         print(f"Téléchargement du fichier '{args.name}' en tant que professeur...")
         repertoire_local = args.directory
         chemin_fichier = os.path.join(repertoire_local, args.name)
@@ -39,9 +39,9 @@ def lopdownload(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Commande lopdownload')
-    parser.add_argument('--kind', choices=['étudiant', 'professeur'], required=True,
-                        help='Spécifiez le type (étudiant ou professeur)')
-    parser.add_argument('--name', required=True, help='Spécifiez le nom du fichier')
-    parser.add_argument('--directory', default=os.getcwd(), help='Spécifiez le répertoire local (par défaut: répertoire courant)')
+    parser.add_argument('--kind', choices=['student', 'professor'], required=True,
+                        help='Please specify the type (student or to professor)')
+    parser.add_argument('--name', required=True, help='Specify the name')
+    parser.add_argument('--directory', default=os.getcwd(), help='Specify local directory')
     args = parser.parse_args()
     lopdownload(args)
