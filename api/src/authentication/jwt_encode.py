@@ -6,9 +6,10 @@ from flask_pymongo.wrappers import Database
 
 from api.config.settings import SECRET
 from api.src.models.User import User
+from api.src.models.objectid import PydanticObjectId
 
 
-def encode_auth_token(self, user_id):
+def encode_auth_token(user_id: PydanticObjectId):
     """
     Generates the Auth Token
     :return: string
