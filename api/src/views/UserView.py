@@ -57,7 +57,7 @@ class UserView():
                     'auth_token': auth_token
                 })
             else:
-                raise Unauthorized('Student does not exist')
+                raise Unauthorized('User does not exist')
         except Exception as e:
             abort(500, 'Une erreur est survenue')
 
