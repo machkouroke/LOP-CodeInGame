@@ -10,6 +10,10 @@ from api.src.models.User import User, Student, Teacher
 class UserView():
 
     @staticmethod
+    def render():
+        return 'LOP CodeIn Game'
+
+    @staticmethod
     def class_retriever(request):
         params = request.args
         if "type" not in params:
