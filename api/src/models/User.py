@@ -5,8 +5,8 @@ from flask_pymongo.wrappers import Database
 from pydantic import BaseModel, Field, SecretStr
 
 from api.src.models.Model import Model
+from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
-from objectid import PydanticObjectId
 
 
 class User(Model):
@@ -78,7 +78,7 @@ class User(Model):
 
 
 class Student(User):
-    level: str
+    level: int
     Type: str = 'student'
 
     @classmethod

@@ -2,7 +2,7 @@ import logging
 
 from flask_pymongo.wrappers import Database
 
-from MongoHandler import MongoHandler
+from api.logger.MongoHandler import MongoHandler
 
 
 class MongoLogger(logging.Logger):
