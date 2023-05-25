@@ -26,6 +26,7 @@ import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes';
+import {GrCode} from "react-icons/gr";
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -118,7 +119,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 
 			<Menu>
 				<MenuButton p='0px'>
-					<Icon mt='6px' as={MdInfoOutline} color={navbarIcon} w='18px' h='18px' me='10px' />
+					<Icon mt='6px' as={GrCode} color={navbarIcon} w='18px' h='18px' me='10px' />
 				</MenuButton>
 				<MenuList
 					boxShadow={shadow}

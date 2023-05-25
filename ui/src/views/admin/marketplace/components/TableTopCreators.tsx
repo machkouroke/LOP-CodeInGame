@@ -22,7 +22,7 @@ type RowObj = {
 const columnHelper = createColumnHelper<RowObj>();
 
 // const columns = columnsDataCheck;
-export default function TopCreatorTable(props: { tableData: any }) {
+export default function TopCompetitorTable(props: { tableData: any }) {
 	const { tableData } = props;
 	const [ sorting, setSorting ] = React.useState<SortingState>([]);
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -122,9 +122,8 @@ export default function TopCreatorTable(props: { tableData: any }) {
           mb='10px'
           boxShadow='0px 40px 58px -20px rgba(112, 144, 176, 0.26)'>
           <Text color={textColor} fontSize='xl' fontWeight='600'>
-            Top Creators
+            Classement de votre classe
           </Text>
-          <Button variant='action'>See all</Button>
         </Flex>
 			<Box>
 				<Table variant='simple' color='gray.500'  mt="12px">
