@@ -1,31 +1,11 @@
-from flask import Flask
-from flask_cors import CORS
+from passlib.context import CryptContext
 
-from api.config.settings import routes
-from api.globals import get_views, environment, setup_db, setup_log
+password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
-def init_route(app):
-    from api.src.views.UserView import UserView
-    for route in routes:
-        app.add_url_rule(route['endpoint'], view_func=get_views(route['view_func'], locals()),
-                         methods=route['methods'])
+def get_hashed_password(password: str) -> str:
+    return password_context.hash(password)
 
 
-def create_app(env: str = 'production'):
-    app = Flask(__name__)
-    app.config.from_object(environment[env])
-    db, _ = setup_db(app)
-    logger = setup_log(app, db, 'logs')
-
-    CORS(app, resources={r"/*": {"origins": "*"}})
-
-    @app.after_request
-    def after_request(response):
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
-        return response
-
-    init_route(app)
-
-    return app
+def verify_password(password: str, hashed_pass: str) -> bool:
+    return password_context.verify(password, hashed_pass)
