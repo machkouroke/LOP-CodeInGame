@@ -34,7 +34,8 @@ def get_views(views_path: str, scope_variables: dict[str, any]):
 
 
 environment = {
-    'production': 'api.config.settings.ConfigFlask'
+    'production': 'api.config.settings.ConfigFlask',
+    'testing': 'api.config.settings.TestConfigFlask'
 }
 
 # load environment variables
