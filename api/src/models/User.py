@@ -9,8 +9,7 @@ from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
 
 
-class User(Model):
-    id: Optional[PydanticObjectId] = Field(None, alias="_id")
+class UserAuth(BaseModel):
     name: str
     surname: str
     mail: str
