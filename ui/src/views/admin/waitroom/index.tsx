@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 
 import {
@@ -19,7 +17,7 @@ import Card from 'components/card/Card';
 import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
 import CountDown from "../../../components/CountDown/CountDown";
 import inProgress from "../../../mocks/Competition";
-
+import Description from "./components/Description";
 
 
 export default function WaitRoom() {
@@ -62,25 +60,22 @@ export default function WaitRoom() {
 
                                 </Flex>
                             </Card>
+                            <Card px='0px' mb='20px'>
 
-                            <Competition
-                                name={inProgress[0].name}
-                                author={inProgress[0].author}
-                                bidders={inProgress[0].bidders}
-                                image={inProgress[0].image}
-                                timeleft={inProgress[0].timeLeft}
-                                download='#'
-                            />
+                                <CompetitorsTable tableData={tableDataTopCreators}
+                                                  title={"Participant ayant  réjoint"}/>
+                            </Card>
 
 
                         </SimpleGrid>
 
                     </Flex>
                 </Flex>
-                <Flex flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
-                    <Card px='0px' mb='20px'>
-                        <CompetitorsTable tableData={tableDataTopCreators} title={"Participant ayant  réjoint"}/>
-                    </Card>
+                <Flex mt='45px' flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
+                    <Description competition={inProgress[0]}/>
+
+
+
                 </Flex>
             </Grid>
         </Box>
