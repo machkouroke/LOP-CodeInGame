@@ -2,8 +2,10 @@ from flask import request, abort, jsonify
 from werkzeug.exceptions import BadRequest, Unauthorized
 
 from api.globals import bcrypt, db
+from api.src.authentication.authentication import role_required
 from api.src.authentication.jwt_encode import encode_auth_token
 from api.src.models.BlackList import BlacklistToken
+from api.src.models.Exercise import Exercise
 from api.src.models.User import User, Student, Teacher
 
 
@@ -21,6 +23,7 @@ class UserView():
         return {"student": Student, "teacher": Teacher, "user": User}[params.get("type")]
 
     @staticmethod
+    @role_required(database=db, role='teacher')
     def add_user():
         try:
             user_class = UserView.class_retriever(request)
@@ -81,3 +84,9 @@ class UserView():
             return jsonify(responseObject)
         except Exception as e:
             abort(500, 'Une erreur du serveur est survenue')
+
+
+    @staticmethod
+    @role_required(database=db, role='admin')
+    def add_exercise():
+        exercise = Exercise(database=db, **request.get_json())
