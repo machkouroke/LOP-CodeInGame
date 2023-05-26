@@ -1,9 +1,12 @@
+import inspect
 from abc import abstractmethod
 from typing import Optional, Any
 
+from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel, Field, SecretStr
 
+from api import get_hashed_password
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
@@ -13,8 +16,23 @@ class UserAuth(BaseModel):
     name: str
     surname: str
     mail: str
-    password: SecretStr
+    password: str
     Type: str = 'user'
+
+    def to_json(self, to_exclude: set = None) -> dict:
+        properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
+        for prop in properties:
+            getattr(self, prop)
+        return jsonable_encoder(self, exclude=to_exclude)
+
+
+class User(Model):
+    id: Optional[PydanticObjectId] = Field(None, alias="_id")
+    name: Optional[str]
+    surname: Optional[str]
+    mail: Optional[str]
+    password: Optional[str]
+    Type: Optional[str] = 'user'
     database: Optional[Any] = None
 
     def __eq__(self, other):
@@ -46,19 +64,20 @@ class UserAuth(BaseModel):
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
-        answer = database.Users.find_one_or_404(mask)
-        user = User.return_user_by_type(answer)
-        user.database = database
-        return user
+        answer = database.Users.find_one(mask)
+        if answer:
+            user = User.return_user_by_type(answer)
+            user.database = database
+            return user
+        else:
+            return None
 
     def get_password(self):
-        return self.password.get_secret_value()
+        return self.password
 
-    def save(self, crypt):
+    def save(self):
         data = self.to_bson()
-        data["password"] = crypt.generate_password_hash(
-            data["password"].get_secret_value()
-        ).decode()
+        data["password"] = get_hashed_password(data["password"])
         result = self.database.Users.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
 
@@ -77,7 +96,7 @@ class UserAuth(BaseModel):
 
 
 class Student(User):
-    level: int
+    level: Optional[int]
     Type: str = 'student'
 
     @classmethod
@@ -87,7 +106,7 @@ class Student(User):
 
 
 class Teacher(User):
-    module: str
+    module: Optional[str]
     Type: str = 'teacher'
 
     @classmethod
