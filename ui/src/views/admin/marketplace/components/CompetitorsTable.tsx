@@ -35,8 +35,11 @@ type RowObj = {
 const columnHelper = createColumnHelper<RowObj>();
 
 // const columns = columnsDataCheck;
-export default function TopCompetitorTable(props: { tableData: any }) {
-    const {tableData} = props;
+export default function CompetitorsTable(props: {
+    tableData: any,
+    title: string,
+}) {
+    const {tableData, title} = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
@@ -138,7 +141,7 @@ export default function TopCompetitorTable(props: { tableData: any }) {
                 mb='10px'
                 boxShadow='0px 40px 58px -20px rgba(112, 144, 176, 0.26)'>
                 <Text color={textColor} fontSize='xl' fontWeight='600'>
-                    Classement de votre classe
+                    {title}
                 </Text>
             </Flex>
             <Box>

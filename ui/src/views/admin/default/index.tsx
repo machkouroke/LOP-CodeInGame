@@ -1,15 +1,13 @@
 // Chakra imports
-import {Avatar, Box, Flex, Icon, SimpleGrid, useColorModeValue} from '@chakra-ui/react';
+import {Box, Flex, Icon, SimpleGrid, useColorModeValue} from '@chakra-ui/react';
 // Assets
 // Custom components
 import MiniStatistics from 'components/card/MiniStatistics';
 import IconBox from 'components/icons/IconBox';
 import { MdBarChart, MdNumbers} from 'react-icons/md';
 
-import TotalSpent from 'views/admin/default/components/TotalSpent';
+import CreateCompetition from './components/CreateCompetition';
 import {TbMilitaryRank} from "react-icons/tb";
-import TableTopCreators from "../marketplace/components/TableTopCreators";
-import TopCompetitorTable from "../marketplace/variables/tableDataTopCreators";
 import React from "react";
 import {BsFillPlayFill} from "react-icons/bs";
 import {useHistory} from "react-router-dom";
@@ -69,7 +67,7 @@ export default function UserReports() {
                 <Flex alignItems={"center"} justifyContent={"center"} width={"100%"} >
                     <MiniStatistics
                         onClick={() => {
-                            history.push("/admin/nft-marketplace")
+                            history.push("/competition")
                         }}
 
                         startContent={
@@ -80,7 +78,7 @@ export default function UserReports() {
                                 icon={<Icon w='32px' h='32px' as={BsFillPlayFill} color={brandColor}/>}
                             />
                         }
-                        name='Lancer une partie'
+                        name='Menu des compétitions'
                     />
                 </Flex>
                 <div></div>
@@ -90,7 +88,7 @@ export default function UserReports() {
              <SimpleGrid columns={{base: 1, md: 2, xl: 3}} gap='20px' mb='20px'>
                 <div></div>
 
-                <TotalSpent/>
+                <CreateCompetition/>
 
             </SimpleGrid>
 

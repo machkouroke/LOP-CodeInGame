@@ -1,0 +1,29 @@
+.countdown-wrapper {
+  max-width: 800px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 40px 0;
+}
+
+.countdown-box {
+  background-color: #413c69;
+  font-size: 50px;
+  font-weight: 700;
+  color: #dcd6f7;
+  border-radius: 15px;
+  width: 160px;
+  height: 160px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.legend {
+  font-size: 30px;
+  color: #a6b1e1;
+}

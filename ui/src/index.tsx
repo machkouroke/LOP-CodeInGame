@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './assets/css/App.css';
-import {HashRouter, Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
+import {Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
 import AuthLayout from './layouts/auth';
-import AdminLayout from './layouts/admin';
-import RTLLayout from './layouts/rtl';
+import DashboardLayout from './layouts/admin';
+import CompetitionLayout from './layouts/competition';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme/theme';
 
@@ -14,8 +14,9 @@ ReactDOM.render(
 			<BrowserRouter>
 				<Switch>
 					<Route path={`/auth`} component={AuthLayout} />
-					<Route path={`/admin`} component={AdminLayout} />
-					<Redirect from='/' to='/admin' />
+					<Route path={`/dashboard`} component={DashboardLayout} />
+					<Route path={`/competition`} component={CompetitionLayout} />
+					<Redirect from='/' to='/dashboard' />
 				</Switch>
 			</BrowserRouter>
 		</React.StrictMode>

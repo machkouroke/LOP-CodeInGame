@@ -6,10 +6,11 @@ import Navbar from 'components/navbar/NavbarAdmin';
 
 import {useState} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import MainDashboard from "../../views/admin/default";
+import CompetitionBoard from "../../views/admin/marketplace";
+import WaitRoom from "../../views/admin/waitroom";
 
 // Custom Chakra theme
-export default function Dashboard(props: { [x: string]: any }) {
+export default function Competition(props: { [x: string]: any }) {
     const {...rest} = props;
     // states and functions
     const [fixed] = useState(false);
@@ -37,9 +38,9 @@ export default function Dashboard(props: { [x: string]: any }) {
                         <Navbar
                             onOpen={onOpen}
                             logoText={'Horizon UI Dashboard PRO'}
-                            brandText={"Mon profil"}
-                            secondary={false}
-                            message={"Mon profil"}
+                            brandText={"Compétition"}
+                            secondary={true}
+                            message={"Compétition"}
                             fixed={fixed}
                             {...rest}
                         />
@@ -49,9 +50,8 @@ export default function Dashboard(props: { [x: string]: any }) {
                 {
                     <Box mx='auto' p={{base: '20px', md: '30px'}} pe='20px' minH='100vh' pt='50px'>
                         <Switch>
-                            <Route path='/dashboard' component={MainDashboard}/>;
-
-                            <Redirect from='/' to='dashboard'/>
+                            <Route path='/competition' exact component={CompetitionBoard}/>;
+                            <Route path='/competition/waitroom' exact component={WaitRoom}/>;
                         </Switch>
                     </Box>
                 }
