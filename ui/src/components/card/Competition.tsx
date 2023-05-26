@@ -6,52 +6,23 @@ import Card from 'components/card/Card';
 import { useState } from 'react';
 import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 
-export default function NFT(props: {
+export default function Competition(props: {
 	image: string;
 	name: string;
 	author: string;
 	bidders: string[];
 	download: string;
-	currentbid: string | number;
+	timeleft: string | number;
+	to_come?: boolean;
 }) {
-	const { image, name, author, bidders, download, currentbid } = props;
+	const { image, name, author, bidders, download, timeleft } = props;
 	const [ like, setLike ] = useState(false);
 	const textColor = useColorModeValue('navy.700', 'white');
 	const textColorBid = useColorModeValue('brand.500', 'white');
 	return (
 		<Card p='20px'>
-			<Flex direction={{ base: 'column' }} justify='center'>
-				<Box mb={{ base: '20px', '2xl': '20px' }} position='relative'>
-					<Image
-						src={image}
-						w={{ base: '100%', '3xl': '100%' }}
-						h={{ base: '100%', '3xl': '100%' }}
-						borderRadius='20px'
-					/>
-					<Button
-						position='absolute'
-						bg='white'
-						_hover={{ bg: 'whiteAlpha.900' }}
-						_active={{ bg: 'white' }}
-						_focus={{ bg: 'white' }}
-						p='0px !important'
-						top='14px'
-						right='14px'
-						borderRadius='50%'
-						minW='36px'
-						h='36px'
-						onClick={() => {
-							setLike(!like);
-						}}>
-						<Icon
-							transition='0.2s linear'
-							w='20px'
-							h='20px'
-							as={like ? IoHeart : IoHeartOutline}
-							color='brand.500'
-						/>
-					</Button>
-				</Box>
+			<Flex direction={{ base: 'column' }} justifyContent={{ base: 'space-between' }} >
+
 				<Flex flexDirection='column' justify='space-between' h='100%'>
 					<Flex
 						justify='space-between'
@@ -122,7 +93,7 @@ export default function NFT(props: {
 						}}
 						mt='25px'>
 						<Text fontWeight='700' fontSize='sm' color={textColorBid}>
-							Current Bid: {currentbid}
+							Temps restant <Text fontWeight='100' fontSize='sm'>{timeleft}</Text>
 						</Text>
 						<Link
 							href={download}
@@ -133,6 +104,7 @@ export default function NFT(props: {
 								xl: '10px',
 								'2xl': '0px'
 							}}>
+							{props.to_come &&
 							<Button
 								variant='darkBrand'
 								color='white'
@@ -141,8 +113,8 @@ export default function NFT(props: {
 								borderRadius='70px'
 								px='24px'
 								py='5px'>
-								Place Bid
-							</Button>
+								Participer
+							</Button>}
 						</Link>
 					</Flex>
 				</Flex>

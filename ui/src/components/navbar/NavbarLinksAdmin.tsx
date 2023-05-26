@@ -27,6 +27,7 @@ import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes';
 import {GrCode} from "react-icons/gr";
+import {TfiBookmarkAlt} from "react-icons/tfi";
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -54,16 +55,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 			p='10px'
 			borderRadius='30px'
 			boxShadow={shadow}>
-			<SearchBar
-				mb={() => {
-					if (secondary) {
-						return { base: '10px', md: 'unset' };
-					}
-					return 'unset';
-				}}
-				me='10px'
-				borderRadius='30px'
-			/>
+
 			<Flex
 				bg={ethBg}
 				display={secondary ? 'flex' : 'none'}
@@ -73,13 +65,13 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 				align='center'
 				me='6px'>
 				<Flex align='center' justify='center' bg={ethBox} h='29px' w='29px' borderRadius='30px' me='7px'>
-					<Icon color={ethColor} w='9px' h='14px' as={FaEthereum} />
+					<Icon color={ethColor} w='9px' h='14px' as={TfiBookmarkAlt} />
 				</Flex>
 				<Text w='max-content' color={ethColor} fontSize='sm' fontWeight='700' me='6px'>
-					1,924
+					642.39
 					<Text as='span' display={{ base: 'none', md: 'unset' }}>
 						{' '}
-						ETH
+						XP
 					</Text>
 				</Text>
 			</Flex>

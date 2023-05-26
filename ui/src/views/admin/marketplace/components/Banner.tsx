@@ -28,7 +28,7 @@ export default function Banner() {
 				}}
 				fontWeight='700'
 				lineHeight={{ base: '32px', md: '42px' }}>
-				Discover, collect, and sell extraordinary NFTs
+				Fais vous une place sur le leaderboard en remportant le maximum de compétition
 			</Text>
 			<Text
 				fontSize='md'
@@ -44,7 +44,7 @@ export default function Banner() {
 				fontWeight='500'
 				mb='40px'
 				lineHeight='28px'>
-				Enter in this creative world. Discover now the latest NFTs or start creating your own!
+				Rejoignez l'une des compétitions programmé ou entrez simplement le code fournit par votre professeur
 			</Text>
 			<Flex align='center'>
 				<Button
@@ -58,13 +58,9 @@ export default function Banner() {
 					py='20px'
 					px='27'
 					me='38px'>
-					Discover now
+					Entrer un code de compétition
 				</Button>
-				<Link>
-					<Text color='white' fontSize='sm' fontWeight='500'>
-						Watch video
-					</Text>
-				</Link>
+
 			</Flex>
 		</Flex>
 	);

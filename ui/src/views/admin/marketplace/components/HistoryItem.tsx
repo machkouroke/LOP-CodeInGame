@@ -7,10 +7,10 @@ import Card from 'components/card/Card';
 import { FaEthereum } from 'react-icons/fa';
 
 export default function NFT(props: {
-	image: string;
+	image?: string;
 	name: string;
 	author: string;
-	date: string;
+	date?: Date;
 	price: string | number;
 }) {
 	const { image, name, author, date, price } = props;
@@ -25,7 +25,6 @@ export default function NFT(props: {
 		<Card _hover={bgItem} bg='transparent' boxShadow='unset' px='24px' py='21px' transition='0.2s linear'>
 			<Flex direction={{ base: 'column' }} justify='center'>
 				<Flex position='relative' align='center'>
-					<Image src={image} w='66px' h='66px' borderRadius='20px' me='16px' />
 					<Flex
 						direction='column'
 						w={{ base: '70%', md: '100%' }}
@@ -57,7 +56,7 @@ export default function NFT(props: {
 						</Text>
 					</Flex>
 					<Text ms='auto' fontWeight='700' fontSize='sm' color={textColorDate}>
-						{date}
+						{date.getFullYear()}
 					</Text>
 				</Flex>
 			</Flex>

@@ -100,7 +100,7 @@ export default function AdminNavbar(props: {
 					{/* Here we create navbar brand, based on route name */}
 					<Link
 						color={mainText}
-						href='#'
+						href='/'
 						bg='inherit'
 						borderRadius='inherit'
 						fontWeight='bold'
