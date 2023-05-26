@@ -4,7 +4,7 @@ import {Box, Flex, Icon, SimpleGrid, useColorModeValue} from '@chakra-ui/react';
 // Custom components
 import MiniStatistics from 'components/card/MiniStatistics';
 import IconBox from 'components/icons/IconBox';
-import { MdBarChart, MdNumbers} from 'react-icons/md';
+import {MdBarChart, MdNumbers} from 'react-icons/md';
 
 import CreateCompetition from './components/CreateCompetition';
 import {TbMilitaryRank} from "react-icons/tb";
@@ -18,8 +18,8 @@ export default function UserReports() {
     const brandColor = useColorModeValue('brand.500', 'white');
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
     return (
-        <Box pt={{base: '130px', md: '80px', xl: '80px'}}>
-            <SimpleGrid columns={{base: 1, md: 2, lg: 3, '2xl': 6}} gap='20px' mb='20px'>
+        <Box mt={{base: '130px'}} pt={{base: '130px',  md: '80px', xl: '80px'}}>
+            <SimpleGrid columns={{base: 1, md: 2}} gap='20px' mb='20px'>
 
                 <MiniStatistics
                     startContent={
@@ -48,7 +48,11 @@ export default function UserReports() {
                     name='Classement dans la filière'
                     value='154'
                 />
-                <MiniStatistics
+
+
+            </SimpleGrid>
+            <SimpleGrid columns={{base: 1, md: 2}} gap='20px' mb='20px'>
+                 <MiniStatistics
                     startContent={
                         <IconBox
                             w='56px'
@@ -60,11 +64,7 @@ export default function UserReports() {
                     name='Nombre de parties jouées'
                     value='2935'
                 />
-
-            </SimpleGrid>
-            <SimpleGrid columns={{base: 1, md: 2, xl: 3}} gap='20px' mb='20px' >
-                <div></div>
-                <Flex alignItems={"center"} justifyContent={"center"} width={"100%"} >
+                <Flex alignItems={"center"} justifyContent={"center"} width={"100%"}>
                     <MiniStatistics
                         onClick={() => {
                             history.push("/competition")
@@ -83,12 +83,6 @@ export default function UserReports() {
                 </Flex>
                 <div></div>
 
-
-            </SimpleGrid>
-             <SimpleGrid columns={{base: 1, md: 2, xl: 3}} gap='20px' mb='20px'>
-                <div></div>
-
-                <CreateCompetition/>
 
             </SimpleGrid>
 

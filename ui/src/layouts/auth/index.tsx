@@ -5,7 +5,6 @@ import { Route, Switch} from 'react-router-dom';
 import {Box, useColorModeValue} from '@chakra-ui/react';
 import SignIn from 'views/auth/signIn';
 // Layout components
-import {SidebarContext} from 'contexts/SidebarContext';
 
 // Custom Chakra theme
 export default function Auth() {

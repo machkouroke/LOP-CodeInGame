@@ -38,7 +38,7 @@ export default function Dashboard(props: { [x: string]: any }) {
                             onOpen={onOpen}
                             logoText={'Horizon UI Dashboard PRO'}
                             brandText={"Mon profil"}
-                            secondary={false}
+                            secondary={true}
                             message={"Mon profil"}
                             fixed={fixed}
                             {...rest}
