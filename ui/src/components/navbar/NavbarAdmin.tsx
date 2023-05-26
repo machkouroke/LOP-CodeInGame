@@ -26,7 +26,6 @@ export default function AdminNavbar(props: {
 
 	// Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
 	let mainText = useColorModeValue('navy.700', 'white');
-	let secondaryText = useColorModeValue('gray.700', 'white');
 	let navbarPosition = 'fixed' as const;
 	let navbarFilter = 'none';
 	let navbarBackdrop = 'blur(20px)';
@@ -95,9 +94,8 @@ export default function AdminNavbar(props: {
 				}}
 				alignItems={{ xl: 'center' }}
 				mb={gap}>
-				<Box mb={{ sm: '8px', md: '0px' }}>
+				<Box mb={{ sm: '8px', md: '0px' }} width={'100%'} textAlign={"center"}>
 
-					{/* Here we create navbar brand, based on route name */}
 					<Link
 						color={mainText}
 						href='/'

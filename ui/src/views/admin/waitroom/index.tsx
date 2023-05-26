@@ -23,10 +23,21 @@
 import React from 'react';
 
 // Chakra imports
-import {Box, Button, Flex, Grid, Link, Text, useColorModeValue, SimpleGrid} from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Flex,
+    Grid,
+    Link,
+    Text,
+    useColorModeValue,
+    SimpleGrid,
+    AvatarGroup,
+    Avatar
+} from '@chakra-ui/react';
 
 // Custom components
-import Banner from 'views/admin/marketplace/components/Banner';
+import Banner from 'views/admin/waitroom/components/Banner';
 import CompetitorsTable from 'views/admin/marketplace/components/CompetitorsTable';
 import HistoryItem from 'views/admin/marketplace/components/HistoryItem';
 import Competition from '../../../components/card/Competition';
@@ -36,14 +47,13 @@ import Card from 'components/card/Card';
 import Nft1 from 'assets/img/nfts/Nft1.png';
 import Nft2 from 'assets/img/nfts/Nft2.png';
 import Nft3 from 'assets/img/nfts/Nft3.png';
-import Nft4 from 'assets/img/nfts/Nft4.png';
-import Nft5 from 'assets/img/nfts/Nft5.png';
-import Nft6 from 'assets/img/nfts/Nft6.png';
 import Avatar1 from 'assets/img/avatars/avatar1.png';
 import Avatar2 from 'assets/img/avatars/avatar2.png';
 import Avatar3 from 'assets/img/avatars/avatar3.png';
 import Avatar4 from 'assets/img/avatars/avatar4.png';
 import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
+import CustomCard from "components/card/Card";
+import CountDown from "../../../components/CountDown/CountDown";
 
 interface Competition {
     name: string;
@@ -82,7 +92,7 @@ const inProgress: Competition[] = [
 
     }
 ]
-export default function CompetitionBoard() {
+export default function WaitRoom() {
     // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
 
@@ -95,82 +105,57 @@ export default function CompetitionBoard() {
                 gap={{base: '20px', xl: '20px'}}
                 display={{base: 'block', xl: 'grid'}}>
                 <Flex flexDirection='column' gridArea={{xl: '1 / 1 / 2 / 3', '2xl': '1 / 1 / 2 / 2'}}>
-                    <Banner/>
+                    <SimpleGrid columns={{base: 1, md: 2, lg: 2}}>
+                        <Banner/>
+
+                    </SimpleGrid>
                     <Flex direction='column'>
-                        <Flex
-                            mt='45px'
-                            mb='20px'
-                            justifyContent='space-between'
-                            direction={{base: 'column', md: 'row'}}
-                            align={{base: 'start', md: 'center'}}>
-                            <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                                Compétition en cours
-                            </Text>
 
-                        </Flex>
-                        <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
-                            {
-                                inProgress.map((item, index) => (
-                                    <Competition
-                                        name={item.name}
-                                        author={item.author}
-                                        bidders={item.bidders}
-                                        image={item.image}
-                                        timeleft={item.timeLeft}
-                                        download='#'
-                                    />))
-                            }
+                        <SimpleGrid mt='45px'
+                                    mb='20px' columns={{base: 1, md: 1}} gap='20px'>
+                            <Card>
+                                <Text
+                                    color={textColor}
+                                    textAlign={{base: 'center'}}
+                                    fontSize={{
+                                        base: 'xl',
+                                        md: 'lg',
+                                        lg: 'lg',
+                                        xl: 'lg',
+                                        '2xl': 'md',
+                                        '3xl': 'lg'
+                                    }}
+                                    mb='5px'
+                                    fontWeight='bold'
+                                    me='14px'>
+                                    Problème des 8 reines
+                                </Text>
+                                <Flex alignContent={"center"} justifyContent={"center"}>
+                                    <CountDown countdownData={new Date()} name={"machkour"}/>
+
+                                </Flex>
+                            </Card>
+
+                            <Competition
+                                name={inProgress[0].name}
+                                author={inProgress[0].author}
+                                bidders={inProgress[0].bidders}
+                                image={inProgress[0].image}
+                                timeleft={inProgress[0].timeLeft}
+                                download='#'
+                            />
 
 
                         </SimpleGrid>
-                        <Text mt='45px' mb='36px' color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                            Compétition à venir
-                        </Text>
-                        <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb={{base: '20px', xl: '0px'}}>
-                            {
-                                inProgress.map((item, index) => (
-                                    <Competition
-                                        name={item.name}
-                                        author={item.author}
-                                        bidders={item.bidders}
-                                        image={item.image}
-                                        timeleft={item.timeLeft}
-                                        download='#'
-                                        to_come={true}
-                                    />))
-                            }
-                        </SimpleGrid>
+
                     </Flex>
                 </Flex>
                 <Flex flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
                     <Card px='0px' mb='20px'>
-                        <CompetitorsTable tableData={tableDataTopCreators} title={"Classement de votre classe"}/>
-                    </Card>
-                    <Card p='0px'>
-                        <Flex
-                            align={{sm: 'flex-start', lg: 'center'}}
-                            justify='space-between'
-                            w='100%'
-                            px='22px'
-                            py='18px'>
-                            <Text color={textColor} fontSize='xl' fontWeight='600'>
-                                6 dernières compétition participé
-                            </Text>
-                        </Flex>
-
-                        {inProgress.map((item, index) => (
-
-                            <HistoryItem
-                                name={item.name}
-                                author={item.author}
-                                date={item.postDate}
-
-                            />
-                        ))}
+                        <CompetitorsTable tableData={tableDataTopCreators} title={"Participant ayant  réjoint"}/>
                     </Card>
                 </Flex>
             </Grid>
-            {/* Delete Product */}
         </Box>
     );
 }
