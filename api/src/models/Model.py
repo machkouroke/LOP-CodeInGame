@@ -11,6 +11,9 @@ class Model(BaseModel):
     id: Optional[PydanticObjectId] = Field(None, alias="_id")
     database: Optional[Any] = None
 
+    def dict(self, *args, **kwargs):
+        return super().dict( exclude={"database"})
+
     def set_db(self, database):
         self.database= database
 
