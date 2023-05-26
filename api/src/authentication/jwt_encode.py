@@ -1,12 +1,20 @@
+import os
 from datetime import datetime, timedelta, timezone
+from typing import Optional
 
 import jwt
-from flask import app, Request
-from flask_pymongo.wrappers import Database
+from dotenv import load_dotenv, find_dotenv
+from fastapi import Request
+from pymongo.database import Database
 
-from api.config.settings import SECRET
 from api.src.models.User import User
 from api.src.models.objectid import PydanticObjectId
+
+load_dotenv(find_dotenv('.env'))
+JWT_SECRET_KEY = os.environ.get("SECRET_KEY")
+ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
+ALGORITHM = "HS256"
+
 
 
 def encode_auth_token(user_id: PydanticObjectId):
@@ -22,11 +30,12 @@ def encode_auth_token(user_id: PydanticObjectId):
         }
         return jwt.encode(
             payload,
-            SECRET,
+            JWT_SECRET_KEY,
             algorithm='HS256'
         )
     except Exception as e:
         return e
+
 
 def decode_auth_token(auth_token):
     """
@@ -35,7 +44,7 @@ def decode_auth_token(auth_token):
     :return: integer|string
     """
     try:
-        payload = jwt.decode(auth_token, SECRET)
+        payload = jwt.decode(auth_token, JWT_SECRET_KEY)
         return payload['sub']
     except jwt.ExpiredSignatureError:
         return 'Signature expired. Please log in again.'
