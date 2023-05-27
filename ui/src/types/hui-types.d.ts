@@ -25,4 +25,19 @@ declare global {
         timeLeft: string;
         postDate?: Date;
     }
+
+    interface IAuthState {
+        loading: boolean,
+        userToken: string | null,
+        error: any,
+        success: boolean,
+    }
+
+    interface LoginResponse {
+        auth_token: string
+    }
+    interface LoginRequest {
+        mail: string,
+        password: string
+    }
 }
