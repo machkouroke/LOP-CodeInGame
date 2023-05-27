@@ -11,9 +11,12 @@ import {TbMilitaryRank} from "react-icons/tb";
 import React from "react";
 import {BsFillPlayFill} from "react-icons/bs";
 import {useHistory} from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import {next} from "../../../slices/navigation";
 
 export default function UserReports() {
     const history = useHistory();
+    const dispatch = useDispatch();
     // Chakra Color Mode
     const brandColor = useColorModeValue('brand.500', 'white');
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
@@ -67,7 +70,7 @@ export default function UserReports() {
                 <Flex alignItems={"center"} justifyContent={"center"} width={"100%"}>
                     <MiniStatistics
                         onClick={() => {
-                            history.push("/competition")
+                            dispatch(next({currentPath: "/", history: history, nextPath: "/competition"}));
                         }}
 
                         startContent={

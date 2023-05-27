@@ -6,3 +6,16 @@ body {
 option {
   color: black;
 }
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+   display: none;
+}

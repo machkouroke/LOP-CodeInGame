@@ -57,7 +57,7 @@ export default function CompetitionBoard() {
 
                         </SimpleGrid>
                         <Text mt='45px' mb='36px' color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                            Compétition à venir
+                            Exercice
                         </Text>
                         <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb={{base: '20px', xl: '0px'}}>
                             {

@@ -22,7 +22,6 @@ import React from 'react';
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
-import routes from 'routes';
 import {GrCode} from "react-icons/gr";
 import {TfiBookmarkAlt} from "react-icons/tfi";
 export default function HeaderLinks(props: { secondary: boolean }) {
