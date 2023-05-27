@@ -10,6 +10,7 @@ from api.src.models.Exercise import Exercise
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
+from api.utilities.utilities_func import field
 
 
 class UserAuth(BaseModel):
@@ -23,6 +24,8 @@ class UserAdd(BaseModel):
     mail: str
     password: str
     Type: str = 'user'
+    filiere: Optional[str]
+
 
     def to_json(self, to_exclude: set = None) -> dict:
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
@@ -39,6 +42,10 @@ class User(Model):
     password: Optional[str]
     Type: Optional[str] = 'user'
     database: Optional[Any] = None
+
+    @field("fullname")
+    def fullname(self):
+        return self.name+' '+self.surname
 
     def __eq__(self, other):
         return self.mail == other.mail
@@ -99,7 +106,7 @@ class User(Model):
 
 
 class Student(User):
-    level: Optional[int]
+    filiere: Optional[str]
     Type: str = 'student'
 
     @classmethod
@@ -109,12 +116,15 @@ class Student(User):
 
 
 class Teacher(User):
-    module: Optional[str]
     exos: Optional[list[PydanticObjectId]] = []
     Type: str = 'teacher'
 
-    # def add_exo(self, exo_id: PydanticObjectId):
-    #     self.database
+    def add_exo(self, exo_id: PydanticObjectId):
+        self.database.Users.update_one(
+            {'_id': self.id},
+            {'$addToSet':{'exos': exo_id}}
+        )
+        self.exos.append(exo_id)
 
     @classmethod
     def all(cls, database):

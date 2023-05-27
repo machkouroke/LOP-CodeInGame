@@ -17,8 +17,9 @@ def add_exercise(exo_to_add: ExoToAdd, user=Depends(get_current_user), db=Depend
             detail=f"Vous n'êtes pas autorisé à faire cette operation")
     exo = Exercise(database=db, **exo_to_add.to_json())
     exo.save(owner_name=user.name + ' ' + user.surname)
-    teacher= Teacher(database=db, **user.to_json())
-    teacher.update(data={'exos': teacher.exos.append(exo.id)})
+    teacher = Teacher(database=db, **user.to_json())
+    teacher.id = user.id
+    teacher.add_exo(exo.id)
 
     return {
         'success': True,
