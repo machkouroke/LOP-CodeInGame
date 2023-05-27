@@ -78,25 +78,26 @@ export default function CreateCompetition(props: { [x: string]: any }) {
                             <option value="volvo">Python</option>
                         </Select>
 
-                        <FormLabel
+                         <FormLabel
                             ms='4px'
                             fontSize='sm'
                             fontWeight='500'
                             color={textColor}
                             display='flex'>
-                            Nombre de minute<Text color={brandStars}>*</Text>
+                            Type<Text color={brandStars}>*</Text>
                         </FormLabel>
-                        <Input
-                            isRequired={true}
+                        <Select
                             fontSize='sm'
+                            ms={{base: "0px", md: "0px"}}
                             mb='24px'
+                            fontWeight='500'
                             size='lg'
-                            type="number"
-                            variant='auth'
-                            min={1}
-                            max={100}
-                            defaultValue={1}
-                        />
+
+                        >
+                            <option value="volvo">Exercice</option>
+                            <option value="volvo">Compétition</option>
+                            <option value="volvo">Salle Privé</option>
+                        </Select>
 
                         <Button
                             fontSize='sm'

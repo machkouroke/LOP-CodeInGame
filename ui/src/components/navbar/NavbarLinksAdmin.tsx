@@ -146,23 +146,21 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							fontSize='sm'
 							fontWeight='700'
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Salut, Machkour
 						</Text>
 					</Flex>
 					<Flex flexDirection='column' p='10px'>
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius='8px' px='14px'>
-							<Text fontSize='sm'>Profile Settings</Text>
+							<Text fontSize='sm'>Paramètre du profile</Text>
 						</MenuItem>
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius='8px' px='14px'>
-							<Text fontSize='sm'>Newsletter Settings</Text>
-						</MenuItem>
+
 						<MenuItem
 							_hover={{ bg: 'none' }}
 							_focus={{ bg: 'none' }}
 							color='red.400'
 							borderRadius='8px'
 							px='14px'>
-							<Text fontSize='sm'>Log out</Text>
+							<Text fontSize='sm'>Déconnexion</Text>
 						</MenuItem>
 					</Flex>
 				</MenuList>

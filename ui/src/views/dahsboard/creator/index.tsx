@@ -36,7 +36,7 @@ export default function CreatorBoard() {
             <Modal isOpen={isOpenCreation} onClose={onCloseCreation}>
                     <CreateCompetition/>
             </Modal>
-            <Modal isOpen={isOpenManage} onClose={onCloseManage}>
+            <Modal isOpen={isOpenManage} onClose={onCloseManage} size={"4xl"}>
                     <ManageCompetition competition={selected}/>
             </Modal>
 

@@ -20,8 +20,10 @@ import {MdBarChart, MdOutlineCalendarToday, MdOutlineRemoveRedEye} from 'react-i
 
 import React from "react";
 import CountDown from "../../../../components/CountDown/CountDown";
+import CompetitorsTable from "../../competion/components/CompetitorsTable";
+import tableDataTopCreators from "../../competion/variables/tableDataTopCreators";
 
-export default function ManageCompetition(props: { competition: Competition}) {
+export default function ManageCompetition(props: { competition: Competition }) {
 
     const {competition, ...rest} = props;
 
@@ -32,7 +34,7 @@ export default function ManageCompetition(props: { competition: Competition}) {
     const brandStars = useColorModeValue("brand.500", "brand.400");
 
     return (
-        <Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
+        <Card justifyContent='center'  alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
             <Text color={textColor} fontSize='xl' fontWeight='600'>
                 {competition.name}
             </Text>
@@ -40,8 +42,20 @@ export default function ManageCompetition(props: { competition: Competition}) {
             <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
                 <Flex flexDirection='column' mt='28px' width={"100%"}>
                     <FormControl>
-                        {/*<CountDown countdownData={new Date()} name={"Début"} />*/}
-                        <div>
+                        {false &&<Flex alignItems={"center"}>
+                            <CountDown countdownData={new Date()} name={"Début"} />
+
+                            <CompetitorsTable
+                                tableData={tableDataTopCreators}
+                                title={"Classement de votre classe"}
+                                style={{
+                                    maxHeight: "500px",
+                                }}
+                            />
+
+                        </Flex>}
+
+                        {true && <div>
                             <FormLabel
                                 display='flex'
                                 ms='4px'
@@ -116,7 +130,7 @@ export default function ManageCompetition(props: { competition: Competition}) {
                                     size='lg'
                                 />
                             </Flex>
-                        </div>
+                        </div>}
 
                         <Button
                             fontSize='sm'
