@@ -1,8 +1,6 @@
-import inProgress from "../../../../mocks/Competition";
-import Competition from "../../../../components/card/Competition";
+import CompetitionCard from "../../../../components/card/CompetitionCard";
 import React from "react";
 import Card from "../../../../components/card/Card";
-import ReactMarkdown from "react-markdown";
 import {Flex, Text, useColorModeValue} from "@chakra-ui/react";
 import MarkdownRender from "../../../../theme/markdown-config";
 
@@ -22,7 +20,7 @@ $$x=\\frac{1}{2} + 1 \\ y=2$$
     const textColor = useColorModeValue('navy.700', 'white');
     return (
         <Card p='20px'>
-            <Competition
+            <CompetitionCard
                 name={competition.name}
                 author={competition.author}
                 bidders={competition.bidders}
