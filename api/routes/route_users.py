@@ -28,9 +28,9 @@ async def create_user(to_add: UserAdd, db=Depends(get_db)):
 
 @router.post('/login')
 async def login(form_data: UserAuth, db=Depends(get_db)):
-    if not form_data.username or not form_data.password:
+    if not form_data.mail or not form_data.password:
         raise BadRequest('mail or password is empty')
-    user = User.find_one_or_404(database=db, mask={"mail": form_data.username})
+    user = User.find_one_or_404(database=db, mask={"mail": form_data.mail})
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
