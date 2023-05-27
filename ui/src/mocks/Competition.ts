@@ -1,4 +1,3 @@
-import Competition from "../components/card/Competition";
 import Avatar1 from "../assets/img/avatars/avatar1.png";
 import Avatar2 from "../assets/img/avatars/avatar2.png";
 import Avatar3 from "../assets/img/avatars/avatar3.png";

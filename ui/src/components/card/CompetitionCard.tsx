@@ -6,21 +6,38 @@ import Card from 'components/card/Card';
 import { useState } from 'react';
 import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 
-export default function Competition(props: {
+export default function CompetitionCard(props: {
 	image: string;
 	name: string;
 	author: string;
+	onClick?: () => void;
+	hoverable?: boolean;
 	bidders: string[];
 	download: string;
 	timeleft: string | number;
 	to_come?: boolean;
 }) {
-	const { image, name, author, bidders, download, timeleft } = props;
+	const { image,
+		name,
+		author,
+		bidders,
+		download,
+		timeleft,
+		hoverable,
+		onClick
+	} = props;
 	const [ like, setLike ] = useState(false);
 	const textColor = useColorModeValue('navy.700', 'white');
 	const textColorBid = useColorModeValue('brand.500', 'white');
+    const hoverColor = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
+
 	return (
-		<Card p='20px'>
+		<Card p='20px' _hover={hoverable && {
+                background:hoverColor,
+                cursor: 'pointer'
+            }}
+			  			onClick={onClick}
+		>
 			<Flex direction={{ base: 'column' }} justifyContent={{ base: 'space-between' }} >
 
 				<Flex flexDirection='column' justify='space-between' h='100%'>

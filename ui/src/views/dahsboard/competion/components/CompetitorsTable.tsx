@@ -38,6 +38,7 @@ const columnHelper = createColumnHelper<RowObj>();
 export default function CompetitorsTable(props: {
     tableData: any,
     title: string,
+    style?: any
 }) {
     const {tableData, title} = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -129,6 +130,7 @@ export default function CompetitorsTable(props: {
     });
     return (
         <Flex
+            style={props.style}
             direction='column'
             w='100%'
             overflowX={{sm: "scroll", lg: "hidden"}}>

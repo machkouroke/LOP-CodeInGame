@@ -8,7 +8,7 @@ import {Box, Flex, Grid, Text, useColorModeValue, SimpleGrid} from '@chakra-ui/r
 import Banner from './components/Banner';
 import CompetitorsTable from './components/CompetitorsTable';
 import HistoryItem from './components/HistoryItem';
-import Competition from '../../../components/card/Competition';
+import CompetitionCard from '../../../components/card/CompetitionCard';
 import Card from 'components/card/Card';
 
 
@@ -43,7 +43,7 @@ export default function CompetitionBoard() {
                         <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
                             {
                                 inProgress.map((item, index) => (
-                                    <Competition
+                                    <CompetitionCard
                                         name={item.name}
                                         author={item.author}
                                         bidders={item.bidders}
@@ -61,7 +61,7 @@ export default function CompetitionBoard() {
                         <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb={{base: '20px', xl: '0px'}}>
                             {
                                 inProgress.map((item, index) => (
-                                    <Competition
+                                    <CompetitionCard
                                         name={item.name}
                                         author={item.author}
                                         bidders={item.bidders}

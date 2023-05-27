@@ -5,20 +5,17 @@ import {
     Box,
     Flex,
     Grid,
-    useColorModeValue,
     SimpleGrid,
     Icon,
     useDisclosure,
-    Modal,
-    ModalOverlay, ModalContent
 } from '@chakra-ui/react';
 
 // Custom components
 
-import Competition from '../../../components/card/Competition';
+import CompetitionCard from '../../../components/card/CompetitionCard';
 import Card from 'components/card/Card';
 
-
+import  Modal from "../../../components/Modal/Modal";
 import inProgress from "../../../mocks/Competition";
 import MiniStatistics from "../../../components/card/MiniStatistics";
 import IconBox from "../../../components/icons/IconBox";
@@ -26,25 +23,21 @@ import useColorIcon from "../../../hooks/useColorIcon";
 
 import {BsPlusCircleFill} from "react-icons/bs";
 import CreateCompetition from "./components/CreateCompetition";
+import ManageCompetition from "./components/ManageCompetition";
 
 export default function CreatorBoard() {
-    const {isOpen, onOpen, onClose} = useDisclosure()
-
+    const {isOpen: isOpenCreation, onOpen: onOpenCreation, onClose: onCloseCreation} = useDisclosure()
+    const {isOpen: isOpenManage, onOpen: onOpenManage, onClose: onCloseManage} = useDisclosure()
+    const [selected, setSelected] = React.useState<Competition | null>(null);
 
     return (
         <>
-            <Modal isCentered isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay bg='none'
 
-                              backdropFilter='blur(10px) '/>
-                <ModalContent bg={useColorModeValue('rgba(51,17,219,0.59)', 'rgba(117,81,255,0.42)')} style={
-                    {
-                        borderRadius: '30px',
-                    }
-                } mx={{base: '10px', md: '0px'}}
-                >
+            <Modal isOpen={isOpenCreation} onClose={onCloseCreation}>
                     <CreateCompetition/>
-                </ModalContent>
+            </Modal>
+            <Modal isOpen={isOpenManage} onClose={onCloseManage} size={"4xl"}>
+                    <ManageCompetition competition={selected}/>
             </Modal>
 
             <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
@@ -60,12 +53,17 @@ export default function CreatorBoard() {
                             <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
                                 {
                                     inProgress.map((item, index) => (
-                                        <Competition
+                                        <CompetitionCard
+                                            hoverable={true}
                                             name={item.name}
                                             author={item.author}
                                             bidders={item.bidders}
                                             image={item.image}
                                             timeleft={item.timeLeft}
+                                            onClick={() => {
+                                                setSelected(item);
+                                                onOpenManage();
+                                            }}
                                             download='#'
                                         />))
                                 }
@@ -78,7 +76,7 @@ export default function CreatorBoard() {
                     <Flex flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
                         <Card p='0px'>
                             <MiniStatistics
-                                onClick={onOpen}
+                                onClick={onOpenCreation}
 
                                 style={{height: "100%"}}
 

@@ -109,17 +109,17 @@ export default function AdminNavbar(props: {
                 mb={gap}>
                 {hasPrevious &&
                     <ChevronLeftIcon boxSize={10} _hover={cursorHover}
-                                        onClick={() => dispatch(previous( {history: history}))}/>}
+                                     onClick={() => dispatch(previous({history: history}))}/>}
 
 
-
-                <Box mb={{sm: '8px', md: '0px'}} width={'100%'} textAlign={"center"} alignItems={"center"}>
+                <Box ml={'8px'} mb={{sm: '8px', md: '0px'}} width={'100%'} textAlign={{base: "center", xl: "start"}}
+                     alignItems={"center"}>
                     <Link
                         color={mainText}
                         href='/'
                         onClick={(e) => {
                             e.preventDefault()
-                            dispatch(home( {history: history}))
+                            dispatch(home({history: history}))
                         }}
                         bg='inherit'
                         alignItems={'center'}
