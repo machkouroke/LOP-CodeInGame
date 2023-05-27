@@ -1,10 +1,9 @@
 import inspect
-from abc import abstractmethod
 from typing import Optional, Any
 
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, Field
 
 from api import get_hashed_password
 from api.src.models.Model import Model
@@ -84,11 +83,9 @@ class User(Model):
     def delete(self):
         self.database.Users.delete_one({"_id": self.id})
 
-    def update(self, data: dict, crypt=None):
+    def update(self, data: dict):
         if "password" in data:
-            data["password"] = crypt.generate_password_hash(
-                data["password"]
-            ).decode()
+            data["password"] = data["password"] = get_hashed_password(data["password"])
 
         self.database.Users.update_one({"_id": self.id},
                                        {"$set": data})
