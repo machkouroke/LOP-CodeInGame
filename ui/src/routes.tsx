@@ -1,29 +1,92 @@
-import { Icon } from '@chakra-ui/react';
-import { MdHome,MdOutlineShoppingCart } from 'react-icons/md';
-import { GrCode} from 'react-icons/gr';
+import AuthLayout from "./layouts/auth";
+import DashboardLayout from "./layouts/admin";
+import CompetitionLayout from "./layouts/competition";
+import MainDashboard from "./views/dahsboard/default";
+import CreatorBoard from "./views/dahsboard/creator";
+import CompetitionBoard from "./views/dahsboard/competion";
+import WaitRoom from "./views/dahsboard/waitroom";
+import SignIn from "./views/auth/signIn";
 
-// Admin Imports
-import MainDashboard from './views/dahsboard/default';
-import NFTMarketplace from './views/dahsboard/competion';
+const routes: RoutesType[] = [
+    {
+        name: 'Authentification',
+        layout: '',
+        path: '/auth',
+        fullpath: '/auth',
+        component: AuthLayout,
+        protected: false,
+        roles: []
+    },
+    {
+        name: 'Page de Connexion',
+        layout: '/auth',
+        path: '/sign-in',
+        fullpath: '/auth/sign-in',
+        component: SignIn,
+        protected: false,
+        roles: []
+    },
+    {
+        name: 'Dashboard',
+        layout: '',
+        path: '/dashboard',
+        fullpath: '/dashboard',
+        component: DashboardLayout,
+        protected: true,
+        roles: []
+    },
+    {
+        name: 'Dashboard Accueil',
+        layout: '/dashboard',
+        path: '',
+        fullpath: '/dashboard',
+        component: MainDashboard,
+        protected: true,
+        roles: []
+    },
+    {
+        name: 'Dashboard Creator',
+        layout: '/dashboard',
+        path: '/creator',
+        fullpath: '/dashboard/creator',
+        component: CreatorBoard,
+        protected: true,
+        roles: ['creator']
+    },
 
-const routes = [
-	{
-		name: 'Mon profil',
-		layout: '/admin',
-		path: '/default',
-		icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
-		component: MainDashboard
-	},
-	{
-		name: 'Compétition',
-		layout: '/admin',
-		path: '/nft-marketplace',
-		icon: <Icon as={GrCode} width='20px' height='20px' color='inherit' />,
-		component: NFTMarketplace,
-		secondary: true
-	},
+    {
+        name: 'Compétition',
+        layout: '',
+        path: '/competition',
+        fullpath: '/competition',
+        component: CompetitionLayout,
+        protected: true,
+        roles: []
+    },
+    {
+        name: 'Compétition Accueil',
+        layout: '/competition',
+        path: '',
+        fullpath: '/competition',
+        component: CompetitionBoard,
+        protected: true,
+        roles: []
+    },
+    {
+        name: 'Compétition Salle d\'attente',
+        layout: '/competition',
+        path: '/waitroom',
+        fullpath: '/competition/waitroom',
+        component: WaitRoom,
+        protected: true,
+        roles: []
+    },
 
 
 ];
 
-export default routes;
+function getRoutes(layout: string): RoutesType[] {
+    return routes.filter((route) => route.layout === layout);
+}
+
+export default getRoutes;

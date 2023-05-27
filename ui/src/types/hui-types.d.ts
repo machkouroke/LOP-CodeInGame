@@ -8,10 +8,13 @@ declare global {
     interface RoutesType {
         name: string;
         layout: string;
-        component: () => JSX.Element;
-        icon: JSX.Element | string;
+        component: (
+            props: any
+        ) => JSX.Element;
         path: string;
-        secondary?: boolean;
+        fullpath: string;
+        protected: boolean;
+        roles: string[];
     }
 
     interface Competition {

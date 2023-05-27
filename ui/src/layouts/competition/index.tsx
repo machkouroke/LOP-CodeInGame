@@ -8,6 +8,7 @@ import {useState} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import CompetitionBoard from "../../views/dahsboard/competion";
 import WaitRoom from "../../views/dahsboard/waitroom";
+import getRoutes from "../../routes";
 
 // Custom Chakra theme
 export default function Competition(props: { [x: string]: any }) {
@@ -50,8 +51,11 @@ export default function Competition(props: { [x: string]: any }) {
                 {
                     <Box mx='auto' p={{base: '20px', md: '30px'}} pe='20px' minH='100vh' pt='50px'>
                         <Switch>
-                            <Route path='/competition' exact component={CompetitionBoard}/>;
-                            <Route path='/competition/waitroom' exact component={WaitRoom}/>;
+                            {getRoutes('/competition').map((route, index) => {
+                                return <Route path={route.fullpath} exact component={route.component} key={index}/>
+
+                            })}
+
                         </Switch>
                     </Box>
                 }

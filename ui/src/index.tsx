@@ -11,6 +11,8 @@ import {configureStore} from "@reduxjs/toolkit";
 import reducers from "./slices";
 import {Provider} from "react-redux";
 
+import getRoutes from "./routes";
+
 const store = configureStore({
     reducer: reducers,
     middleware: (getDefaultMiddleware) =>
@@ -29,9 +31,10 @@ ReactDOM.render(
             <React.StrictMode>
                 <BrowserRouter>
                     <Switch>
-                        <Route path={`/auth`} component={AuthLayout}/>
-                        <Route path={`/dashboard`} component={DashboardLayout}/>
-                        <Route path={`/competition`} component={CompetitionLayout}/>
+                        {getRoutes('').map((route, index) =>{
+                            return  <Route path={route.fullpath}  component={route.component} key={index}/>
+                        })}
+
                         <Redirect from='/' to='/dashboard'/>
                     </Switch>
                 </BrowserRouter>

@@ -4,6 +4,7 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 // Chakra imports
 import {Box, useColorModeValue} from '@chakra-ui/react';
 import SignIn from 'views/auth/signIn';
+import getRoutes from "../../routes";
 // Layout components
 
 // Custom Chakra theme
@@ -30,7 +31,12 @@ export default function Auth() {
 
                     <Box mx='auto' minH='100vh'>
                         <Switch>
-                            <Route path={"/auth/sign-in"} strict component={SignIn} />
+                            {
+                                getRoutes('/auth').map((route, index) =>{
+                                    return  <Route path={route.fullpath} exact component={route.component} key={index}/>
+
+                                })
+                            }
                             <Redirect from='/auth/' to='sign-in'/>
                         </Switch>
                     </Box>
