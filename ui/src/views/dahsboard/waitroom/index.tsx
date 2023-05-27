@@ -10,11 +10,10 @@ import {
 } from '@chakra-ui/react';
 
 // Custom components
-import CompetitorsTable from 'views/admin/marketplace/components/CompetitorsTable';
-import Competition from '../../../components/card/Competition';
+import CompetitorsTable from '../competion/components/CompetitorsTable';
 import Card from 'components/card/Card';
 
-import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
+import tableDataTopCreators from '../competion/variables/tableDataTopCreators';
 import CountDown from "../../../components/CountDown/CountDown";
 import inProgress from "../../../mocks/Competition";
 import Description from "./components/Description";

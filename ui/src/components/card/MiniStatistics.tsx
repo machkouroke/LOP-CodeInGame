@@ -6,24 +6,33 @@ import Card from 'components/card/Card';
 export default function Default(props: {
     startContent?: JSX.Element;
     endContent?: JSX.Element;
-    name: string;
+    name?: string;
     growth?: string | number;
-    value?: string | number;
+    value: string | number;
     onClick?: () => void;
+    style?: any;
 }) {
-    const {startContent, endContent, name, growth, value, onClick} = props;
+    const {
+        startContent,
+        endContent,
+        name,
+        growth,
+        value,
+        onClick, style
+    } = props;
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorSecondary = 'secondaryGray.600';
     const hoverColor = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
 
     return (
         <Card py='15px' _hover={
-            !value && {
+            !name && {
                 background:hoverColor,
                 cursor: 'pointer'
             }
         }
               onClick={onClick}
+              style={style}
         >
             <Flex my='auto' h='100%' align={{base: 'center', xl: 'start'}} justify={{base: 'center', xl: 'center'}}>
                 {startContent}
@@ -33,7 +42,7 @@ export default function Default(props: {
                         lineHeight='100%'
                         color={textColorSecondary}
                         fontSize={{
-                            base: value ? 'sm' : '2xl',
+                            base: 'sm',
                         }}>
                         {name}
                     </StatLabel>
@@ -56,6 +65,7 @@ export default function Default(props: {
                     ) : null}
                 </Stat>
                 <Flex ms='auto' w='max-content'>
+
                     {endContent}
                 </Flex>
             </Flex>

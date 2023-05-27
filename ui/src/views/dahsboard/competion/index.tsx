@@ -5,18 +5,17 @@ import React from 'react';
 import {Box, Flex, Grid, Text, useColorModeValue, SimpleGrid} from '@chakra-ui/react';
 
 // Custom components
-import Banner from 'views/admin/marketplace/components/Banner';
-import CompetitorsTable from 'views/admin/marketplace/components/CompetitorsTable';
-import HistoryItem from 'views/admin/marketplace/components/HistoryItem';
+import Banner from './components/Banner';
+import CompetitorsTable from './components/CompetitorsTable';
+import HistoryItem from './components/HistoryItem';
 import Competition from '../../../components/card/Competition';
 import Card from 'components/card/Card';
 
 
-import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
+import tableDataTopCreators from './variables/tableDataTopCreators';
 import inProgress from "../../../mocks/Competition";
 
 export default function CompetitionBoard() {
-    // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
 
     return (

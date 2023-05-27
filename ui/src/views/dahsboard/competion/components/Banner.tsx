@@ -17,7 +17,6 @@ import {useHistory} from "react-router-dom";
 import CodeModal from "./CodeModal";
 
 export default function Banner() {
-    const history = useHistory();
     const {isOpen, onOpen, onClose} = useDisclosure()
     return (
         <>

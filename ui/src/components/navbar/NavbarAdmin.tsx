@@ -5,6 +5,7 @@ import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin';
 import {ChevronLeftIcon, ChevronRightIcon} from "@chakra-ui/icons";
 import {home, previous} from "../../slices/navigation";
 import {useHistory} from "react-router-dom";
+import MainLogo from "../icons/MainLogo";
 
 
 export default function AdminNavbar(props: {
@@ -17,7 +18,7 @@ export default function AdminNavbar(props: {
 }) {
     const [scrolled, setScrolled] = useState(false);
     const cursorHover = {
-        color: 'red',
+        color: '#0b1437',
         cursor: 'pointer',
         background: useColorModeValue('dark', 'white'),
         borderRadius: '20%'
@@ -121,6 +122,7 @@ export default function AdminNavbar(props: {
                             dispatch(home( {history: history}))
                         }}
                         bg='inherit'
+                        alignItems={'center'}
                         borderRadius='inherit'
                         fontWeight='bold'
                         fontSize='34px'
@@ -133,6 +135,8 @@ export default function AdminNavbar(props: {
                         _focus={{
                             boxShadow: 'none'
                         }}>
+
+                        <MainLogo mr={"10px"} borderRadius={"10px"}/>
                         {brandText}
                     </Link>
                 </Box>
