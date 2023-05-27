@@ -16,7 +16,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
 ALGORITHM = "HS256"
 
 
-
 def encode_auth_token(user_id: PydanticObjectId):
     """
     Generates the Auth Token
@@ -44,7 +43,8 @@ def decode_auth_token(auth_token):
     :return: integer|string
     """
     try:
-        payload = jwt.decode(auth_token, JWT_SECRET_KEY)
+        payload = jwt.decode(auth_token, JWT_SECRET_KEY, algorithms='HS256')
+        print(f'payload: {payload}')
         return payload['sub']
     except jwt.ExpiredSignatureError:
         return 'Signature expired. Please log in again.'
