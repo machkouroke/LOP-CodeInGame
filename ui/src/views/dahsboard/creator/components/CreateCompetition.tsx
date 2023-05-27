@@ -17,9 +17,7 @@ import LineChart from 'components/charts/LineChart';
 import {IoCheckmarkCircle} from 'react-icons/io5';
 import {MdBarChart, MdOutlineCalendarToday, MdOutlineRemoveRedEye} from 'react-icons/md';
 // Assets
-import {RiArrowUpSFill, RiEyeCloseLine} from 'react-icons/ri';
-import {lineChartDataTotalSpent, lineChartOptionsTotalSpent} from 'variables/charts';
-import {NavLink} from "react-router-dom";
+
 import React from "react";
 
 export default function CreateCompetition(props: { [x: string]: any }) {

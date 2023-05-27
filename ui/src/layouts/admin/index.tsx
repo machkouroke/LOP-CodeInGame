@@ -6,7 +6,8 @@ import Navbar from 'components/navbar/NavbarAdmin';
 
 import {useState} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import MainDashboard from "../../views/admin/default";
+import MainDashboard from "../../views/dahsboard/default";
+import CreatorBoard from "../../views/dahsboard/creator";
 
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {
@@ -49,7 +50,8 @@ export default function Dashboard(props: { [x: string]: any }) {
                 {
                     <Box mx='auto' p={{base: '20px', md: '30px'}} pe='20px' minH='100vh' pt='50px'>
                         <Switch>
-                            <Route path='/dashboard' component={MainDashboard}/>;
+                            <Route path='/dashboard' exact component={MainDashboard}/>;
+                            <Route path='/dashboard/creator' exact component={CreatorBoard}/>;
 
                             <Redirect from='/' to='dashboard'/>
                         </Switch>

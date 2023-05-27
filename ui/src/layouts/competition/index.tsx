@@ -6,8 +6,8 @@ import Navbar from 'components/navbar/NavbarAdmin';
 
 import {useState} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import CompetitionBoard from "../../views/admin/marketplace";
-import WaitRoom from "../../views/admin/waitroom";
+import CompetitionBoard from "../../views/dahsboard/competion";
+import WaitRoom from "../../views/dahsboard/waitroom";
 
 // Custom Chakra theme
 export default function Competition(props: { [x: string]: any }) {

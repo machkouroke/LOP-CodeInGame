@@ -13,20 +13,19 @@ import {
 } from '@chakra-ui/react';
 
 // Assets
-import banner from 'assets/img/nfts/NftBanner1.png';
-import CreateCompetition from "../../default/components/CreateCompetition";
+
 import React from "react";
 import Card from "../../../../components/card/Card";
 
-export default function Banner(props: { [x: string]: any }) {
+export default function CodeModal(props: { [x: string]: any }) {
     const {...rest} = props;
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    let mainText = useColorModeValue('white', 'white');
+    let mainText = useColorModeValue('black', 'white');
 
     let navbarFilter = 'none';
     let navbarBackdrop = 'blur(20px)';
     let navbarShadow = 'none';
-    let navbarBg = useColorModeValue('rgba(51,17,219,0.59)', 'rgba(117,81,255,0.42)');
+    let navbarBg = useColorModeValue('#f4f7fe', '#1e2647');
     let navbarBorder = 'transparent';
     let secondaryMargin = '0px';
     let paddingX = '15px';
@@ -57,7 +56,7 @@ export default function Banner(props: { [x: string]: any }) {
             >
                 Veuillez saisir le code privée fournit par votre proffesseur
             </Box>
-            <Flex w={{base: '100%', lg: '50%'}} flexDirection={{base: 'column', lg: 'row'}} px="10px">
+            <Flex flexDirection={{base: 'column', lg: 'row'}} px="10px">
                 <Flex flexDirection='column' mt='28px' width={"100%"}>
                     <FormControl>
 

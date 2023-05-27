@@ -3,8 +3,8 @@ import { MdHome,MdOutlineShoppingCart } from 'react-icons/md';
 import { GrCode} from 'react-icons/gr';
 
 // Admin Imports
-import MainDashboard from 'views/admin/default';
-import NFTMarketplace from 'views/admin/marketplace';
+import MainDashboard from './views/dahsboard/default';
+import NFTMarketplace from './views/dahsboard/competion';
 
 const routes = [
 	{
