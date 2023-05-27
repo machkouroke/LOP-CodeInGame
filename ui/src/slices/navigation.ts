@@ -31,6 +31,16 @@ const navigation = createSlice({
                 state.previousPages.push(currentPath)
                 state.hasPrevious = true;
                 history.push(nextPath)
+            },
+            home: (state, action: {
+                payload: {
+                    history: any,
+                }
+            }) => {
+                const {history} = action.payload;
+                state.previousPages = [];
+                state.hasPrevious = false;
+                history.push('/')
             }
         }
     }
@@ -38,6 +48,7 @@ const navigation = createSlice({
 
 export const {
     previous,
-    next
+    next,
+    home,
 } = navigation.actions;
 export default navigation.reducer;

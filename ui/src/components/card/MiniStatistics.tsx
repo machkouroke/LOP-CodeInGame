@@ -14,11 +14,12 @@ export default function Default(props: {
     const {startContent, endContent, name, growth, value, onClick} = props;
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorSecondary = 'secondaryGray.600';
+    const hoverColor = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
 
     return (
         <Card py='15px' _hover={
             !value && {
-                background: "green",
+                background:hoverColor,
                 cursor: 'pointer'
             }
         }

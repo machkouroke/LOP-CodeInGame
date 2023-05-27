@@ -3,7 +3,7 @@ import {Box, Flex, Link, useColorModeValue} from '@chakra-ui/react';
 import {useState, useEffect} from 'react';
 import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin';
 import {ChevronLeftIcon, ChevronRightIcon} from "@chakra-ui/icons";
-import {previous} from "../../slices/navigation";
+import {home, previous} from "../../slices/navigation";
 import {useHistory} from "react-router-dom";
 
 
@@ -116,6 +116,10 @@ export default function AdminNavbar(props: {
                     <Link
                         color={mainText}
                         href='/'
+                        onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(home( {history: history}))
+                        }}
                         bg='inherit'
                         borderRadius='inherit'
                         fontWeight='bold'
