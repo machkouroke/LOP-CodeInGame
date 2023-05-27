@@ -6,13 +6,13 @@ from api import verify_password
 from api.dependencies.db import get_db
 from api.globals import bcrypt
 from api.src.authentication.jwt_encode import encode_auth_token
-from api.src.models.User import UserAuth, User
+from api.src.models.User import UserAuth, User, UserAdd
 
 router = APIRouter()
 
 
 @router.post('/register')
-async def create_user(to_add: UserAuth, db=Depends(get_db)):
+async def create_user(to_add: UserAdd, db=Depends(get_db)):
     user = User(database=db, **to_add.to_json())
     if User.find_one_or_404(database=db, mask={"mail": user.mail}) is not None:
         raise HTTPException(
@@ -27,7 +27,7 @@ async def create_user(to_add: UserAuth, db=Depends(get_db)):
 
 
 @router.post('/login')
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db=Depends(get_db)):
+async def login(form_data: UserAuth, db=Depends(get_db)):
     if not form_data.username or not form_data.password:
         raise BadRequest('mail or password is empty')
     user = User.find_one_or_404(database=db, mask={"mail": form_data.username})

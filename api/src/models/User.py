@@ -6,12 +6,18 @@ from flask_pymongo.wrappers import Database
 from pydantic import BaseModel, Field
 
 from api import get_hashed_password
+from api.src.models.Exercise import Exercise
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
 
 
 class UserAuth(BaseModel):
+    username: str
+    password: str
+
+
+class UserAdd(BaseModel):
     name: str
     surname: str
     mail: str
@@ -104,7 +110,11 @@ class Student(User):
 
 class Teacher(User):
     module: Optional[str]
+    exos: Optional[list[PydanticObjectId]] = []
     Type: str = 'teacher'
+
+    # def add_exo(self, exo_id: PydanticObjectId):
+    #     self.database
 
     @classmethod
     def all(cls, database):
