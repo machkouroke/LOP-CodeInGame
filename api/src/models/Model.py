@@ -12,6 +12,9 @@ class Model(BaseModel):
     database: Optional[Any] = None
 
     def dict(self, *args, **kwargs):
+        properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
+        for prop in properties:
+            getattr(self, prop)
         return super().dict( exclude={"database"})
 
     def set_db(self, database):
