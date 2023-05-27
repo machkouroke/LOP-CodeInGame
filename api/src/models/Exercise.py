@@ -47,8 +47,8 @@ class Exercise(Model):
             return None
 
     def save(self, owner_id):
+        self.owner_id= owner_id
         data = self.to_bson()
-        data['owner_id'] = owner_id
         result = self.database.Exercises.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
 
