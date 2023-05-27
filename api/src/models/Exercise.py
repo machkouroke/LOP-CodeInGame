@@ -4,11 +4,8 @@ from typing import Optional
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel
-from sqlalchemy import Column, ForeignKey, Integer
-from sqlalchemy.orm import relationship
 
 from api.src.models.Model import Model
-from api.src.models.User import Teacher, User
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
 
@@ -34,7 +31,7 @@ class Exercise(Model):
     langage: str
     nbr_minutes: int
     Type: str
-    owner_id: Optional[PydanticObjectId]
+    owner_name: Optional[str]
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
@@ -46,14 +43,11 @@ class Exercise(Model):
         else:
             return None
 
-    def save(self, owner_id):
-        self.owner_id= owner_id
+    def save(self, owner_name):
+        self.owner_name= owner_name
         data = self.to_bson()
         result = self.database.Exercises.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
-
-    def get_owner(self):
-        return User.find_one_or_404(self.database, mask={'_id': self.owner_id})
 
     def delete(self):
         self.database.Exercises.delete_one({"_id": self.id})
