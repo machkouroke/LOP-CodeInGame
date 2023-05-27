@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "lop-codeingame"
+version = "0.1.0"
+description = ""
+authors = ["machkouroke <machkour20.mo1@gmail.com>"]
+readme = "README.md"
+packages = [{include = "lop_codeingame"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.2"
+flask = "^2.3.2"
+flask-pymongo = "^2.3.0"
+uvicorn = "^0.22.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

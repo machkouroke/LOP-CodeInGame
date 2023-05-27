@@ -1,4 +1,0 @@
-fastapi
-Flask
-Flask-PyMongo
-uvicorn
