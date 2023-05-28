@@ -98,7 +98,7 @@ export default function MainDashboard(props: {user: User }) {
                         />
                     }
                     name='Nombre de parties jouées'
-                    value='2935'
+                    value={user.nbr_participation}
                 />
                 <Flex alignItems={"center"} justifyContent={"center"} width={"100%"}>
                     <MiniStatistics

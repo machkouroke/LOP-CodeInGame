@@ -50,6 +50,8 @@ declare global {
         password: string,
         fullname?: string,
         exos?: string[],
+        experience?: number,
+        nbr_participation?: number,
     }
 
     interface CompetitionSchedule {

@@ -18,7 +18,6 @@ const auth = createSlice(
         reducers: {
             logout: (state: IAuthState) => {
                 localStorage.removeItem('userToken')
-                localStorage.removeItem('isManager')
                 state.loading = false
                 state.userToken = null
                 state.error = null

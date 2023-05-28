@@ -1,16 +1,9 @@
-from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status, Form
-from fastapi.security import OAuth2PasswordRequestForm
-from werkzeug.exceptions import BadRequest
+from fastapi import APIRouter, Depends, HTTPException, status, WebSocket
 
-from api import verify_password
 from api.dependencies.db import get_db
 from api.dependencies.user import get_current_user
-from api.globals import bcrypt
-from api.src.authentication.jwt_encode import encode_auth_token
 from api.src.models.Exercise import Exercise, ExoId
-from api.src.models.User import UserAuth, User, UserAdd, Student, Teacher
 from api.src.models.objectid import PydanticObjectId
 
 router = APIRouter()
@@ -39,3 +32,11 @@ def get_all_exos(user=Depends(get_current_user), db=Depends(get_db)):
         'success': True,
         'all': user.get_all_exos(database=db)
     }
+
+@router.websocket('/ws')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()
+        await websocket.send_json({'message': 'Hello World'})
+        print(f"Message received from client: {data}")
