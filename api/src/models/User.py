@@ -18,6 +18,8 @@ class UserAuth(BaseModel):
     password: str
 
 
+
+
 class UserAdd(BaseModel):
     name: str
     surname: str
