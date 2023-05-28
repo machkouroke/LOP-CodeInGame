@@ -1,3 +1,8 @@
+from datetime import timedelta
+
+from google.cloud.storage import Bucket
+
+
 def field(name: str):
     """
     Decorator to add a dynamic field to a pydantic model
@@ -17,3 +22,19 @@ def field(name: str):
         return wrapper
 
     return decorator
+
+
+class Firebase:
+    @staticmethod
+    def download_link(bucket: Bucket, path: str) -> str:
+
+        return (
+            bucket.get_blob(path).generate_signed_url(
+                timedelta(seconds=36000), method='GET'
+            )
+        )
+    @staticmethod
+    def upload(bucket: Bucket, file_path: str, dest_path: str) -> None:
+        blob = bucket.blob(f'{dest_path}{file_path}')
+        blob.upload_from_filename(file_path)
+        return None
