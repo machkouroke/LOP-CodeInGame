@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, requests
 from fastapi.security import OAuth2PasswordRequestForm
 from werkzeug.exceptions import BadRequest
-
+import requests
 from api import verify_password
 from api.dependencies.db import get_db
 from api.globals import bcrypt
@@ -47,3 +47,15 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db=Depends(get
             'message': 'Successfully logged in.',
             'auth_token': auth_token
         }
+@router.post('/submit')
+async def check_files_on_server():
+    server_url = 'http://localhost:5000/get_files'
+
+    response = requests.get(server_url)
+
+    if response.status_code == 200:
+        files = response.json()
+        return files
+    else:
+        print("Erreur lors de la récupération des fichiers depuis le serveur distant.")
+        return None
