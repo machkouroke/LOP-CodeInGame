@@ -52,6 +52,7 @@ declare global {
         exos?: string[],
         experience?: number,
         nbr_participation?: number,
+        Type?: string,
     }
 
     interface CompetitionSchedule {

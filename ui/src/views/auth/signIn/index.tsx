@@ -27,6 +27,7 @@ import {RiEyeCloseLine} from "react-icons/ri";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {userLogin} from "../../../thunks/login";
+import SmoothBox from "../../../components/SmoothBox/SmoothBox";
 
 function SignIn() {
     const dispatch = useDispatch()
@@ -212,18 +213,16 @@ function SignIn() {
                                 </NavLink>
                             </Flex>
                             {error &&
-                                <Flex alignItems={"center"} justifyContent={"center"}>
-                                    <Box
+                                    <SmoothBox
                                         bg='#2c36cd'
-                                        borderRadius='xl'
                                         mb={"10px"}
 
                                         textAlign={"center"}
 
-                                        w='95%' p={4} color='white'>
+                                        color='white'>
                                         {error}
-                                    </Box>
-                                </Flex>}
+                                    </SmoothBox>
+                                }
 
                             <Flex alignContent={"center"}>
                                 <Button

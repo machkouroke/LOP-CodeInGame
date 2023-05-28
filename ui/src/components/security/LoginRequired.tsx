@@ -8,7 +8,7 @@ import {Spinner} from "@chakra-ui/react";
 const LoginRequiredRoute = (props: { component: FunctionComponent | null, [rest: string]: any }) => {
     const {component, ...rest} = props;
 
-    const {data, isFetching, error} = useGetUserDetailsQuery('userDetails', {
+    const {isFetching, error} = useGetUserDetailsQuery('userDetails', {
         // perform a refetch every 15mins
         pollingInterval: 900000,
         /* retry settings */
@@ -30,11 +30,9 @@ const LoginRequiredRoute = (props: { component: FunctionComponent | null, [rest:
         userToken && !success && localStorage.removeItem('userToken') && dispatch(logout())
         return <Redirect to="/auth/login"/>
     } else {
-        const user = data
         const createComponent = (props: any) => {
             return React.createElement(component, {
                 ...props,
-                user
             })
         }
         return (
