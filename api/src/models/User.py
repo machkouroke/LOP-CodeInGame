@@ -160,6 +160,13 @@ class Teacher(User):
         )
         self.exos_owned.append(exo_id)
 
+    def get_own_exos(self, database):
+        all = []
+        for exo_id in self.exos_owned:
+            exo = Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
+            all.append(exo)
+        return all
+
     @classmethod
     def all(cls, database):
         users = database.Users.find({"Type": "teacher"})

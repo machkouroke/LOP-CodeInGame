@@ -39,3 +39,15 @@ def get_all_exos(user=Depends(get_current_user), db=Depends(get_db)):
         'success': True,
         'all': user.get_all_exos(database=db)
     }
+
+
+@router.get('/own_exos', summary='Get exos created by current user')
+def get_owned_exos(user=Depends(get_current_user), db=Depends(get_db)):
+    if user.Type != 'teacher':
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Vous n'êtes pas autorisé à faire cette operation")
+    return {
+        'success': True,
+        'all': user.get_own_exos(database=db)
+    }
