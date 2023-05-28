@@ -16,6 +16,7 @@ export const competitionApi = createApi({
             return headers
         },
     }),
+    tagTypes: ['Competition'],
     endpoints: (builder) => ({
         addCompetition: builder.mutation({
             query: (data: CompetitionPost) => ({
@@ -23,13 +24,16 @@ export const competitionApi = createApi({
                 method: 'POST',
                 body: data,
             }),
+             invalidatesTags: [{ type: 'Competition', id: 'LIST' }],
+
         }),
         getTeachersCompetitions: builder.query({
-            query: (data: string) => ({
+            query: () => ({
                 url: `/users/own_exos`,
-            })
+            }),
+            providesTags: (result) => [{ type: 'Competition', id: 'LIST' }],
         })
     })
 })
 
-export const {useAddCompetitionMutation} = competitionApi
+export const {useAddCompetitionMutation, useGetTeachersCompetitionsQuery} = competitionApi

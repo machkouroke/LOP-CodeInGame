@@ -7,7 +7,7 @@ import {
     Grid,
     SimpleGrid,
     Icon,
-    useDisclosure,
+    useDisclosure, Spinner,
 } from '@chakra-ui/react';
 
 // Custom components
@@ -26,13 +26,39 @@ import CreateCompetition from "./components/CreateCompetition";
 import ManageCompetition from "./components/ManageCompetition";
 import {getUserInfo} from "../../../slices/selector";
 import {useSelector} from "react-redux";
+import {useGetTeachersCompetitionsQuery} from "../../../services/competitionService";
+import moment from "moment/moment";
 
 export default function CreatorBoard() {
     const user = useSelector(getUserInfo);
-
+    const {data: competitions, isLoading, isError, error} = useGetTeachersCompetitionsQuery('');
     const {isOpen: isOpenCreation, onOpen: onOpenCreation, onClose: onCloseCreation} = useDisclosure()
     const {isOpen: isOpenManage, onOpen: onOpenManage, onClose: onCloseManage} = useDisclosure()
     const [selected, setSelected] = React.useState<Competition | null>(null);
+
+    const content = () => {
+        if (isLoading) {
+            return <Spinner mt={"5px"} ml={"20px"} size='lg'
+            />
+        } else {
+            const {all} = competitions as { all: Competition[] }
+            return all.map((item, index) => (
+                <CompetitionCard
+                    hoverable={true}
+                    name={item.name}
+                    author={item.owner_name}
+                    bidders={item.participators}
+                    image={item.image}
+                    timeleft={moment(item.created_at).format('DD/MM/YYYY')}
+                    onClick={() => {
+                        setSelected(item);
+                        onOpenManage();
+                    }}
+                    download='#'
+                />))
+
+        }
+    }
 
     return (
         <>
@@ -57,22 +83,7 @@ export default function CreatorBoard() {
                         <Flex direction='column'>
 
                             <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
-                                {
-                                    inProgress.map((item, index) => (
-                                        <CompetitionCard
-                                            hoverable={true}
-                                            name={item.name}
-                                            author={item.author}
-                                            bidders={item.bidders}
-                                            image={item.image}
-                                            timeleft={item.timeLeft}
-                                            onClick={() => {
-                                                setSelected(item);
-                                                onOpenManage();
-                                            }}
-                                            download='#'
-                                        />))
-                                }
+                                {content()}
 
 
                             </SimpleGrid>

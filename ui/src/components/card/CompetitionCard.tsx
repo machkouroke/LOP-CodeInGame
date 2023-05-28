@@ -114,7 +114,7 @@ export default function CompetitionCard(props: {
                         }}
                         mt='25px'>
                         <Text fontWeight='700' fontSize='sm' color={textColorBid}>
-                            Temps restant <Text fontWeight='100' fontSize='sm'>{timeleft}</Text>
+                            Posté le <Text fontWeight='100' fontSize='sm'>{timeleft}</Text>
                         </Text>
                         <Link
                             href={download}

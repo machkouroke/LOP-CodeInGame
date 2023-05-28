@@ -19,11 +19,14 @@ declare global {
 
     interface Competition {
         name: string;
-        author: string;
-        bidders: string[];
-        image: any,
-        timeLeft: string;
-        postDate?: Date;
+        owner_name: string;
+        participators: string[];
+        image?: any,
+        start: Date;
+        end: Date;
+        created_at?: Date;
+        Type: string;
+        id: string;
     }
 
     interface IAuthState {

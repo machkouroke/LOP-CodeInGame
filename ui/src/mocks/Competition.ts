@@ -8,31 +8,39 @@ import Nft3 from "../assets/img/nfts/Nft3.png";
 
 const inProgress: Competition[] = [
     {
+        id: '1',
         name: 'Problème des 8 reines',
-        author: 'Par Khalfi ',
-        bidders: [],
+        owner_name: 'Par Khalfi ',
+        participators: [],
         image: Nft1,
-        timeLeft: '2d 19h 23m',
-        postDate: new Date(),
+        start: new Date(),
+        end: new Date(),
+        created_at: new Date(),
+        Type: 'exercice',
     },
     {
+        id: '2',
         name: 'Problème du voyageur de commerce',
-        author: 'Par Hafidi ',
-        bidders: [Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1],
+        owner_name: 'Par Hafidi ',
+        participators: [Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1],
         image: Nft2,
-        timeLeft: '2d 19h 23m',
-        postDate: new Date(),
-
+        start: new Date(),
+        end: new Date(),
+        created_at: new Date(),
+        Type: 'exercice',
     },
-    {
+      {
+        id: '3',
         name: 'Fibonacci',
-        author: "Ghazdhali",
-        bidders: [Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1],
-        image: Nft3,
-        timeLeft: '2d 19h 23m',
-        postDate: new Date(),
-
+        owner_name: "Par Ghazdhali",
+        participators: [Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1],
+        image: Nft2,
+        start: new Date(),
+        end: new Date(),
+        created_at: new Date(),
+        Type: 'exercice',
     }
+
 ]
 
 export default inProgress;

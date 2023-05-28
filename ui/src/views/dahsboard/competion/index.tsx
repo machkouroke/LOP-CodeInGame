@@ -16,6 +16,7 @@ import tableDataTopCreators from './variables/tableDataTopCreators';
 import inProgress from "../../../mocks/Competition";
 import {useSelector} from "react-redux";
 import {getUserInfo} from "../../../slices/selector";
+import moment from "moment";
 
 export default function CompetitionBoard() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -47,10 +48,10 @@ export default function CompetitionBoard() {
                                 inProgress.map((item, index) => (
                                     <CompetitionCard
                                         name={item.name}
-                                        author={item.author}
-                                        bidders={item.bidders}
+                                        author={item.owner_name}
+                                        bidders={item.participators}
                                         image={item.image}
-                                        timeleft={item.timeLeft}
+                                        timeleft={moment(item.end).diff(moment(), 'days')}
                                         download='#'
                                     />))
                             }
@@ -63,14 +64,13 @@ export default function CompetitionBoard() {
                         <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb={{base: '20px', xl: '0px'}}>
                             {
                                 inProgress.map((item, index) => (
-                                    <CompetitionCard
+                                     <CompetitionCard
                                         name={item.name}
-                                        author={item.author}
-                                        bidders={item.bidders}
+                                        author={item.owner_name}
+                                        bidders={item.participators}
                                         image={item.image}
-                                        timeleft={item.timeLeft}
+                                        timeleft={moment(item.end).diff(moment(), 'days')}
                                         download='#'
-                                        to_come={true}
                                     />))
                             }
                         </SimpleGrid>
@@ -96,8 +96,8 @@ export default function CompetitionBoard() {
 
                             <HistoryItem
                                 name={item.name}
-                                author={item.author}
-                                date={item.postDate}
+                                author={item.owner_name}
+                                date={item.created_at}
 
                             />
                         ))}

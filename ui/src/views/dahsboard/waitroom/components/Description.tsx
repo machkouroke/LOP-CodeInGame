@@ -3,6 +3,7 @@ import React from "react";
 import Card from "../../../../components/card/Card";
 import {Flex, Text, useColorModeValue} from "@chakra-ui/react";
 import MarkdownRender from "../../../../theme/markdown-config";
+import moment from "moment";
 
 export default function Description(props: {
                                         competition: Competition
@@ -22,10 +23,10 @@ $$x=\\frac{1}{2} + 1 \\ y=2$$
         <Card p='20px'>
             <CompetitionCard
                 name={competition.name}
-                author={competition.author}
-                bidders={competition.bidders}
+                author={competition.owner_name}
+                bidders={competition.participators}
                 image={competition.image}
-                timeleft={competition.timeLeft}
+                timeleft={moment(competition.end).diff(moment(), 'days')}
                 download='#'
             />
             <Flex px='20px' py='5px' direction={"column"}>
