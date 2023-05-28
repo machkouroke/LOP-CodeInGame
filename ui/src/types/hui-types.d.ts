@@ -52,6 +52,7 @@ declare global {
         exos?: string[],
         experience?: number,
         nbr_participation?: number,
+        Type?: string,
     }
 
     interface CompetitionSchedule {
@@ -60,6 +61,11 @@ declare global {
         endTime?: string,
         endDate: string,
         competitionId: string,
+    }
+    interface CompetitionPost {
+        name: string,
+        language: string,
+        Type: string,
     }
 
 }
