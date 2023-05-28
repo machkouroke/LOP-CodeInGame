@@ -36,7 +36,6 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
     const submitForm = (data: CompetitionPost) => {
         console.log(data)
         try {
-            console.log("Add competition")
             addCompetition(data)
                 .unwrap()
                 .then((res) => {
@@ -47,9 +46,7 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
                 .catch((e) => {
                     setErrorMessage(e)
                 })
-            console.log(errorMessage)
-            console.log(sucessMessage)
-            console.log("Add competition fin")
+
         } catch (e) {
             setErrorMessage(e)
             setSucessMessage(null)

@@ -10,7 +10,7 @@ const inProgress: Competition[] = [
     {
         name: 'Problème des 8 reines',
         author: 'Par Khalfi ',
-        bidders: [Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1],
+        bidders: [],
         image: Nft1,
         timeLeft: '2d 19h 23m',
         postDate: new Date(),
