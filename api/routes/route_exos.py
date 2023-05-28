@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from api.dependencies.db import get_db
@@ -16,6 +18,7 @@ def add_exercise(exo_to_add: ExoToAdd, user=Depends(get_current_user), db=Depend
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Vous n'êtes pas autorisé à faire cette operation")
     data = exo_to_add.to_json()
+    data['created_at']= datetime.utcnow()
     data['participators'] = []
     exo = Exercise(database=db, **data)
     exo.save(owner_name=user.name + ' ' + user.surname)

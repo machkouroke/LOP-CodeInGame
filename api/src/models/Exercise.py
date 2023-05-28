@@ -19,7 +19,6 @@ class ExoId(BaseModel):
 class ExoToAdd(BaseModel):
     name: str
     langage: str
-    nbr_minutes: int
     Type: str
 
     def to_json(self, to_exclude: set = None) -> dict:
@@ -41,17 +40,16 @@ class ExoStart(FormModel):
 class Exercise(Model):
     name: str
     langage: str
-    nbr_minutes: int
     Type: str
     owner_name: Optional[str]
     participators: Optional[list[PydanticObjectId]] = []
+    created_at: Optional[datetime]
     start: Optional[datetime]
     end: Optional[datetime]
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
-        answer = database.Exercises.find_one(mask)
-        if answer:
+        if answer := database.Exercises.find_one(mask):
             exercise = Exercise(**get_keys(answer, list(Exercise.__fields__.keys())))
             exercise.database = database
             return exercise

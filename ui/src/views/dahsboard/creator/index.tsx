@@ -24,9 +24,12 @@ import useColorIcon from "../../../hooks/useColorIcon";
 import {BsPlusCircleFill} from "react-icons/bs";
 import CreateCompetition from "./components/CreateCompetition";
 import ManageCompetition from "./components/ManageCompetition";
+import {getUserInfo} from "../../../slices/selector";
+import {useSelector} from "react-redux";
 
-export default function CreatorBoard(props: { user: User }) {
-    const {user} = props;
+export default function CreatorBoard() {
+    const user = useSelector(getUserInfo);
+
     const {isOpen: isOpenCreation, onOpen: onOpenCreation, onClose: onCloseCreation} = useDisclosure()
     const {isOpen: isOpenManage, onOpen: onOpenManage, onClose: onCloseManage} = useDisclosure()
     const [selected, setSelected] = React.useState<Competition | null>(null);

@@ -14,10 +14,12 @@ import Card from 'components/card/Card';
 
 import tableDataTopCreators from './variables/tableDataTopCreators';
 import inProgress from "../../../mocks/Competition";
+import {useSelector} from "react-redux";
+import {getUserInfo} from "../../../slices/selector";
 
 export default function CompetitionBoard() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-
+    const user = useSelector(getUserInfo)
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
             {/* Main Fields */}

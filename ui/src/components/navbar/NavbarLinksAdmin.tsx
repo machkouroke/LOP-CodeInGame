@@ -25,9 +25,12 @@ import {GrCode} from "react-icons/gr";
 import {TfiBookmarkAlt} from "react-icons/tfi";
 import {useDispatch, useSelector} from "react-redux";
 import {userLogout} from "../../thunks/logout";
+import {getUserInfo} from "../../slices/selector";
 
-export default function HeaderLinks(props: { secondary: boolean }) {
+export default function HeaderLinks(props: { secondary: boolean}) {
 	const { secondary } = props;
+    const user = useSelector(getUserInfo);
+
 	const { colorMode, toggleColorMode } = useColorMode();
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
@@ -68,7 +71,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 					<Icon color={ethColor} w='9px' h='14px' as={TfiBookmarkAlt} />
 				</Flex>
 				<Text w='max-content' color={ethColor} fontSize='sm' fontWeight='700' me='6px'>
-					642.39
+					{user.experience}
 					<Text as='span' display={{ base: 'none', md: 'unset' }}>
 						{' '}
 						XP
@@ -99,11 +102,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 					</Flex>
 					<Flex flexDirection='column'>
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} px='0' borderRadius='8px' mb='10px'>
-							<ItemContent info='Horizon UI Dashboard PRO' />
+							<ItemContent info="Message d'accueil" />
 						</MenuItem>
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} px='0' borderRadius='8px' mb='10px'>
-							<ItemContent info='Horizon Design System Free' />
-						</MenuItem>
+
 					</Flex>
 				</MenuList>
 			</Menu>
@@ -131,7 +132,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 					<Avatar
 						_hover={{ cursor: 'pointer' }}
 						color='white'
-						name='Adela Parkson'
+						name={user.fullname}
 						bg='#11047A'
 						size='sm'
 						w='40px'
@@ -150,7 +151,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							fontSize='sm'
 							fontWeight='700'
 							color={textColor}>
-							👋&nbsp; Salut, Machkour
+							👋&nbsp; Salut, {user.surname}
 						</Text>
 					</Flex>
 					<Flex flexDirection='column' p='10px'>

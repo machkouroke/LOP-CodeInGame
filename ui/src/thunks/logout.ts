@@ -1,4 +1,3 @@
-// authActions.js
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {logout as logoutAction} from "../slices/auth";
 import {BASE_URL} from "../config";

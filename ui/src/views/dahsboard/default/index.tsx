@@ -14,13 +14,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {next} from "../../../slices/navigation";
 import {BiPaint} from "react-icons/bi";
 import useColorIcon from "../../../hooks/useColorIcon";
+import {getUserInfo} from "../../../slices/selector";
 
 
 
 
-export default function MainDashboard(props: {user: User }) {
-    const {user} = props;
+export default function MainDashboard() {
     const history = useHistory();
+    const user = useSelector(getUserInfo);
 
     const dispatch = useDispatch();
     // Chakra Color Mode
@@ -69,7 +70,7 @@ export default function MainDashboard(props: {user: User }) {
                         />
                     }
                     name='Expérience'
-                    value='642.39 XP'
+                    value={ `${user.experience} XP`}
                 />
 
                 <MiniStatistics

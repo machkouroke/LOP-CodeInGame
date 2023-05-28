@@ -34,6 +34,8 @@ def generate_files(identifier,args):
     return config_file, os.path.join(src_dir, 'main.py'), os.path.join(test_dir, 'test_main.py')
 
 
+
+
 def lopsubmit(args):
 
     if args.kind == 'résolu':

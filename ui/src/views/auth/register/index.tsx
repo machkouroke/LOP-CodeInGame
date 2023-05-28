@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink, useHistory} from "react-router-dom";
 // Chakra imports
 import {
@@ -27,6 +27,7 @@ import {RiEyeCloseLine} from "react-icons/ri";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {userLogin} from "../../../thunks/login";
+import {registerUser} from "../../../thunks/register";
 
 function Register() {
     const dispatch = useDispatch()
@@ -51,28 +52,42 @@ function Register() {
         userToken,
         error,
         success
-    } = useSelector((state: { authentication: IAuthState }) => {
+    } = useSelector((state: { registration: IAuthState }) => {
 
         return {
-            loading: state.authentication.loading,
-            error: state.authentication.error,
-            userToken: state.authentication.userToken,
-            success: state.authentication.success
+            loading: state.registration.loading,
+            error: state.registration.error,
+            userToken: state.registration.userToken,
+            success: state.registration.success
         };
     });
+    const [credentials, setCredentials] = useState<LoginRequest>()
     const history = useHistory()
 
     useEffect(() => {
-        if (userToken) {
-            history.push('/dashboard')
+        console.log(success)
+        if (success) {
+        // @ts-ignore
+
+            dispatch(userLogin(credentials))
+            history.push('/user')
         }
-    }, [history, userToken])
+        // redirect authenticated user to profile screen
+        if (userToken) {
+            history.push('/user')
+        }
+    }, [history, userToken, success])
     const {register, handleSubmit} = useForm()
     const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
     const submitForm = (data: User) => {
-        // @ts-ignore
         console.log(data)
+        // @ts-ignore
+        dispatch(registerUser(data))
+        setCredentials({
+            mail: data.mail,
+            password: data.password
+        })
     }
     return (
         <DefaultAuth illustrationBackground={illustration} image={illustration}>
@@ -184,7 +199,7 @@ function Register() {
                                     />
                                 </FormControl>
                             </Flex>
-                            <FormControl >
+                            <FormControl>
                                 <FormLabel
                                     display='flex'
                                     ms='4px'
