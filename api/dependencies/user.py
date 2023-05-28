@@ -17,10 +17,8 @@ def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
     )
-    print(f'token:{token}')
     try:
         payload = ObjectId(decode_auth_token(token))
-        print(f'{payload}, {type(payload)}')
         if payload is None:
             raise credentials_exception
     except jwt.PyJWTError:

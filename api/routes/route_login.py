@@ -20,10 +20,11 @@ async def login(form_data: UserAuth, db=Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email incorrect"
         )
-    if not verify_password(form_data.password, user.password):
+
+    if not verify_password(form_data.password, user.password.get_secret_value()):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
+            detail="Incorrect password"
         )
     if auth_token := encode_auth_token(user.id):
         return {
