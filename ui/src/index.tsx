@@ -11,6 +11,7 @@ import {Provider} from "react-redux";
 import getRoutes from "./routes";
 import LoginRequired from "./components/security/LoginRequired";
 import {authApi} from "./services/authService";
+import {competitionApi} from "./services/competitionService";
 
 const store = configureStore({
     reducer: reducers,
@@ -21,6 +22,7 @@ const store = configureStore({
 
             },
         }).concat(authApi.middleware)
+            .concat(competitionApi.middleware)
 
 })
 

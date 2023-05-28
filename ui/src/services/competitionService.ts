@@ -6,7 +6,7 @@ import {BASE_URL} from "../config";
 export const competitionApi = createApi({
     reducerPath: 'competitionApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${BASE_URL}/auth`,
+        baseUrl: `${BASE_URL}/exos`,
         prepareHeaders: (headers, {getState}) => {
             // @ts-ignore
             const token = getState().authentication.userToken
@@ -17,9 +17,9 @@ export const competitionApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        startCompetition: builder.mutation({
-            query: (data: CompetitionSchedule) => ({
-                url: '/competition/start',
+        addCompetition: builder.mutation({
+            query: (data: CompetitionPost) => ({
+                url: '/add',
                 method: 'POST',
                 body: data,
             }),
@@ -27,4 +27,4 @@ export const competitionApi = createApi({
     })
 })
 
-export const {useStartCompetitionMutation} = competitionApi
+export const {useAddCompetitionMutation} = competitionApi

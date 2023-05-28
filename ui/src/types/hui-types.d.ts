@@ -62,5 +62,10 @@ declare global {
         endDate: string,
         competitionId: string,
     }
+    interface CompetitionPost {
+        name: string,
+        language: string,
+        Type: string,
+    }
 
 }
