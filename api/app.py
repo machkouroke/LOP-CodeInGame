@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routes import route_users, route_exos, route_login
+from api.routes import route_users, route_exos, route_login, route_cli
 
 app = FastAPI()
 
@@ -15,6 +15,7 @@ def home():
 app.include_router(route_users.router, prefix='/users')
 app.include_router(route_exos.router, prefix='/exos')
 app.include_router(route_login.router, prefix='/auth')
+app.include_router(route_cli.router, prefix='/cli')
 
 app.add_middleware(
     CORSMiddleware,

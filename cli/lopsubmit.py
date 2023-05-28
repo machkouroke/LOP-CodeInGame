@@ -2,6 +2,8 @@ import argparse
 import os
 import requests
 
+
+
 def lopsubmit(args):
     #avec 3 options --file --kind et --name à préciser
     if args.kind == 'résolu':
