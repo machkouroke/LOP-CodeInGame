@@ -15,7 +15,7 @@ import {
 import CompetitionCard from '../../../components/card/CompetitionCard';
 import Card from 'components/card/Card';
 
-import  Modal from "../../../components/Modal/Modal";
+import Modal from "../../../components/Modal/Modal";
 import inProgress from "../../../mocks/Competition";
 import MiniStatistics from "../../../components/card/MiniStatistics";
 import IconBox from "../../../components/icons/IconBox";
@@ -25,7 +25,8 @@ import {BsPlusCircleFill} from "react-icons/bs";
 import CreateCompetition from "./components/CreateCompetition";
 import ManageCompetition from "./components/ManageCompetition";
 
-export default function CreatorBoard() {
+export default function CreatorBoard(props: { user: User }) {
+    const {user} = props;
     const {isOpen: isOpenCreation, onOpen: onOpenCreation, onClose: onCloseCreation} = useDisclosure()
     const {isOpen: isOpenManage, onOpen: onOpenManage, onClose: onCloseManage} = useDisclosure()
     const [selected, setSelected] = React.useState<Competition | null>(null);
@@ -34,10 +35,10 @@ export default function CreatorBoard() {
         <>
 
             <Modal isOpen={isOpenCreation} onClose={onCloseCreation}>
-                    <CreateCompetition/>
+                <CreateCompetition/>
             </Modal>
             <Modal isOpen={isOpenManage} onClose={onCloseManage} size={"4xl"}>
-                    <ManageCompetition competition={selected}/>
+                <ManageCompetition competition={selected}/>
             </Modal>
 
             <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
@@ -47,7 +48,9 @@ export default function CreatorBoard() {
                     gridTemplateColumns={{xl: 'repeat(3, 1fr)', '2xl': '1fr 0.46fr'}}
                     gap={{base: '20px', xl: '20px'}}
                     display={{base: 'block', xl: 'grid'}}>
-                    <Flex flexDirection='column' gridArea={{xl: '1 / 1 / 2 / 3', '2xl': '1 / 1 / 2 / 2'}}>
+
+                    <Flex flexDirection='column'
+                          gridArea={{xl: '1 / 1 / 2 / 3', '2xl': '1 / 1 / 2 / 2'}}>
                         <Flex direction='column'>
 
                             <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
@@ -73,7 +76,10 @@ export default function CreatorBoard() {
 
                         </Flex>
                     </Flex>
-                    <Flex flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
+                    <Flex flexDirection='column' order={{base: 1,}}
+                          mt={{base: '20px', xl: '0px'}}
+
+                          gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
                         <Card p='0px'>
                             <MiniStatistics
                                 onClick={onOpenCreation}

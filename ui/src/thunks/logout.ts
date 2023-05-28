@@ -1,39 +1,37 @@
 // authActions.js
 import {createAsyncThunk} from "@reduxjs/toolkit";
+import {logout as logoutAction} from "../slices/auth";
 import {BASE_URL} from "../config";
 import axios from "axios";
 
-function login(mail: string, password: string): Promise<LoginResponse>
-{
-   const option = {
+
+function logout(token: string) {
+    const option = {
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         }
     }
-    const body: LoginRequest  = {
-        mail: mail,
-        password: password
-    }
-    const url = `${BASE_URL}/auth/login`
-    return axios.post(url, body, option)
+
+    const url = `${BASE_URL}/auth/logout`
+    return axios.post(url, {}, option)
         .then(({data}) => {
             return data
         })
 }
-
-export const userLogin = createAsyncThunk(
+export const userLogout = createAsyncThunk(
     'auth/login',
-    async (credentials: LoginRequest, {rejectWithValue}) => {
-        const {mail, password} = credentials
+    async (token: string, {dispatch, rejectWithValue}) => {
         try {
+            // configure header's Content-Type as JSON
 
-            const data = await login(mail, password)
-            console.log(data)
+            const data = await logout(token)
             // store user's token in local storage
-            localStorage.setItem('userToken', data["auth_token"])
+            dispatch(logoutAction())
+            window.location.reload()
             return data
         } catch (error: any) {
-
+            // return custom error message from API if any
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message)
             } else {

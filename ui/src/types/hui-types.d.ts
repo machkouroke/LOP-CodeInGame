@@ -36,8 +36,30 @@ declare global {
     interface LoginResponse {
         auth_token: string
     }
+
     interface LoginRequest {
         mail: string,
         password: string
     }
+
+    interface User {
+        id?: string,
+        name: string,
+        surname: string,
+        mail: string,
+        password: string,
+        fullname?: string,
+        exos?: string[],
+        experience?: number,
+        nbr_participation?: number,
+    }
+
+    interface CompetitionSchedule {
+        startDate: string,
+        startTime?: string,
+        endTime?: string,
+        endDate: string,
+        competitionId: string,
+    }
+
 }

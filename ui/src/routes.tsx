@@ -6,6 +6,7 @@ import CreatorBoard from "./views/dahsboard/creator";
 import CompetitionBoard from "./views/dahsboard/competion";
 import WaitRoom from "./views/dahsboard/waitroom";
 import SignIn from "./views/auth/signIn";
+import Register from "./views/auth/register";
 
 const routes: RoutesType[] = [
     {
@@ -23,6 +24,15 @@ const routes: RoutesType[] = [
         path: '/sign-in',
         fullpath: '/auth/sign-in',
         component: SignIn,
+        protected: false,
+        roles: []
+    },
+    {
+        name: "Page d'incription",
+        layout: '/auth',
+        path: '/register',
+        fullpath: '/auth/register',
+        component: Register,
         protected: false,
         roles: []
     },

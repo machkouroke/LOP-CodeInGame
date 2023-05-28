@@ -17,8 +17,10 @@ import tableDataTopCreators from '../competion/variables/tableDataTopCreators';
 import CountDown from "../../../components/CountDown/CountDown";
 import inProgress from "../../../mocks/Competition";
 import Description from "./components/Description";
+import moment from "moment";
 
-
+const moment1 = moment("2023-05-28T05:20:00");
+const moment2 = moment("2023-05-28T05:22:00");
 export default function WaitRoom() {
     // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -55,7 +57,9 @@ export default function WaitRoom() {
                                     Problème des 8 reines
                                 </Text>
                                 <Flex alignContent={"center"} justifyContent={"center"}>
-                                    <CountDown countdownData={new Date()} name={"machkour"}/>
+                                    <CountDown startDate={moment1}
+                                                  endDate={moment2}
+                                               name={"machkour"}/>
 
                                 </Flex>
                             </Card>
