@@ -40,7 +40,6 @@ class User(Model):
     mail: str
     password: SecretStr
     experience: Optional[float]
-    nbr_participation: Optional[int]
     exos: Optional[list[PydanticObjectId]] = []
     Type: str = 'user'
     database: Optional[Any] = None
@@ -48,6 +47,10 @@ class User(Model):
     @field("fullname")
     def fullname(self):
         return self.name + ' ' + self.surname
+
+    @field("nbr_participation")
+    def get_n_participation(self):
+        return len(self.exos)
 
     def __eq__(self, other):
         return self.mail == other.mail
@@ -107,12 +110,15 @@ class User(Model):
                                        {"$set": data})
         self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).to_json())
 
-    def addToSet(self, data: dict):
-        self.database.Users.update_one(
+    def addToSet(self, data: dict, database):
+        database.Users.update_one(
             {'_id': self.id},
             {'$addToSet': data}
         )
-        self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).to_json())
+        new_data = User.find_one_or_404(database, {"_id": self.id}).to_json()
+        self.__init__(**new_data)
+        self.id = PydanticObjectId(new_data['id'])
+        self.database = database
 
     def participate(self, exo: Exercise):
         data = {
@@ -121,13 +127,14 @@ class User(Model):
             'score': 0
         }
         self.database.Participations.insert_one(data)
-        self.addToSet({'exos': exo.id})
-        exo.addToSet({'participators': self.id})
+        self.database.Users.update_one({"_id": self.id}, {'$set': {'experience': self.experience + 20}})
+        self.addToSet({'exos': exo.id}, database=self.database)
+        exo.addToSet({'participators': self.id}, database=self.database)
 
     def get_all_exos(self, database):
-        all=[]
+        all = []
         for exo_id in self.exos:
-            exo= Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
+            exo = Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
             all.append(exo)
         return all
 
