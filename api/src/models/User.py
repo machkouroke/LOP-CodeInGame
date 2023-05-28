@@ -1,5 +1,5 @@
 import inspect
-from typing import Optional, Any
+from typing import Optional, Any, Annotated
 
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
@@ -63,6 +63,13 @@ class User(Model):
             })
         return all
 
+    @field("rank")
+    def get_rank(self):
+        user_sorted= sorted(User.find(database=self.database), key=lambda x: x.experience, reverse=True)
+        for i in range(len(user_sorted)):
+            if user_sorted[i].id== self.id:
+                return i+1
+
     def __eq__(self, other):
         return self.mail == other.mail
 
@@ -84,11 +91,17 @@ class User(Model):
         return [User(**get_keys(user, list(User.__fields__.keys()))) for user in database.Users.find()]
 
     @classmethod
-    def find(cls, database: Database, mask: dict) -> list:
-        users = database.Users.find(mask)
-        for user in users:
+    def find(cls, database: Database) -> list:
+        all=[]
+        users = database.Users.find()
+        for answer in users:
+            # answer['experience']= (answer['experience'])
+            # print(f"{type(answer['experience'])} {answer['name']}")
+            user = User.return_user_by_type(answer)
             user.database = database
-        return users
+            # user['database'] = database
+            all.append(user)
+        return all
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
