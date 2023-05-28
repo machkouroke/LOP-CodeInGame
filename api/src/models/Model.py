@@ -15,7 +15,7 @@ class Model(BaseModel):
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
         for prop in properties:
             getattr(self, prop)
-        return super().dict( exclude={"database"})
+        return super().dict( exclude={"database", "password"})
 
     def set_db(self, database):
         self.database= database
@@ -24,6 +24,7 @@ class Model(BaseModel):
         if to_exclude is None:
             to_exclude = set()
         to_exclude.add("database")
+        to_exclude.add("password")
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
         for prop in properties:
             getattr(self, prop)
@@ -33,7 +34,9 @@ class Model(BaseModel):
         if to_exclude is None:
             to_exclude = set()
         to_exclude.add("database")
-        data = self.dict(by_alias=True, exclude=to_exclude)
+        to_exclude.add("fullname")
+        # data = self.dict(by_alias=True, exclude=to_exclude)
+        data= super().dict(by_alias=True, exclude=to_exclude)
         if "_id" in data and data["_id"] is None:
             data.pop("_id")
         return data
