@@ -22,6 +22,7 @@ async def create_user(to_add: UserAdd, db=Depends(get_db)):
     user_class = class_retriever(to_add)
     data = to_add.to_json()
     data['exos']= []
+    data['experience']= 0
     if to_add.Type == 'teacher': data['exos_owned'] = []
     user = user_class(database=db, **data)
 
