@@ -28,10 +28,12 @@ export const userLogin = createAsyncThunk(
         try {
 
             const data = await login(mail, password)
+            console.log(data)
             // store user's token in local storage
             localStorage.setItem('userToken', data["auth_token"])
             return data
         } catch (error: any) {
+
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message)
             } else {

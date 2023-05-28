@@ -2,9 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './assets/css/App.css';
 import {Route, Switch, Redirect, BrowserRouter} from 'react-router-dom';
-import AuthLayout from './layouts/auth';
-import DashboardLayout from './layouts/admin';
-import CompetitionLayout from './layouts/competition';
 import {ChakraProvider} from '@chakra-ui/react';
 import theme from './theme/theme';
 import {configureStore} from "@reduxjs/toolkit";
@@ -12,6 +9,8 @@ import reducers from "./slices";
 import {Provider} from "react-redux";
 
 import getRoutes from "./routes";
+import LoginRequired from "./components/security/LoginRequired";
+import {authApi} from "./services/authService";
 
 const store = configureStore({
     reducer: reducers,
@@ -21,7 +20,7 @@ const store = configureStore({
                 ignoredActions: ['navigation/next', 'navigation/previous'],
 
             },
-        })
+        }).concat(authApi.middleware)
 
 })
 
@@ -32,6 +31,9 @@ ReactDOM.render(
                 <BrowserRouter>
                     <Switch>
                         {getRoutes('').map((route, index) =>{
+                            if (route.protected) {
+                                return <LoginRequired path={route.fullpath} component={route.component} />
+                            }
                             return  <Route path={route.fullpath}  component={route.component} key={index}/>
                         })}
 

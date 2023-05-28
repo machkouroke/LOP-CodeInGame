@@ -10,7 +10,7 @@ import {TbMilitaryRank} from "react-icons/tb";
 import React from "react";
 import {BsFillPlayFill} from "react-icons/bs";
 import {useHistory} from "react-router-dom";
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {next} from "../../../slices/navigation";
 import {BiPaint} from "react-icons/bi";
 import useColorIcon from "../../../hooks/useColorIcon";
@@ -18,8 +18,10 @@ import useColorIcon from "../../../hooks/useColorIcon";
 
 
 
-export default function UserReports() {
+export default function MainDashboard(props: {user: User }) {
+    const {user} = props;
     const history = useHistory();
+
     const dispatch = useDispatch();
     // Chakra Color Mode
     const brandColor = useColorModeValue('brand.500', 'white');
@@ -27,14 +29,14 @@ export default function UserReports() {
 
     return (
         <Box mt={{base: '130px'}} pt={{base: '130px', md: '80px', xl: '80px'}}>
-            <SimpleGrid columns={{base: 3}} gap='20px' mb='20px'>
+            <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb='20px'>
                 <div></div>
                 <Text fontSize={"30px"} fontWeight={"1000"} textAlign={"center"}>
-                    Bienvenue Machkour Oke
+                    Bienvenue {user.fullname}
                 </Text>
                 <div></div>
             </SimpleGrid>
-            <SimpleGrid columns={{base: 3}} gap='20px' mb='20px'>
+            <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb='20px'>
                 <div></div>
                 <MiniStatistics
                     onClick={() => {

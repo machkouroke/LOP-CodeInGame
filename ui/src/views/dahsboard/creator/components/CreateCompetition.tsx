@@ -13,9 +13,7 @@ import {
 } from '@chakra-ui/react';
 // Custom components
 import Card from 'components/card/Card';
-import LineChart from 'components/charts/LineChart';
-import {IoCheckmarkCircle} from 'react-icons/io5';
-import {MdBarChart, MdOutlineCalendarToday, MdOutlineRemoveRedEye} from 'react-icons/md';
+
 // Assets
 
 import React from "react";
