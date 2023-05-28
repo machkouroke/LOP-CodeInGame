@@ -63,9 +63,12 @@ class Exercise(Model):
                                            {"$set": data})
         self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
 
-    def addToSet(self, data: dict):
+    def addToSet(self, data: dict, database):
         self.database.Exercises.update_one(
             {'_id': self.id},
             {'$addToSet': data}
         )
-        self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
+        new_data= Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json()
+        self.__init__(**new_data)
+        self.id = PydanticObjectId(new_data['id'])
+        self.database = database
