@@ -3,7 +3,7 @@ from typing import Optional, Any
 
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 
 from api import get_hashed_password
 from api.src.models.Exercise import Exercise
@@ -36,11 +36,11 @@ class UserAdd(BaseModel):
 
 class User(Model):
     id: Optional[PydanticObjectId] = Field(None, alias="_id")
-    name: Optional[str]
-    surname: Optional[str]
-    mail: Optional[str]
-    password: Optional[str]
-    Type: Optional[str] = 'user'
+    name: str
+    surname: str
+    mail: str
+    password: SecretStr
+    Type: str = 'user'
     database: Optional[Any] = None
 
     @field("fullname")
