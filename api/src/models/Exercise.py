@@ -64,7 +64,7 @@ class Exercise(Model):
         self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
 
     def addToSet(self, data: dict):
-        self.database.Users.update_one(
+        self.database.Exercises.update_one(
             {'_id': self.id},
             {'$addToSet': data}
         )

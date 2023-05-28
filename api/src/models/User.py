@@ -124,6 +124,13 @@ class User(Model):
         self.addToSet({'exos': exo.id})
         exo.addToSet({'participators': self.id})
 
+    def get_all_exos(self, database):
+        all=[]
+        for exo_id in self.exos:
+            exo= Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
+            all.append(exo)
+        return all
+
 
 class Student(User):
     filiere: Optional[str]
