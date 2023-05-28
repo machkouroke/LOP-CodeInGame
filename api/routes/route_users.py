@@ -1,61 +1,42 @@
-from fastapi import APIRouter, Depends, HTTPException, status, requests
-from fastapi.security import OAuth2PasswordRequestForm
-from werkzeug.exceptions import BadRequest
-import requests
-from api import verify_password
+
+from fastapi import APIRouter, Depends, HTTPException, status, WebSocket
+
 from api.dependencies.db import get_db
-from api.globals import bcrypt
-from api.src.authentication.jwt_encode import encode_auth_token
-from api.src.models.User import UserAuth, User
+from api.dependencies.user import get_current_user
+from api.src.models.Exercise import Exercise, ExoId
+from api.src.models.objectid import PydanticObjectId
 
 router = APIRouter()
 
 
-@router.post('/register')
-async def create_user(to_add: UserAuth, db=Depends(get_db)):
-    user = User(database=db, **to_add.to_json())
-    if User.find_one_or_404(database=db, mask={"mail": user.mail}) is not None:
+@router.post('/participate', summary='Participate to a competition')
+def participate(exoId: ExoId, user=Depends(get_current_user), db=Depends(get_db)):
+    exo = Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(exoId.exo_id)})
+    if exo is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"L'email {user.mail} est déja utilisé")
-    user.save()
+            detail=f"L'exercice n'existe pas"
+        )
+    user.participate(exo)
     return {
         'success': True,
-        "message": f'User {user.name} is created',
-        "data": {"auth_token": encode_auth_token(user.id), "user_id": str(user.id)}
+        # 'data': f'{exo_id}',
+        # 'user': user
+        'data': 'Vous etes ajoutes a la competition'
     }
 
 
-@router.post('/login')
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db=Depends(get_db)):
-    if not form_data.username or not form_data.password:
-        raise BadRequest('mail or password is empty')
-    user = User.find_one_or_404(database=db, mask={"mail": form_data.username})
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email incorrect"
-        )
-    if not verify_password(form_data.password, user.password):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
-        )
-    if auth_token := encode_auth_token(user.id):
-        return {
-            'success': True,
-            'message': 'Successfully logged in.',
-            'auth_token': auth_token
-        }
-@router.post('/submit')
-async def check_files_on_server():
-    server_url = 'http://localhost:5000/get_files'
+@router.get('/exos', summary='Get all exos for the connected user')
+def get_all_exos(user=Depends(get_current_user), db=Depends(get_db)):
+    return {
+        'success': True,
+        'all': user.get_all_exos(database=db)
+    }
 
-    response = requests.get(server_url)
-
-    if response.status_code == 200:
-        files = response.json()
-        return files
-    else:
-        print("Erreur lors de la récupération des fichiers depuis le serveur distant.")
-        return None
+@router.websocket('/ws')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()
+        await websocket.send_json({'message': 'Hello World'})
+        print(f"Message received from client: {data}")

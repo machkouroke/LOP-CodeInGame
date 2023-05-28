@@ -4,7 +4,7 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 from api.globals import bcrypt, db
 from api.src.authentication.authentication import role_required
 from api.src.authentication.jwt_encode import encode_auth_token
-from api.src.models.BlackList import BlacklistToken
+from api.src.models.BlackListToken import BlacklistToken
 from api.src.models.Exercise import Exercise
 from api.src.models.User import User, Student, Teacher
 

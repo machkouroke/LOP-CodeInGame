@@ -1,5 +1,4 @@
 import inspect
-from abc import abstractmethod
 from typing import Optional, Any
 
 from fastapi.encoders import jsonable_encoder
@@ -7,17 +6,25 @@ from flask_pymongo.wrappers import Database
 from pydantic import BaseModel, Field, SecretStr
 
 from api import get_hashed_password
+from api.src.models.Exercise import Exercise
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
+from api.utilities.utilities_func import field
 
 
 class UserAuth(BaseModel):
+    mail: str
+    password: str
+
+
+class UserAdd(BaseModel):
     name: str
     surname: str
     mail: str
     password: str
     Type: str = 'user'
+    filiere: Optional[str]
 
     def to_json(self, to_exclude: set = None) -> dict:
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
@@ -28,12 +35,22 @@ class UserAuth(BaseModel):
 
 class User(Model):
     id: Optional[PydanticObjectId] = Field(None, alias="_id")
-    name: Optional[str]
-    surname: Optional[str]
-    mail: Optional[str]
-    password: Optional[str]
-    Type: Optional[str] = 'user'
+    name: str
+    surname: str
+    mail: str
+    password: SecretStr
+    experience: Optional[float]
+    exos: Optional[list[PydanticObjectId]] = []
+    Type: str = 'user'
     database: Optional[Any] = None
+
+    @field("fullname")
+    def fullname(self):
+        return self.name + ' ' + self.surname
+
+    @field("nbr_participation")
+    def get_n_participation(self):
+        return len(self.exos)
 
     def __eq__(self, other):
         return self.mail == other.mail
@@ -77,26 +94,53 @@ class User(Model):
 
     def save(self):
         data = self.to_bson()
-        data["password"] = get_hashed_password(data["password"])
+        print(data)
+        data["password"] = get_hashed_password(data["password"].get_secret_value())
         result = self.database.Users.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
 
     def delete(self):
         self.database.Users.delete_one({"_id": self.id})
 
-    def update(self, data: dict, crypt=None):
+    def update(self, data: dict):
         if "password" in data:
-            data["password"] = crypt.generate_password_hash(
-                data["password"]
-            ).decode()
+            data["password"] = data["password"] = get_hashed_password(data["password"])
 
         self.database.Users.update_one({"_id": self.id},
                                        {"$set": data})
         self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).to_json())
 
+    def addToSet(self, data: dict, database):
+        database.Users.update_one(
+            {'_id': self.id},
+            {'$addToSet': data}
+        )
+        new_data = User.find_one_or_404(database, {"_id": self.id}).to_json()
+        self.__init__(**new_data)
+        self.id = PydanticObjectId(new_data['id'])
+        self.database = database
+
+    def participate(self, exo: Exercise):
+        data = {
+            'user': self.id,
+            'exo': exo.id,
+            'score': 0
+        }
+        self.database.Participations.insert_one(data)
+        self.database.Users.update_one({"_id": self.id}, {'$set': {'experience': self.experience + 20}})
+        self.addToSet({'exos': exo.id}, database=self.database)
+        exo.addToSet({'participators': self.id}, database=self.database)
+
+    def get_all_exos(self, database):
+        all = []
+        for exo_id in self.exos:
+            exo = Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
+            all.append(exo)
+        return all
+
 
 class Student(User):
-    level: Optional[int]
+    filiere: Optional[str]
     Type: str = 'student'
 
     @classmethod
@@ -106,8 +150,15 @@ class Student(User):
 
 
 class Teacher(User):
-    module: Optional[str]
+    exos_owned: Optional[list[PydanticObjectId]] = []
     Type: str = 'teacher'
+
+    def add_exo(self, exo_id: PydanticObjectId):
+        self.database.Users.update_one(
+            {'_id': self.id},
+            {'$addToSet': {'exos_owned': exo_id}}
+        )
+        self.exos_owned.append(exo_id)
 
     @classmethod
     def all(cls, database):

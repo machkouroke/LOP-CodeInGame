@@ -1,16 +1,19 @@
 import inspect
+from datetime import datetime
 from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel
-from sqlalchemy import Column, ForeignKey, Integer
-from sqlalchemy.orm import relationship
 
+from api.src.models.FormModel import FormModel
 from api.src.models.Model import Model
-from api.src.models.User import Teacher, User
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
+
+
+class ExoId(BaseModel):
+    exo_id: str
 
 
 class ExoToAdd(BaseModel):
@@ -29,12 +32,21 @@ class ExoToAdd(BaseModel):
         return jsonable_encoder(self, exclude=to_exclude)
 
 
+class ExoStart(FormModel):
+    id: str
+    start: Optional[datetime]
+    end: Optional[datetime]
+
+
 class Exercise(Model):
     name: str
     langage: str
     nbr_minutes: int
     Type: str
-    owner_id: Optional[PydanticObjectId]
+    owner_name: Optional[str]
+    participators: Optional[list[PydanticObjectId]] = []
+    start: Optional[datetime]
+    end: Optional[datetime]
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
@@ -46,14 +58,11 @@ class Exercise(Model):
         else:
             return None
 
-    def save(self, owner_id):
+    def save(self, owner_name):
+        self.owner_name = owner_name
         data = self.to_bson()
-        data['owner_id'] = owner_id
         result = self.database.Exercises.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
-
-    def get_owner(self):
-        return User.find_one_or_404(self.database, mask={'_id': self.owner_id})
 
     def delete(self):
         self.database.Exercises.delete_one({"_id": self.id})
@@ -62,3 +71,13 @@ class Exercise(Model):
         self.database.Exercises.update_one({"_id": self.id},
                                            {"$set": data})
         self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
+
+    def addToSet(self, data: dict, database):
+        self.database.Exercises.update_one(
+            {'_id': self.id},
+            {'$addToSet': data}
+        )
+        new_data = Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json()
+        self.__init__(**new_data)
+        self.id = PydanticObjectId(new_data['id'])
+        self.database = database

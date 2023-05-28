@@ -28,7 +28,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {userLogin} from "../../../thunks/login";
 
-function SignIn() {
+function Register() {
     const dispatch = useDispatch()
     // Chakra color mode
     const textColor = useColorModeValue("navy.700", "white");
@@ -70,9 +70,9 @@ function SignIn() {
     const {register, handleSubmit} = useForm()
     const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
-    const submitForm = (data: LoginRequest) => {
+    const submitForm = (data: User) => {
         // @ts-ignore
-        dispatch(userLogin(data))
+        console.log(data)
     }
     return (
         <DefaultAuth illustrationBackground={illustration} image={illustration}>
@@ -90,7 +90,7 @@ function SignIn() {
                 flexDirection='column'>
                 <Box me='auto'>
                     <Heading color={textColor} fontSize='36px' mb='10px'>
-                        Connexion
+                        Créer un compte
                     </Heading>
                     <Text
                         mb='36px'
@@ -98,7 +98,7 @@ function SignIn() {
                         color={textColorSecondary}
                         fontWeight='400'
                         fontSize='md'>
-                        Entrer vos identifiants pour vous connecter
+                        Entrez vos informations pour continuer
                     </Text>
                 </Box>
                 <Flex
@@ -136,27 +136,78 @@ function SignIn() {
                     </Flex>
                     <form onSubmit={handleSubmit(submitForm)}>
                         <FormControl>
-                            <FormLabel
-                                display='flex'
-                                ms='4px'
-                                fontSize='sm'
-                                fontWeight='500'
-                                color={textColor}
-                                mb='8px'>
-                                Email<Text color={brandStars}>*</Text>
-                            </FormLabel>
-                            <Input
-                                isRequired={true}
-                                variant='auth'
-                                fontSize='sm'
-                                ms={{base: "0px", md: "0px"}}
-                                type='email'
-                                placeholder='mail@gmail.com'
-                                mb='24px'
-                                fontWeight='500'
-                                size='lg'
-                                {...register('mail')}
-                            />
+                            <Flex>
+                                <FormControl>
+                                    <FormLabel
+                                        display='flex'
+                                        ms='4px'
+                                        fontSize='sm'
+                                        fontWeight='500'
+                                        color={textColor}
+                                        mb='8px'>
+                                        Nom<Text color={brandStars}>*</Text>
+                                    </FormLabel>
+                                    <Input
+                                        isRequired={true}
+                                        variant='auth'
+                                        fontSize='sm'
+                                        ms={{base: "0px", md: "0px"}}
+                                        type='text'
+                                        placeholder='Votre nom'
+                                        mb='24px'
+                                        fontWeight='500'
+                                        size='lg'
+                                        {...register('name')}
+                                    />
+                                </FormControl>
+                                <FormControl ml={'10px'}>
+                                    <FormLabel
+                                        display='flex'
+                                        ms='4px'
+                                        fontSize='sm'
+                                        fontWeight='500'
+                                        color={textColor}
+                                        mb='8px'>
+                                        Prénom<Text color={brandStars}>*</Text>
+                                    </FormLabel>
+                                    <Input
+                                        isRequired={true}
+                                        variant='auth'
+                                        fontSize='sm'
+                                        ms={{base: "0px", md: "0px"}}
+                                        type='text'
+                                        placeholder='Votre prénom'
+                                        mb='24px'
+                                        fontWeight='500'
+                                        size='lg'
+                                        {...register('surname')}
+                                    />
+                                </FormControl>
+                            </Flex>
+                            <FormControl >
+                                <FormLabel
+                                    display='flex'
+                                    ms='4px'
+                                    fontSize='sm'
+                                    fontWeight='500'
+                                    color={textColor}
+                                    mb='8px'>
+                                    Email<Text color={brandStars}>*</Text>
+                                </FormLabel>
+                                <Input
+                                    isRequired={true}
+                                    variant='auth'
+                                    fontSize='sm'
+                                    ms={{base: "0px", md: "0px"}}
+                                    type='text'
+                                    placeholder='Votre adresse e-mail'
+                                    mb='24px'
+                                    fontWeight='500'
+                                    size='lg'
+                                    {...register('mail')}
+                                />
+                            </FormControl>
+
                             <FormLabel
                                 ms='4px'
                                 fontSize='sm'
@@ -185,46 +236,6 @@ function SignIn() {
                                     />
                                 </InputRightElement>
                             </InputGroup>
-                            <Flex justifyContent='space-between' align='center' mb='24px'>
-                                <FormControl display='flex' alignItems='center'>
-                                    <Checkbox
-                                        id='remember-login'
-                                        colorScheme='brandScheme'
-                                        me='10px'
-                                    />
-                                    <FormLabel
-                                        htmlFor='remember-login'
-                                        mb='0'
-                                        fontWeight='normal'
-                                        color={textColor}
-                                        fontSize='sm'>
-                                        Restez connecté
-                                    </FormLabel>
-                                </FormControl>
-                                <NavLink to='/auth/forgot-password'>
-                                    <Text
-                                        color={textColorBrand}
-                                        fontSize='sm'
-                                        w='124px'
-                                        fontWeight='500'>
-                                        Mot de passe oublié ?
-                                    </Text>
-                                </NavLink>
-                            </Flex>
-                            {error &&
-                                <Flex alignItems={"center"} justifyContent={"center"}>
-                                    <Box
-                                        bg='#2c36cd'
-                                        borderRadius='xl'
-                                        mb={"10px"}
-
-                                        textAlign={"center"}
-
-                                        w='95%' p={4} color='white'>
-                                        {error}
-                                    </Box>
-                                </Flex>}
-
                             <Flex alignContent={"center"}>
                                 <Button
                                     _hover={
@@ -240,7 +251,7 @@ function SignIn() {
                                     w='100%'
                                     h='50'
                                     mb='24px'>
-                                    Connecter
+                                    Créer un compte
                                 </Button>
                                 {loading &&
                                     <Spinner mt={"5px"} ml={"20px"} size='lg'
@@ -258,13 +269,13 @@ function SignIn() {
                         maxW='100%'
                         mt='0px'>
                         <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-                            Vous n'avez pas de compte ?
-                            <NavLink to='/auth/register'>
+                            Vous aviez déja un compte ?
+                            <NavLink to='/auth/sign-up'>
                                 <Text
                                     color={textColorBrand}
                                     as='span'
                                     ms='5px'
-                                    fontWeight='500'>Créer un compte
+                                    fontWeight='500'>Connectez-vous
                                 </Text>
                             </NavLink>
                         </Text>
@@ -275,4 +286,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default Register;

@@ -10,8 +10,8 @@ import MainDashboard from "../../views/dahsboard/default";
 import CreatorBoard from "../../views/dahsboard/creator";
 
 // Custom Chakra theme
-export default function Dashboard(props: { [x: string]: any }) {
-    const {...rest} = props;
+export default function Dashboard(props: { user: User, [x: string]: any }) {
+    const {user, ...rest} = props;
     // states and functions
     const [fixed] = useState(false);
 
@@ -50,8 +50,8 @@ export default function Dashboard(props: { [x: string]: any }) {
                 {
                     <Box mx='auto' p={{base: '20px', md: '30px'}} pe='20px' minH='100vh' pt='50px'>
                         <Switch>
-                            <Route path='/dashboard' exact component={MainDashboard}/>;
-                            <Route path='/dashboard/creator' exact component={CreatorBoard}/>;
+                            <Route path='/dashboard' exact render={() => <MainDashboard user={user}/>}/>;
+                            <Route path='/dashboard/creator' exact render={() => <CreatorBoard user={user}/>} />;
 
                             <Redirect from='/' to='dashboard'/>
                         </Switch>

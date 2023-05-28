@@ -19,11 +19,13 @@ import { ItemContent } from 'components/menu/ItemContent';
 import PropTypes from 'prop-types';
 import React from 'react';
 // Assets
-import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import {GrCode} from "react-icons/gr";
 import {TfiBookmarkAlt} from "react-icons/tfi";
+import {useDispatch, useSelector} from "react-redux";
+import {userLogout} from "../../thunks/logout";
+
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -40,7 +42,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
 	);
-	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+	const dispatch = useDispatch()
+	const token = useSelector((state: {authentication: IAuthState}) => state.authentication.userToken)
+
 	return (
 		<Flex
 			w={{ sm: '100%', md: 'auto' }}
@@ -159,6 +163,10 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							_focus={{ bg: 'none' }}
 							color='red.400'
 							borderRadius='8px'
+							onClick={() => {
+								 // @ts-ignore
+								dispatch(userLogout(token))
+							}}
 							px='14px'>
 							<Text fontSize='sm'>Déconnexion</Text>
 						</MenuItem>

@@ -107,39 +107,42 @@ export default function AdminNavbar(props: {
                 }}
                 alignItems={{base: 'center'}}
                 mb={gap}>
-                {hasPrevious &&
-                    <ChevronLeftIcon boxSize={10} _hover={cursorHover}
-                                     onClick={() => dispatch(previous({history: history}))}/>}
+                <Flex alignContent={"center"}>
+                    {hasPrevious &&
+                        <ChevronLeftIcon boxSize={10} _hover={cursorHover}
+                                         onClick={() => dispatch(previous({history: history}))}/>}
 
 
-                <Box ml={'8px'} mb={{sm: '8px', md: '0px'}} width={'100%'} textAlign={{base: "center", xl: "start"}}
-                     alignItems={"center"}>
-                    <Link
-                        color={mainText}
-                        href='/'
-                        onClick={(e) => {
-                            e.preventDefault()
-                            dispatch(home({history: history}))
-                        }}
-                        bg='inherit'
-                        alignItems={'center'}
-                        borderRadius='inherit'
-                        fontWeight='bold'
-                        fontSize='34px'
-                        _hover={{color: {mainText}}}
-                        _active={{
-                            bg: 'inherit',
-                            transform: 'none',
-                            borderColor: 'transparent'
-                        }}
-                        _focus={{
-                            boxShadow: 'none'
-                        }}>
+                    <Box ml={'8px'} mb={{sm: '8px', md: '0px'}} width={'100%'} textAlign={{base: "center", xl: "start"}}
+                         alignItems={"center"}>
+                        <Link
+                            color={mainText}
+                            href='/'
+                            onClick={(e) => {
+                                e.preventDefault()
+                                dispatch(home({history: history}))
+                            }}
+                            bg='inherit'
+                            alignItems={'center'}
+                            borderRadius='inherit'
+                            fontWeight='bold'
+                            fontSize='34px'
+                            _hover={{color: {mainText}}}
+                            _active={{
+                                bg: 'inherit',
+                                transform: 'none',
+                                borderColor: 'transparent'
+                            }}
+                            _focus={{
+                                boxShadow: 'none'
+                            }}>
 
-                        <MainLogo mr={"10px"} borderRadius={"10px"}/>
-                        {brandText}
-                    </Link>
-                </Box>
+                            <MainLogo mr={"10px"} borderRadius={"10px"}/>
+                            {brandText}
+                        </Link>
+                    </Box>
+                </Flex>
+
                 <Box ms='auto' w={{sm: '100%', md: 'unset'}}>
                     <AdminNavbarLinks
                         onOpen={props.onOpen}

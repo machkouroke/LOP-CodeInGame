@@ -8,10 +8,13 @@ declare global {
     interface RoutesType {
         name: string;
         layout: string;
-        component: () => JSX.Element;
-        icon: JSX.Element | string;
+        component: (
+            props: any
+        ) => JSX.Element;
         path: string;
-        secondary?: boolean;
+        fullpath: string;
+        protected: boolean;
+        roles: string[];
     }
 
     interface Competition {
@@ -22,4 +25,41 @@ declare global {
         timeLeft: string;
         postDate?: Date;
     }
+
+    interface IAuthState {
+        loading: boolean,
+        userToken: string | null,
+        error: any,
+        success: boolean,
+    }
+
+    interface LoginResponse {
+        auth_token: string
+    }
+
+    interface LoginRequest {
+        mail: string,
+        password: string
+    }
+
+    interface User {
+        id?: string,
+        name: string,
+        surname: string,
+        mail: string,
+        password: string,
+        fullname?: string,
+        exos?: string[],
+        experience?: number,
+        nbr_participation?: number,
+    }
+
+    interface CompetitionSchedule {
+        startDate: string,
+        startTime?: string,
+        endTime?: string,
+        endDate: string,
+        competitionId: string,
+    }
+
 }

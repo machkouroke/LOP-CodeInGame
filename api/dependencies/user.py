@@ -7,6 +7,7 @@ from bson import ObjectId
 
 from api.dependencies.db import get_db
 from api.src.authentication.jwt_encode import decode_auth_token
+from api.src.models.BlackListToken import BlacklistToken
 from api.src.models.User import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/login')
@@ -17,10 +18,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
     )
-    print(f'token:{token}')
+    if BlacklistToken.check_blacklist(auth_token=token, database=db):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expiré",
+        )
     try:
         payload = ObjectId(decode_auth_token(token))
-        print(f'{payload}, {type(payload)}')
         if payload is None:
             raise credentials_exception
     except jwt.PyJWTError:
