@@ -14,7 +14,7 @@ def home():
 
 app.include_router(route_users.router, prefix='/users')
 app.include_router(route_exos.router, prefix='/exos')
-app.include_router(route_login.router, )
+app.include_router(route_login.router, prefix='/auth')
 
 app.add_middleware(
     CORSMiddleware,

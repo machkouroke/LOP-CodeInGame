@@ -1,10 +1,8 @@
 // authActions.js
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {BASE_URL} from "../../config";
+import {BASE_URL} from "../config";
 import axios from "axios";
-interface LoginResponse {
-    auth_token: string
-}
+
 function login(mail: string, password: string): Promise<LoginResponse>
 {
    const option = {
@@ -12,7 +10,7 @@ function login(mail: string, password: string): Promise<LoginResponse>
             "Content-Type": "application/json",
         }
     }
-    const body = {
+    const body: LoginRequest  = {
         mail: mail,
         password: password
     }
@@ -25,7 +23,7 @@ function login(mail: string, password: string): Promise<LoginResponse>
 
 export const userLogin = createAsyncThunk(
     'auth/login',
-    async (credentials: {mail: string, password: string}, {rejectWithValue}) => {
+    async (credentials: LoginRequest, {rejectWithValue}) => {
         const {mail, password} = credentials
         try {
 

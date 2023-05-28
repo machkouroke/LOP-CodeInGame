@@ -1,3 +1,4 @@
+// @ts-ignore
 import process from "react-syntax-highlighter/.eslintrc";
 
 
