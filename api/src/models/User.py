@@ -24,7 +24,6 @@ class UserAdd(BaseModel):
     mail: str
     password: str
     Type: str = 'user'
-    filiere: Optional[str]
 
     def to_json(self, to_exclude: set = None) -> dict:
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
@@ -51,6 +50,18 @@ class User(Model):
     @field("nbr_participation")
     def get_n_participation(self):
         return len(self.exos)
+
+    @field("participated_exos")
+    def participated_exos(self):
+        all= []
+        exos= self.get_all_exos(database=self.database)
+        for exo in exos:
+            all.append({
+                'name': exo.name,
+                'owner_name': exo.owner_name,
+                'published_year': exo.created_at.year
+            })
+        return all
 
     def __eq__(self, other):
         return self.mail == other.mail
@@ -140,7 +151,6 @@ class User(Model):
 
 
 class Student(User):
-    filiere: Optional[str]
     Type: str = 'student'
 
     @classmethod
