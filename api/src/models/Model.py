@@ -15,7 +15,7 @@ class Model(BaseModel):
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
         for prop in properties:
             getattr(self, prop)
-        return super().dict( exclude={"database", "password"})
+        return super().dict( exclude={"database"})
 
     def set_db(self, database):
         self.database= database
@@ -24,7 +24,7 @@ class Model(BaseModel):
         if to_exclude is None:
             to_exclude = set()
         to_exclude.add("database")
-        to_exclude.add("password")
+        # to_exclude.add("password")
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
         for prop in properties:
             getattr(self, prop)

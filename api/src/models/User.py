@@ -26,7 +26,6 @@ class UserAdd(BaseModel):
     Type: str = 'user'
     filiere: Optional[str]
 
-
     def to_json(self, to_exclude: set = None) -> dict:
         properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
         for prop in properties:
@@ -40,12 +39,15 @@ class User(Model):
     surname: str
     mail: str
     password: SecretStr
+    experience: Optional[float]
+    nbr_participation: Optional[int]
+    exos: Optional[list[PydanticObjectId]] = []
     Type: str = 'user'
     database: Optional[Any] = None
 
     @field("fullname")
     def fullname(self):
-        return self.name+' '+self.surname
+        return self.name + ' ' + self.surname
 
     def __eq__(self, other):
         return self.mail == other.mail
@@ -89,7 +91,8 @@ class User(Model):
 
     def save(self):
         data = self.to_bson()
-        data["password"] = get_hashed_password(data["password"])
+        print(data)
+        data["password"] = get_hashed_password(data["password"].get_secret_value())
         result = self.database.Users.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
 
@@ -104,6 +107,23 @@ class User(Model):
                                        {"$set": data})
         self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).to_json())
 
+    def addToSet(self, data: dict):
+        self.database.Users.update_one(
+            {'_id': self.id},
+            {'$addToSet': data}
+        )
+        self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).to_json())
+
+    def participate(self, exo: Exercise):
+        data = {
+            'user': self.id,
+            'exo': exo.id,
+            'score': 0
+        }
+        self.database.Participations.insert_one(data)
+        self.addToSet({'exos': exo.id})
+        exo.addToSet({'participators': self.id})
+
 
 class Student(User):
     filiere: Optional[str]
@@ -116,15 +136,15 @@ class Student(User):
 
 
 class Teacher(User):
-    exos: Optional[list[PydanticObjectId]] = []
+    exos_owned: Optional[list[PydanticObjectId]] = []
     Type: str = 'teacher'
 
     def add_exo(self, exo_id: PydanticObjectId):
         self.database.Users.update_one(
             {'_id': self.id},
-            {'$addToSet':{'exos': exo_id}}
+            {'$addToSet': {'exos_owned': exo_id}}
         )
-        self.exos.append(exo_id)
+        self.exos_owned.append(exo_id)
 
     @classmethod
     def all(cls, database):

@@ -10,11 +10,16 @@ from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
 
 
+class ExoId(BaseModel):
+    exo_id: str
+
+
 class ExoToAdd(BaseModel):
     name: str
     langage: str
     nbr_minutes: int
     Type: str
+    # participator: Optional[list[PydanticObjectId]]=[]
 
     def to_json(self, to_exclude: set = None) -> dict:
         if to_exclude is None:
@@ -32,6 +37,7 @@ class Exercise(Model):
     nbr_minutes: int
     Type: str
     owner_name: Optional[str]
+    participators: Optional[list[PydanticObjectId]]=[]
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
@@ -44,7 +50,7 @@ class Exercise(Model):
             return None
 
     def save(self, owner_name):
-        self.owner_name= owner_name
+        self.owner_name = owner_name
         data = self.to_bson()
         result = self.database.Exercises.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
@@ -55,4 +61,11 @@ class Exercise(Model):
     def update(self, data: dict):
         self.database.Exercises.update_one({"_id": self.id},
                                            {"$set": data})
+        self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
+
+    def addToSet(self, data: dict):
+        self.database.Users.update_one(
+            {'_id': self.id},
+            {'$addToSet': data}
+        )
         self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
