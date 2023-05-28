@@ -1,10 +1,12 @@
 import inspect
+from datetime import datetime
 from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel
 
+from api.src.models.FormModel import FormModel
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
@@ -19,7 +21,6 @@ class ExoToAdd(BaseModel):
     langage: str
     nbr_minutes: int
     Type: str
-    # participator: Optional[list[PydanticObjectId]]=[]
 
     def to_json(self, to_exclude: set = None) -> dict:
         if to_exclude is None:
@@ -31,13 +32,21 @@ class ExoToAdd(BaseModel):
         return jsonable_encoder(self, exclude=to_exclude)
 
 
+class ExoStart(FormModel):
+    id: str
+    start: Optional[datetime]
+    end: Optional[datetime]
+
+
 class Exercise(Model):
     name: str
     langage: str
     nbr_minutes: int
     Type: str
     owner_name: Optional[str]
-    participators: Optional[list[PydanticObjectId]]=[]
+    participators: Optional[list[PydanticObjectId]] = []
+    start: Optional[datetime]
+    end: Optional[datetime]
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
@@ -68,7 +77,7 @@ class Exercise(Model):
             {'_id': self.id},
             {'$addToSet': data}
         )
-        new_data= Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json()
+        new_data = Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json()
         self.__init__(**new_data)
         self.id = PydanticObjectId(new_data['id'])
         self.database = database
