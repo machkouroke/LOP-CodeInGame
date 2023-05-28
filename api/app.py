@@ -1,5 +1,8 @@
+from typing import Annotated, List
+
 import uvicorn
-from fastapi import FastAPI
+from anyio.streams import file
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import route_users, route_exos, route_login
@@ -10,6 +13,16 @@ app = FastAPI()
 @app.get('/')
 def home():
     return {"Hello": "World"}
+
+@app.post('/lopsubmit')
+async def lopsubmit(files: UploadFile):
+
+    print(files)
+    return {
+
+         'hello':1
+    }
+
 
 
 app.include_router(route_users.router, prefix='/users')
