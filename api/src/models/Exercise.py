@@ -19,7 +19,6 @@ class ExoId(BaseModel):
 class ExoToAdd(BaseModel):
     name: str
     langage: str
-    nbr_minutes: int
     Type: str
 
     def to_json(self, to_exclude: set = None) -> dict:
@@ -41,7 +40,6 @@ class ExoStart(FormModel):
 class Exercise(Model):
     name: str
     langage: str
-    nbr_minutes: int
     Type: str
     owner_name: Optional[str]
     participators: Optional[list[PydanticObjectId]] = []
