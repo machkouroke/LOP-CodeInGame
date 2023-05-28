@@ -43,6 +43,7 @@ class Exercise(Model):
     Type: str
     owner_name: Optional[str]
     participators: Optional[list[PydanticObjectId]] = []
+    created_at: Optional[datetime]
     start: Optional[datetime]
     end: Optional[datetime]
 
