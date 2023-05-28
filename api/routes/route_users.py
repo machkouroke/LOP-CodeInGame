@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordRequestForm
+from starlette.websockets import WebSocket
 from werkzeug.exceptions import BadRequest
 
 from api import verify_password
@@ -51,6 +52,7 @@ def get_owned_exos(user=Depends(get_current_user), db=Depends(get_db)):
         'success': True,
         'all': user.get_own_exos(database=db)
     }
+
 
 @router.websocket('/ws')
 async def websocket_endpoint(websocket: WebSocket):
