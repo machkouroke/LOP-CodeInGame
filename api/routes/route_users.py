@@ -19,19 +19,25 @@ router = APIRouter()
 
 @router.post('/participate', summary='Participate to a competition')
 def participate(exoId: ExoId, user=Depends(get_current_user), db=Depends(get_db)):
-    exo = Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(exoId.exo_id)})
-    if exo is None:
+    try:
+        exo = Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(exoId.exo_id)})
+        if exo is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"L'exercice n'existe pas"
+            )
+        user.participate(exo)
+        return {
+            'success': True,
+            # 'data': f'{exo_id}',
+            # 'user': user
+            'data': 'Vous etes ajoutes a la competition'
+        }
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"L'exercice n'existe pas"
+            detail=f"Une erreur est survenue: {e}",
         )
-    user.participate(exo)
-    return {
-        'success': True,
-        # 'data': f'{exo_id}',
-        # 'user': user
-        'data': 'Vous etes ajoutes a la competition'
-    }
 
 
 @router.get('/exos', summary='Get all exos for the connected user')

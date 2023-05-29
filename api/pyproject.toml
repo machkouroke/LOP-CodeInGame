@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["machkouroke <machkour20.mo1@gmail.com>"]
 readme = "README.md"
-packages = [{include = "lop_codeingame"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
