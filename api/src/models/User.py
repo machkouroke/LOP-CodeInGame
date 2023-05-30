@@ -13,9 +13,7 @@ from api.src.utilities.utility_function import get_keys
 from api.utilities.utilities_func import field
 
 
-class UserAuth(BaseModel):
-    mail: str
-    password: str
+
 
 
 

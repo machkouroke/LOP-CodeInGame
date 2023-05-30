@@ -1,8 +1,5 @@
-from typing import Annotated, List
-
 import uvicorn
-from anyio.streams import file
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import route_users, route_exos, route_login, route_cli
@@ -14,15 +11,14 @@ app = FastAPI()
 def home():
     return {"Hello": "World"}
 
+
 @app.post('/lopsubmit')
 async def lopsubmit(files: UploadFile):
-
     print(files)
     return {
 
-         'hello':1
+        'hello': 1
     }
-
 
 
 app.include_router(route_users.router, prefix='/users')
@@ -39,4 +35,4 @@ app.add_middleware(
 )
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
+    uvicorn.run("app:app", port=8000, reload=True)

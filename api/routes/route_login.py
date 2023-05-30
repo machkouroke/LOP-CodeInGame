@@ -6,7 +6,8 @@ from api.dependencies.db import get_db
 from api.dependencies.user import get_current_user, oauth2_scheme
 from api.src.authentication.jwt_encode import encode_auth_token
 from api.src.models.BlackListToken import BlacklistToken
-from api.src.models.User import UserAuth, User, Student, Teacher, UserAdd
+from api.src.models.DTO import UserAuth
+from api.src.models.User import  User, Student, Teacher, UserAdd
 
 router = APIRouter()
 

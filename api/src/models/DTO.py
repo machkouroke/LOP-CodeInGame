@@ -1,4 +1,5 @@
 import inspect
+from datetime import datetime
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -14,3 +15,12 @@ class FormModel(BaseModel):
         for prop in properties:
             getattr(self, prop)
         return jsonable_encoder(self, exclude=to_exclude)
+
+
+class ExoStart(FormModel):
+    start: datetime
+    end: datetime
+
+class UserAuth(FormModel):
+    mail: str
+    password: str

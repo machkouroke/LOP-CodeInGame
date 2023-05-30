@@ -6,10 +6,10 @@ from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel
 
-from api.src.models.FormModel import FormModel
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
+from api.utilities.utilities_func import field
 
 
 class ExoId(BaseModel):
@@ -31,10 +31,7 @@ class ExoToAdd(BaseModel):
         return jsonable_encoder(self, exclude=to_exclude)
 
 
-class ExoStart(FormModel):
-    id: str
-    start: Optional[datetime]
-    end: Optional[datetime]
+
 
 
 class Exercise(Model):
@@ -55,6 +52,8 @@ class Exercise(Model):
             return exercise
         else:
             return None
+
+
 
     def save(self, owner_name):
         self.owner_name = owner_name
@@ -79,3 +78,12 @@ class Exercise(Model):
         self.__init__(**new_data)
         self.id = PydanticObjectId(new_data['id'])
         self.database = database
+
+    @field("status")
+    def get_status(self):
+        if self.start is None or datetime.now() < self.start:
+            return "Not Started"
+        elif self.start < datetime.now() < self.end:
+            return "In Progress"
+        else:
+            return "Finished"
