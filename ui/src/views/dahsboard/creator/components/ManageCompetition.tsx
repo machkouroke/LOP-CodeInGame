@@ -14,6 +14,7 @@ import React from "react";
 
 import DateSelector from "./DateSelector";
 import WaitView from "./WaitView";
+import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
 
 export default function ManageCompetition(props: { competition: Competition }) {
 
@@ -25,10 +26,14 @@ export default function ManageCompetition(props: { competition: Competition }) {
 
     return (
         <Card justifyContent='center'  alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
-            <Text color={textColor} fontSize='xl' fontWeight='600'>
+            <Text color={textColor} fontSize='xl' fontWeight='600' mb={'10px'}>
                 {competition.name}
             </Text>
-
+            <SmoothBox bg={"#2831a0"}>
+                <b>Code</b>: <Text >
+                {competition.id}
+            </Text>
+            </SmoothBox>
             <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
                 <Flex flexDirection='column' mt='28px' width={"100%"}>
                         {false && <WaitView/>}

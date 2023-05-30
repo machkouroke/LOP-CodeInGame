@@ -92,7 +92,8 @@ export default function CompetitionCard(props: {
                             }}
                             fontSize='12px'>
 
-                            {bidders.length > 0 ? bidders.map((avt, key) => <Avatar key={key} name={"Machkour Oke"}/>) :
+                            {bidders.length > 0 ? bidders.map((avt, key) => <Avatar key={key} name={"Machkour Oke"}
+                                                                                    src={"https://picsum.photos/200"}/>) :
                                 <SmoothBox bg={"rgba(44,54,205,0.67)"}>Aucun Participants</SmoothBox>}
                         </AvatarGroup>
                     </Flex>

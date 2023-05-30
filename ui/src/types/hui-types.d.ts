@@ -56,6 +56,7 @@ declare global {
         experience?: number,
         nbr_participation?: number,
         Type?: string,
+        rank?: number,
     }
 
     interface CompetitionSchedule {

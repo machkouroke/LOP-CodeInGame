@@ -18,13 +18,16 @@ import CountDown from "../../../components/CountDown/CountDown";
 import inProgress from "../../../mocks/Competition";
 import Description from "./components/Description";
 import moment from "moment";
+import {useLocation} from "react-router-dom";
 
 const moment1 = moment("2023-05-28T05:20:00");
 const moment2 = moment("2023-05-28T05:22:00");
 export default function WaitRoom() {
     // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-
+    const location: any = useLocation()
+    const competition = location.state.competition
+    console.log("competition",competition)
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
             {/* Main Fields */}

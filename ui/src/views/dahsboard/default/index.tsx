@@ -29,7 +29,7 @@ export default function MainDashboard() {
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
 
     return (
-        <Box mt={{base: '130px'}} pt={{base: '130px', md: '80px', xl: '80px'}}>
+        <Box mt={{base: '130px'}} pt={{base: '10px', md: '80px', xl: '80px'}} mx={{base: '30px', lg: '180px'}}>
             <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb='20px'>
                 <div></div>
                 <Text fontSize={"30px"} fontWeight={"1000"} textAlign={"center"}>
@@ -83,7 +83,7 @@ export default function MainDashboard() {
                         />
                     }
                     name='Classement dans la filière'
-                    value='154'
+                    value={user.rank}
                 />
 
 

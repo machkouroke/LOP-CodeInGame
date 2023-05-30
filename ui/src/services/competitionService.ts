@@ -1,4 +1,3 @@
-
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {BASE_URL} from "../config";
 
@@ -24,16 +23,34 @@ export const competitionApi = createApi({
                 method: 'POST',
                 body: data,
             }),
-             invalidatesTags: [{ type: 'Competition', id: 'LIST' }],
+            invalidatesTags: [{type: 'Competition', id: 'LIST'}],
 
         }),
         getTeachersCompetitions: builder.query({
             query: () => ({
                 url: `/users/own_exos`,
             }),
-            providesTags: (result) => [{ type: 'Competition', id: 'LIST' }],
+            providesTags: (result) => [{type: 'Competition', id: 'LIST'}],
+        }),
+        participate: builder.mutation({
+            query: (exo_id: string) => ({
+                url: `/users/participate`,
+                method: 'POST',
+                body: {exo_id},
+            })
+        }),
+        getCompetitions: builder.query({
+            query: (competition_id: string) => ({
+                url: `/exos/${competition_id}`,
+            })
         })
+
     })
 })
 
-export const {useAddCompetitionMutation, useGetTeachersCompetitionsQuery} = competitionApi
+export const {
+    useAddCompetitionMutation,
+    useGetTeachersCompetitionsQuery,
+    useParticipateMutation,
+    useGetCompetitionsQuery
+} = competitionApi

@@ -39,7 +39,7 @@ ReactDOM.render(
                             return  <Route path={route.fullpath}  component={route.component} key={index}/>
                         })}
 
-                        <Redirect from='/' to='/dashboard'/>
+                        <Redirect from='/' to='dashboard'/>
                     </Switch>
                 </BrowserRouter>
             </React.StrictMode>

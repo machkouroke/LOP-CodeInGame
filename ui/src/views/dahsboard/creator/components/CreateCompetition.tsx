@@ -34,7 +34,6 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
 
     const brandStars = useColorModeValue("brand.500", "brand.400");
     const submitForm = (data: CompetitionPost) => {
-        console.log(data)
         try {
             addCompetition(data)
                 .unwrap()

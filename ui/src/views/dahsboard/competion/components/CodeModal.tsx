@@ -7,19 +7,29 @@ import {
     FormLabel,
     Input,
     Link,
-    Select,
+    Select, Spinner,
     Text,
     useColorModeValue
 } from '@chakra-ui/react';
 
 // Assets
 
-import React from "react";
+import React, {useState} from "react";
 import Card from "../../../../components/card/Card";
+import {useForm} from "react-hook-form";
+import {registerUser} from "../../../../thunks/register";
+import {useAddCompetitionMutation, useParticipateMutation} from "../../../../services/competitionService";
+import {useDispatch} from "react-redux";
+import {next} from "../../../../slices/navigation";
+import {useHistory} from "react-router-dom";
+import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
 
 export default function CodeModal(props: { [x: string]: any }) {
     const {...rest} = props;
-    const textColor = useColorModeValue('secondaryGray.900', 'white');
+    const [participate, {isLoading}] = useParticipateMutation()
+    const dispatch = useDispatch()
+    const history = useHistory()
+
     let mainText = useColorModeValue('black', 'white');
 
     let navbarFilter = 'none';
@@ -27,12 +37,33 @@ export default function CodeModal(props: { [x: string]: any }) {
     let navbarShadow = 'none';
     let navbarBg = useColorModeValue('#f4f7fe', '#1e2647');
     let navbarBorder = 'transparent';
-    let secondaryMargin = '0px';
-    let paddingX = '15px';
-    let gap = '0px';
+    const {register, handleSubmit} = useForm()
+    const [errorMessage, setErrorMessage] = useState(null)
 
 
-    const brandStars = useColorModeValue("brand.500", "brand.400");
+    const submitForm = (data: { exo_id: string }) => {
+        try {
+            participate(data.exo_id)
+                .unwrap()
+                .then((res) => {
+
+                    setErrorMessage(null)
+                    history.push('/competition/waitroom', {competition: data.exo_id})
+                    // dispatch(next({
+                    //     currentPath: '/competition',
+                    //     nextPath: '/competition/waitroom',
+                    //     history: history
+                    // }))
+                })
+                .catch((e) => {
+                    console.log(e)
+                    setErrorMessage(e)
+                })
+        } catch (e: any) {
+            setErrorMessage(e)
+        }
+
+    }
     // Chakra Color Mode
     return (
         <Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
@@ -58,36 +89,58 @@ export default function CodeModal(props: { [x: string]: any }) {
             </Box>
             <Flex flexDirection={{base: 'column', lg: 'row'}} px="10px">
                 <Flex flexDirection='column' mt='28px' width={"100%"}>
-                    <FormControl>
+                    <form onSubmit={handleSubmit(submitForm)}>
+                        <FormControl>
 
 
-                        <Input
-                            isRequired={true}
-                            variant='auth'
-                            fontSize='sm'
-                            ms={{base: "0px", md: "0px"}}
-                            type='email'
-                            placeholder='ABCDE95'
-                            mb='24px'
-                            fontWeight='500'
-                            size='lg'
-                        />
+                            <Input
+                                isRequired={true}
+                                variant='auth'
+                                fontSize='sm'
+                                ms={{base: "0px", md: "0px"}}
+                                type='text'
+                                placeholder='ABCDE95'
+                                mb='24px'
+                                fontWeight='500'
+                                size='lg'
+                                {...register("exo_id")}
+                            />
+                            {errorMessage &&
+                                <SmoothBox
+                                    bg='#2c36cd'
+                                    mb={"10px"}
 
+                                    textAlign={"center"}
 
-                        <Button
-                            fontSize='sm'
-                            variant='brand'
-                            fontWeight='500'
-                            w='100%'
-                            h='50'
-                            mb='24px'>
-                            Créer
-                        </Button>
-                    </FormControl>
+                                    color='white'>
+                                    Une erreur est survenue
+                                </SmoothBox>
+                            }
+
+                            <Flex alignContent={"center"}>
+
+                                <Button
+                                    type='submit'
+                                    fontSize='sm'
+                                    variant='brand'
+                                    fontWeight='500'
+                                    w='100%'
+                                    h='50'
+                                    mb='24px'>
+                                    Réjoindre
+                                </Button>
+                                {isLoading &&
+                                    <Spinner mt={"5px"} ml={"20px"} size='lg'
+                                    />}
+                            </Flex>
+                        </FormControl>
+
+                    </form>
                 </Flex>
             </Flex>
         </Card>
 
 
-    );
+    )
+        ;
 }
