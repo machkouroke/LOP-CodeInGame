@@ -1,0 +1,46 @@
+# This script deploys your website automatically
+name: Heroku deployment
+
+# Only trigger this script when you push to the master branch
+on:
+  push:
+    branches: main
+
+# Specify the tasks to run when this script gets triggered
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # Download our master branch
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_DB_NAME: ${{ secrets.DB_NAME }}
+          envkey_DB_TEST_NAME: ${{ secrets.DB_TEST_NAME }}
+          envkey_MONGO_URL: ${{ secrets.MONGO_URL }}
+          envkey_MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+          envkey_MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+          envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          envkey_GCLOUD_BUCKET: ${{ secrets.GCLOUD_BUCKET }}
+          envkey_GCLOUD_SERVICE_KEY_JSON: ${{ secrets.GCLOUD_SERVICE_KEY_JSON }}
+          directory: ./api
+      # Build and push Docker image to Heroku
+      - name: Build and Push Docker image on Heroku
+        working-directory: ./api
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
+      - name: Release Docker image on Heroku
+        working-directory: ./api
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a ${{secrets.HEROKU_APP_NAME }} web
