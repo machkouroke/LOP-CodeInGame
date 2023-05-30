@@ -32,9 +32,11 @@ jobs:
                     envkey_GCLOUD_BUCKET: ${{ secrets.GCLOUD_BUCKET }}
                     envkey_GCLOUD_SERVICE_KEY_JSON: ${{ secrets.GCLOUD_SERVICE_KEY_JSON }}
                     directory: ./api
+                    
+            
             -   name: Setup tmate session
                 if: success() || failure()
-                uses: mxschmitt/action-tmate@v3
+                uses: lhotari/action-upterm@v1
             # Build and push Docker image to Heroku
             -   name: Build and Push Docker image on Heroku
                 working-directory: ./api
