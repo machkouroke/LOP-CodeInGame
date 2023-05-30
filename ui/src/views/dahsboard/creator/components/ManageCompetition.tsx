@@ -5,6 +5,8 @@ import {
     Text,
     useColorModeValue
 } from '@chakra-ui/react';
+import Modal from "../../../../components/Modal/Modal";
+
 // Custom components
 import Card from 'components/card/Card';
 
@@ -15,35 +17,48 @@ import React from "react";
 import DateSelector from "./DateSelector";
 import WaitView from "./WaitView";
 import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
+import competition from "../../../../mocks/Competition";
 
-export default function ManageCompetition(props: { competition: Competition }) {
+export default function ManageCompetition(props: {
+    isOpenManage: boolean,
+    selected: Competition | null,
+    onCloseManage: () => void,
+    isFetching: boolean
+}) {
 
-    const {competition, ...rest} = props;
+    const {
+        isOpenManage,
+        selected,
+        onCloseManage,
+        isFetching, ...rest
+    } = props;
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
 
 
-
     return (
-        <Card justifyContent='center'  alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
-            <Text color={textColor} fontSize='xl' fontWeight='600' mb={'10px'}>
-                {competition.name}
-            </Text>
-            <SmoothBox bg={"#2831a0"}>
-                <b>Code</b>: <Text >
-                {competition.id}
-            </Text>
-            </SmoothBox>
-            <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
-                <Flex flexDirection='column' mt='28px' width={"100%"}>
-                        {false && <WaitView/>}
+        <Modal isOpen={isOpenManage} onClose={onCloseManage} size={selected?.status !== "Not Scheduled" && "4xl"}>
 
-                        {true && <DateSelector />}
+            <Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
+                <Text color={textColor} fontSize='xl' fontWeight='600' mb={'10px'}>
+                    {selected?.name}
+                </Text>
+                <SmoothBox w={"100%"} bg={"#2831a0"}>
+                    <b>Code Exercice</b> <Text>
+                    {selected?.id}
+                </Text>
+                </SmoothBox>
+                <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
+                    <Flex flexDirection='column' mt='28px' width={"100%"}>
+                        {selected?.status !== "Not Scheduled" && <WaitView competition={selected}/>}
+
+                        {selected?.status === "Not Scheduled" && <DateSelector competition={selected}/>}
 
 
-
+                    </Flex>
                 </Flex>
-            </Flex>
-        </Card>
+            </Card>
+        </Modal>
+
     );
 }

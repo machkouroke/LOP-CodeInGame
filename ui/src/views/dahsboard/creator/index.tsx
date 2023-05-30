@@ -1,5 +1,5 @@
 import React from 'react';
-
+import classnames from 'classnames'
 // Chakra imports
 import {
     Box,
@@ -31,17 +31,18 @@ import moment from "moment/moment";
 
 export default function CreatorBoard() {
     const user = useSelector(getUserInfo);
-    const {data: competitions, isLoading, isError, error} = useGetTeachersCompetitionsQuery('');
+    const {data: competitions, isLoading, isError, error, isFetching} = useGetTeachersCompetitionsQuery('');
     const {isOpen: isOpenCreation, onOpen: onOpenCreation, onClose: onCloseCreation} = useDisclosure()
     const {isOpen: isOpenManage, onOpen: onOpenManage, onClose: onCloseManage} = useDisclosure()
-    const [selected, setSelected] = React.useState<Competition | null>(null);
+    const [selected, setSelected] = React.useState<string | null>(null);
 
     const content = () => {
         if (isLoading) {
             return <Spinner mt={"5px"} ml={"20px"} size='lg'
             />
         } else {
-            const {all} = competitions as { all: Competition[] }
+            const all = competitions as Competition[]
+
             return all.map((item, index) => (
                 <CompetitionCard
                     hoverable={true}
@@ -51,10 +52,13 @@ export default function CreatorBoard() {
                     image={item.image}
                     timeleft={moment(item.created_at).format('DD/MM/YYYY')}
                     onClick={() => {
-                        setSelected(item);
+                        setSelected(item.id);
                         onOpenManage();
                     }}
                     download='#'
+                    className={classnames({
+                        loading: isFetching
+                    })}
                 />))
 
         }
@@ -66,9 +70,12 @@ export default function CreatorBoard() {
             <Modal isOpen={isOpenCreation} onClose={onCloseCreation}>
                 <CreateCompetition/>
             </Modal>
-            <Modal isOpen={isOpenManage} onClose={onCloseManage} size={"4xl"}>
-                <ManageCompetition competition={selected}/>
-            </Modal>
+            <ManageCompetition
+                isOpenManage={isOpenManage}
+                selected={competitions?.find((item: Competition) => item.id === selected) || null}
+                onCloseManage={onCloseManage}
+                isFetching={isFetching}
+            />
 
             <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
                 {/* Main Fields */}

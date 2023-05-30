@@ -13,26 +13,22 @@ const moment1 = moment();
 const moment2 = moment("2023-05-28T05:30:00");
 
 // @ts-ignore
-console.log("test", getTimeRemaining(moment2, moment1));
 
 
 const Countdown = (props: { startDate: moment.Moment, endDate: moment.Moment, name: string }) => {
     const {startDate, endDate, name} = props;
     const [countdownData, setCountdownData] = useState<moment.Duration>(
-        getTimeRemaining(endDate, moment()));
+        getTimeRemaining(endDate, startDate));
     useEffect(() => {
         if (moment().isAfter(startDate) && moment().isBefore(endDate)) {
             const updateCountdownData = () => {
-                    setCountdownData(getTimeRemaining(endDate, moment()));
+                setCountdownData(getTimeRemaining(endDate, moment()));
 
             }
 
-
-            const interval = setInterval(updateCountdownData, 1000);
-
-            return () => clearInterval(interval);
+            updateCountdownData();
         }
-    }, [startDate, endDate]);
+    }, [startDate, endDate, moment()]);
     return (
         <div>
 

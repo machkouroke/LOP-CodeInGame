@@ -34,10 +34,7 @@ def participate(exoId: ExoId, user=Depends(get_current_user), db=Depends(get_db)
 
 @router.get('/exos', summary='Get all exos for the connected user')
 def get_all_exos(user=Depends(get_current_user), db=Depends(get_db)):
-    return {
-        'success': True,
-        'all': user.get_all_exos(database=db)
-    }
+    return user.get_all_exos(database=db)
 
 
 @router.get('/own_exos', summary='Get exos created by current user')
@@ -47,10 +44,7 @@ def get_owned_exos(user=Depends(get_current_user), db=Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Vous n'êtes pas autorisé à faire cette operation",
         )
-    return {
-        'success': True,
-        'all': user.get_own_exos(database=db)
-    }
+    return user.get_own_exos(database=db)
 
 
 @router.websocket('/ws')

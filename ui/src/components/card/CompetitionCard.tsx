@@ -17,6 +17,7 @@ export default function CompetitionCard(props: {
     download: string;
     timeleft: string | number;
     to_come?: boolean;
+    className?: string;
 }) {
     const {
         image,
@@ -26,7 +27,8 @@ export default function CompetitionCard(props: {
         download,
         timeleft,
         hoverable,
-        onClick
+        onClick,
+        className
     } = props;
     const [like, setLike] = useState(false);
     const textColor = useColorModeValue('navy.700', 'white');
@@ -39,6 +41,7 @@ export default function CompetitionCard(props: {
             cursor: 'pointer'
         }}
               onClick={onClick}
+              className={className}
         >
             <Flex direction={{base: 'column'}} justifyContent={{base: 'space-between'}}>
 

@@ -23,15 +23,21 @@ export const competitionApi = createApi({
                 method: 'POST',
                 body: data,
             }),
-            invalidatesTags: [{type: 'Competition', id: 'LIST'}],
+            invalidatesTags: ['Competition'],
 
         }),
         getTeachersCompetitions: builder.query({
             query: () => ({
                 url: `/users/own_exos`,
             }),
-            providesTags: (result) => [{type: 'Competition', id: 'LIST'}],
+            providesTags: (result = [], error, arg) => {
+                return [
+                    'Competition',
+                    ...result.map((competition: Competition) => ({type: 'Competition', id: competition.id})),
+                ]
+            }
         }),
+
         participate: builder.mutation({
             query: (exo_id: string) => ({
                 url: `/users/participate`,
@@ -43,6 +49,18 @@ export const competitionApi = createApi({
             query: (competition_id: string) => ({
                 url: `/exos/${competition_id}`,
             })
+        }),
+        startCompetition: builder.mutation({
+            query: (data: CompetitionSchedule) => ({
+                url: `/exos/${data.id}/start`,
+                method: 'PATCH',
+                body: {
+                    start: data.startDate,
+                    end: data.endDate,
+                },
+            }),
+            invalidatesTags: (result, error, arg) => [{type: 'Competition', id: arg.id}],
+
         })
 
     })
@@ -52,5 +70,6 @@ export const {
     useAddCompetitionMutation,
     useGetTeachersCompetitionsQuery,
     useParticipateMutation,
-    useGetCompetitionsQuery
+    useGetCompetitionsQuery,
+    useStartCompetitionMutation
 } = competitionApi

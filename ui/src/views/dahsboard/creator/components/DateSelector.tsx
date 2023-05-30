@@ -3,22 +3,30 @@ import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import moment from "moment";
 import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
+import {globalStyles} from "../../../../theme/styles";
+import {useAddCompetitionMutation, useStartCompetitionMutation} from "../../../../services/competitionService";
+import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
-export default function DateSelector() {
+export default function DateSelector(props: { competition: Competition }) {
+    const {competition, ...rest} = props;
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const brandStars = useColorModeValue("brand.500", "brand.400");
     const {register, handleSubmit} = useForm()
+    const [startCompetition, {isLoading}] = useStartCompetitionMutation()
+    const startDate = competition.start ? moment(competition.start) : moment()
+    const endDate = competition.end ? moment(competition.end) : moment()
+    console.log(startDate)
+
     const [errorMessage, setErrorMessage] = useState(null)
     const [sucessMessage, setSucessMessage] = useState(null)
     const submitForm = (data: CompetitionSchedule) => {
-        const MINIMUM_TIME_BEFORE_START = 5 * 60 * 1000
         // @ts-ignore
         const startDate = moment(data.startDate + "T" + data.startTime, "YYYY-MM-DDTHH:mm:ss")
         const endDate = moment(data.endDate + "T" + data.endTime, "YYYY-MM-DDTHH:mm:ss")
 
 
-        if (moment.duration(startDate.diff(moment())).asMilliseconds() < MINIMUM_TIME_BEFORE_START) {
-            setErrorMessage("La date de départ doit être au moins 5 minutes après la date actuelle")
+        if (startDate.isBefore(moment())) {
+            setErrorMessage("La date de départ ne doit pas être avant l'heure actuelle, veuillez commencer au moins 1 minutes après l'heure actuelle")
             return
         }
         if (startDate.isAfter(endDate)) {
@@ -32,12 +40,24 @@ export default function DateSelector() {
 
         try {
             const competitionSchedule: CompetitionSchedule = {
-                startDate: startDate.format("YYYY-MM-DDTHH:mm:ss"),
-                endDate: endDate.format("YYYY-MM-DDTHH:mm:ss"),
-                competitionId: "OK"
+                startDate: startDate.add(5, "minutes").format("YYYY-MM-DDTHH:mm:ss"),
+                endDate: endDate.add(5, "minutes").format("YYYY-MM-DDTHH:mm:ss"),
+                id: competition.id
             }
+            startCompetition(competitionSchedule)
+                .unwrap()
+                .then((res) => {
+                    console.log(res)
+                    setSucessMessage(`Compétition démarrée avec succès, veuillez patienter quelque instants pour voir la salle de compétition`)
+                    setErrorMessage(null)
+                })
+                .catch((e) => {
+                    setErrorMessage(e)
+                })
+
         } catch (e: any) {
-            console.log(e)
+            setErrorMessage(e)
+            setSucessMessage(null)
         }
 
     }
@@ -65,7 +85,7 @@ export default function DateSelector() {
                         mr={'24px'}
                         fontWeight='500'
                         size='lg'
-                        defaultValue={moment().format("YYYY-MM-DD")}
+                        defaultValue={startDate.format("YYYY-MM-DD")}
                         {...register('startDate')}
                     />
                     <Input
@@ -79,7 +99,7 @@ export default function DateSelector() {
                         ml={'24px'}
                         fontWeight='500'
                         size='lg'
-                        defaultValue={moment().format("HH:mm")}
+                        defaultValue={startDate.format("HH:mm")}
                         {...register('startTime')}
                     />
                 </Flex>
@@ -104,7 +124,7 @@ export default function DateSelector() {
                         placeholder='Maze'
                         mb='24px'
                         mr={'24px'}
-                        defaultValue={moment().format("YYYY-MM-DD")}
+                        defaultValue={endDate.format("YYYY-MM-DD")}
                         fontWeight='500'
                         size='lg'
                         {...register('endDate')}
@@ -121,32 +141,21 @@ export default function DateSelector() {
                         mb='24px'
                         ml={'24px'}
                         {...register('endTime')}
-                        defaultValue={moment().format("HH:mm")}
+                        defaultValue={endDate.format("HH:mm")}
                         fontWeight='500'
                         size='lg'
                     />
                 </Flex>
             </div>
-            {errorMessage && (
 
-                    <SmoothBox bg={"#fdecea"}   p="10px" mb="24px" >
-                        <Text color='red.500' fontSize='sm' fontWeight='500' textAlign={"center"}>
-                            {errorMessage}
-                        </Text>
-                    </SmoothBox>
+            <FormBottom
+                errorMessage={errorMessage}
+                successMessage={sucessMessage}
+                isLoading={isLoading}
+                mainButtonMessage={"Lancer la compétition"}
+            />
 
-            )}
-            <Button
-                type='submit'
-                fontSize='sm'
-                variant='brand'
-                fontWeight='500'
-                bg={"#d54910"}
-                w='100%'
-                h='50'
-                mb='24px'>
-                Lancer la compétition
-            </Button>
+
         </form>
     )
 }

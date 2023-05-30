@@ -81,7 +81,9 @@ class Exercise(Model):
 
     @field("status")
     def get_status(self):
-        if self.start is None or datetime.now() < self.start:
+        if self.start is None:
+            return "Not Scheduled"
+        elif  datetime.now() < self.start:
             return "Not Started"
         elif self.start < datetime.now() < self.end:
             return "In Progress"

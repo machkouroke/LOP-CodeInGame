@@ -27,7 +27,6 @@ export default function WaitRoom() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const location: any = useLocation()
     const competition = location.state.competition
-    console.log("competition",competition)
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
             {/* Main Fields */}

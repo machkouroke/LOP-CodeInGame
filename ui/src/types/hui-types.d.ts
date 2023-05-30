@@ -25,6 +25,7 @@ declare global {
         start: Date;
         end: Date;
         created_at?: Date;
+        status?: "Not Scheduled" | "Not Started" | "In Progress" | "Finished";
         Type: string;
         id: string;
     }
@@ -64,7 +65,7 @@ declare global {
         startTime?: string,
         endTime?: string,
         endDate: string,
-        competitionId: string,
+        id: string,
     }
     interface CompetitionPost {
         name: string,

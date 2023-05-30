@@ -18,9 +18,8 @@ import Card from 'components/card/Card';
 
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
-import {registerUser} from "../../../../thunks/register";
 import {useAddCompetitionMutation} from "../../../../services/competitionService";
-import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
+import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
 export default function CreateCompetition(props: { [rest: string]: any }) {
     const {...rest} = props;
@@ -126,43 +125,12 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
                                 <option value="Exercice">Exercice</option>
                                 <option value="Compétition">Compétition</option>
                             </Select>
-                              {errorMessage &&
-                                    <SmoothBox
-                                        bg='#2c36cd'
-                                        mb={"10px"}
+                             <FormBottom errorMessage={errorMessage}
+                                         successMessage={sucessMessage}
+                                         mainButtonMessage={"Créer"}
+                                         isLoading={isLoading}
+                             />
 
-                                        textAlign={"center"}
-
-                                        color='white'>
-                                        {errorMessage}
-                                    </SmoothBox>
-                                }
-                                  {sucessMessage &&
-                                    <SmoothBox
-                                        bg='#2c36cd'
-                                        mb={"10px"}
-
-                                        textAlign={"center"}
-
-                                        color='white'>
-                                        {sucessMessage}
-                                    </SmoothBox>
-                                }
-                            <Flex alignContent={"center"}>
-                                <Button
-                                    type={"submit"}
-                                    fontSize='sm'
-                                    variant='brand'
-                                    fontWeight='500'
-                                    w='100%'
-                                    h='50'
-                                    mb='24px'>
-                                    Créer
-                                </Button>
-                                {isLoading &&
-                                    <Spinner mt={"5px"} ml={"20px"} size='lg'
-                                    />}
-                            </Flex>
 
                         </FormControl>
 
