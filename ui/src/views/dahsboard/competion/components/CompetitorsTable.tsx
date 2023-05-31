@@ -38,12 +38,7 @@ export default function CompetitorsTable(props: {
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
     const defaultData = tableData;
     useEffect(() => {
-
-        if (JSON.stringify(data) !== JSON.stringify(tableData)) {
-            console.log("setData")
-            setData([...tableData]);
-        }
-
+        setData([...tableData]);
     }, [tableData]);
     const columns = [
         columnHelper.accessor('name', {

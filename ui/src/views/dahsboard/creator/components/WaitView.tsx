@@ -23,8 +23,10 @@ function WaitView(props: {
     const [participants, setParticipants] = React.useState<any[]>([])
     const {lastJsonMessage, getWebSocket, sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exos/participants`, {
         share: true,
-        filter: (message) => {
-            return JSON.stringify(message.data) === JSON.stringify(participants)
+        filter: (message: {
+            data: string
+        }) => {
+            return JSON.stringify(JSON.parse(message.data)) !== JSON.stringify(participants)
         },
         onOpen: () => {
             console.log('Connexion WebSocket établie');
