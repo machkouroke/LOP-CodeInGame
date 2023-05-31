@@ -47,10 +47,4 @@ def get_owned_exos(user=Depends(get_current_user), db=Depends(get_db)):
     return user.get_own_exos(database=db)
 
 
-@router.websocket('/ws')
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_json()
-        await websocket.send_json({'message': 'Hello World'})
-        print(f"Message received from client: {data}")
+
