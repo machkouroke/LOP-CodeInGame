@@ -6,7 +6,7 @@ import Nft1 from "../assets/img/nfts/Nft1.png";
 import Nft2 from "../assets/img/nfts/Nft2.png";
 import Nft3 from "../assets/img/nfts/Nft3.png";
 
-const inProgress: Competition[] = [
+const inProgress: Exercise[] = [
     {
         id: '1',
         name: 'Problème des 8 reines',

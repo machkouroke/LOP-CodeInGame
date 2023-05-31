@@ -49,14 +49,9 @@ export default function CodeModal(props: { [x: string]: any }) {
 
                     setErrorMessage(null)
                     history.push('/competition/waitroom', {competition: data.exo_id})
-                    // dispatch(next({
-                    //     currentPath: '/competition',
-                    //     nextPath: '/competition/waitroom',
-                    //     history: history
-                    // }))
+
                 })
                 .catch((e) => {
-                    console.log(e)
                     setErrorMessage(e)
                 })
         } catch (e: any) {

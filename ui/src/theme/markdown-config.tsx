@@ -40,7 +40,6 @@ function MarkdownRender(props: { children: string }) {
         // @ts-ignore
 
         code({node, inline, className, children, ...props}) {
-            console.log({node, inline, className, children})
             const match = /language-(\w+)/.exec(className || "");
             return !inline && match ? (
                 <SyntaxHighlighter

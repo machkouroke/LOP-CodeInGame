@@ -37,7 +37,6 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
             addCompetition(data)
                 .unwrap()
                 .then((res) => {
-                    console.log(res)
                     setSucessMessage(  `ID: ${res.id_exercice}`)
                     setErrorMessage(null)
                 })

@@ -41,7 +41,7 @@ export default function CreatorBoard() {
             return <Spinner mt={"5px"} ml={"20px"} size='lg'
             />
         } else {
-            const all = competitions as Competition[]
+            const all = competitions as Exercise[]
 
             return all.map((item, index) => (
                 <CompetitionCard
@@ -72,7 +72,7 @@ export default function CreatorBoard() {
             </Modal>
             <ManageCompetition
                 isOpenManage={isOpenManage}
-                selected={competitions?.find((item: Competition) => item.id === selected) || null}
+                selected={competitions?.find((item: Exercise) => item.id === selected) || null}
                 onCloseManage={onCloseManage}
                 isFetching={isFetching}
             />

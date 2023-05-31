@@ -81,7 +81,6 @@ function Register() {
     const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
     const submitForm = (data: User) => {
-        console.log(data)
         // @ts-ignore
         dispatch(registerUser(data))
         setCredentials({

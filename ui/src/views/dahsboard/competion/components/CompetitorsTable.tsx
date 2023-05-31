@@ -1,9 +1,7 @@
 import {
     Avatar,
     Box,
-    Button,
     Flex,
-    Progress,
     Table,
     Tbody,
     Td,
@@ -21,18 +19,11 @@ import {
     SortingState,
     useReactTable
 } from '@tanstack/react-table';
-// Custom components  
 import * as React from 'react';
-// Assets 
+import {useEffect} from "react";
 
 
-type RowObj = {
-    name: string[];
-    artworks: number;
-    rating: number;
-};
-
-const columnHelper = createColumnHelper<RowObj>();
+const columnHelper = createColumnHelper<UserTable>();
 
 // const columns = columnsDataCheck;
 export default function CompetitorsTable(props: {
@@ -45,7 +36,15 @@ export default function CompetitorsTable(props: {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-    let defaultData = tableData;
+    const defaultData = tableData;
+    useEffect(() => {
+
+        if (JSON.stringify(data) !== JSON.stringify(tableData)) {
+            console.log("setData")
+            setData([...tableData]);
+        }
+
+    }, [tableData]);
     const columns = [
         columnHelper.accessor('name', {
             id: 'name',
@@ -75,8 +74,8 @@ export default function CompetitorsTable(props: {
                 </Flex>
             )
         }),
-        columnHelper.accessor('artworks', {
-            id: 'artworks',
+        columnHelper.accessor('experience', {
+            id: 'experience',
             header: () => (
                 <Text
                     justifyContent='space-between'
@@ -95,8 +94,8 @@ export default function CompetitorsTable(props: {
                 </Text>
             )
         }),
-        columnHelper.accessor('rating', {
-            id: 'rating',
+        columnHelper.accessor('rank', {
+            id: 'rank',
             header: () => (
                 <Text
                     justifyContent='space-between'
@@ -107,7 +106,7 @@ export default function CompetitorsTable(props: {
                 </Text>
             ),
             cell: (info) => (
-                 <Text
+                <Text
                     color={textColorSecondary}
                     fontSize='sm'
                     fontWeight='500'>

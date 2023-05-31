@@ -31,9 +31,6 @@ class ExoToAdd(BaseModel):
         return jsonable_encoder(self, exclude=to_exclude)
 
 
-
-
-
 class Exercise(Model):
     name: str
     langage: str
@@ -52,8 +49,6 @@ class Exercise(Model):
             return exercise
         else:
             return None
-
-
 
     def save(self, owner_name):
         self.owner_name = owner_name
@@ -83,9 +78,10 @@ class Exercise(Model):
     def get_status(self):
         if self.start is None:
             return "Not Scheduled"
-        elif  datetime.now() < self.start:
+        elif datetime.now() < self.start:
             return "Not Started"
         elif self.start < datetime.now() < self.end:
             return "In Progress"
         else:
             return "Finished"
+

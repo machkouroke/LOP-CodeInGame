@@ -17,11 +17,10 @@ import React from "react";
 import DateSelector from "./DateSelector";
 import WaitView from "./WaitView";
 import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
-import competition from "../../../../mocks/Competition";
 
 export default function ManageCompetition(props: {
     isOpenManage: boolean,
-    selected: Competition | null,
+    selected: Exercise | null,
     onCloseManage: () => void,
     isFetching: boolean
 }) {
@@ -50,7 +49,8 @@ export default function ManageCompetition(props: {
                 </SmoothBox>
                 <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
                     <Flex flexDirection='column' mt='28px' width={"100%"}>
-                        {selected?.status !== "Not Scheduled" && <WaitView competition={selected}/>}
+                        {selected?.status !== "Not Scheduled" &&
+                            <WaitView competition={selected} modalIsOpen={isOpenManage}/>}
 
                         {selected?.status === "Not Scheduled" && <DateSelector competition={selected}/>}
 

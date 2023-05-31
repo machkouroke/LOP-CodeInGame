@@ -6,7 +6,7 @@ import MarkdownRender from "../../../../theme/markdown-config";
 import moment from "moment";
 
 export default function Description(props: {
-                                        competition: Competition
+                                        competition: Exercise
                                     }
 ) {
     const {competition} = props;

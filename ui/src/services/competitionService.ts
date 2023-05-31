@@ -33,7 +33,7 @@ export const competitionApi = createApi({
             providesTags: (result = [], error, arg) => {
                 return [
                     'Competition',
-                    ...result.map((competition: Competition) => ({type: 'Competition', id: competition.id})),
+                    ...result.map((competition: Exercise) => ({type: 'Competition', id: competition.id})),
                 ]
             }
         }),

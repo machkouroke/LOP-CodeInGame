@@ -28,6 +28,10 @@ const Countdown = (props: { startDate: moment.Moment, endDate: moment.Moment, na
 
             updateCountdownData();
         }
+        else if (moment().isAfter(endDate)) {
+            setCountdownData(moment.duration(0));
+        }
+
     }, [startDate, endDate, moment()]);
     return (
         <div>
