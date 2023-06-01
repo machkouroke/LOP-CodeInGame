@@ -4,7 +4,7 @@ import {Button, Flex, FormControl, Spinner, useColorModeValue} from "@chakra-ui/
 
 export default function FormBottom(props: {
     errorMessage: string | null,
-    successMessage: string | null,
+    successMessage?: string | null,
     isLoading: boolean,
     children?: React.ReactNode,
     mainButtonMessage: string,

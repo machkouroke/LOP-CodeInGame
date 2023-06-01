@@ -28,6 +28,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {userLogin} from "../../../thunks/login";
 import SmoothBox from "../../../components/SmoothBox/SmoothBox";
+import FormBottom from "../../../components/BoxAlert/FormBottom";
 
 function SignIn() {
     const dispatch = useDispatch()
@@ -212,40 +213,11 @@ function SignIn() {
                                     </Text>
                                 </NavLink>
                             </Flex>
-                            {error &&
-                                    <SmoothBox
-                                        bg='#2c36cd'
-                                        mb={"10px"}
-
-                                        textAlign={"center"}
-
-                                        color='white'>
-                                        {error}
-                                    </SmoothBox>
-                                }
-
-                            <Flex alignContent={"center"}>
-                                <Button
-                                    _hover={
-                                        {
-                                            bg: "brandScheme.500",
-                                            color: "white"
-                                        }
-                                    }
-                                    type={"submit"}
-                                    fontSize='sm'
-                                    variant='brand'
-                                    fontWeight='500'
-                                    w='100%'
-                                    h='50'
-                                    mb='24px'>
-                                    Connecter
-                                </Button>
-                                {loading &&
-                                    <Spinner mt={"5px"} ml={"20px"} size='lg'
-                                    />}
-
-                            </Flex>
+                           <FormBottom errorMessage={error}
+                                         successMessage={""}
+                                         mainButtonMessage={"Connexion"}
+                                         isLoading={loading}
+                             />
 
                         </FormControl>
 
