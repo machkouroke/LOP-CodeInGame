@@ -2,6 +2,7 @@ import inspect
 from datetime import datetime
 from typing import Optional
 
+from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel
@@ -9,7 +10,7 @@ from pydantic import BaseModel
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
-from api.utilities.utilities_func import field
+from api.src.utilities.utility_function import field
 
 
 class ExoId(BaseModel):
@@ -43,12 +44,13 @@ class Exercise(Model):
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
+        print(database.Exercises.find_one(mask))
         if answer := database.Exercises.find_one(mask):
             exercise = Exercise(**get_keys(answer, list(Exercise.__fields__.keys())))
             exercise.database = database
             return exercise
         else:
-            return None
+            raise HTTPException(status_code=404, detail="Aucun exercice ne correspond à cet id")
 
     def save(self, owner_name):
         self.owner_name = owner_name

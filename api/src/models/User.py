@@ -5,12 +5,12 @@ from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
 from pydantic import BaseModel, Field, SecretStr
 
-from api import get_hashed_password
+from api.src.dependencies.auth import get_hashed_password
 from api.src.models.Exercise import Exercise
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
-from api.utilities.utilities_func import field
+from api.src.utilities.utility_function  import field
 
 
 

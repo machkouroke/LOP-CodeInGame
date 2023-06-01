@@ -3,8 +3,8 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, WebSocket
 from pymongo.database import Database
 
-from api.dependencies.db import get_db
-from api.dependencies.user import get_current_user
+from api.src.dependencies.db import get_db
+from api.src.dependencies.auth import get_current_user
 from api.src.models.DTO import ExoStart
 from api.src.models.Exercise import Exercise, ExoToAdd
 from api.src.models.User import Teacher, User

@@ -2,8 +2,8 @@ import os
 
 from fastapi import APIRouter, File, Depends
 
-from api.gcloud.gcloud import get_bucket
-from api.utilities.utilities_func import Firebase
+from api.src.gcloud.gcloud import get_bucket
+from api.src.utilities.utility_function  import Firebase
 
 router = APIRouter()
 

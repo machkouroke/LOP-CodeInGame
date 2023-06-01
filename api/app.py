@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routes import route_users, route_exos, route_login, route_cli
+from api.src.routes import route_users, route_exos, route_login, route_cli
 
 app = FastAPI()
 

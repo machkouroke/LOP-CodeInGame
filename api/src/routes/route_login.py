@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from werkzeug.exceptions import BadRequest
 
-from api import verify_password
-from api.dependencies.db import get_db
-from api.dependencies.user import get_current_user, oauth2_scheme
+from api.src.dependencies.auth import verify_password
+from api.src.dependencies.db import get_db
+from api.src.dependencies.auth import get_current_user, oauth2_scheme
 from api.src.authentication.jwt_encode import encode_auth_token
 from api.src.models.BlackListToken import BlacklistToken
 from api.src.models.DTO import UserAuth
-from api.src.models.User import  User, Student, Teacher, UserAdd
+from api.src.models.User import User, Student, Teacher, UserAdd
 
 router = APIRouter()
 
@@ -22,12 +22,11 @@ def class_retriever(data):
 async def create_user(to_add: UserAdd, db=Depends(get_db)):
     user_class = class_retriever(to_add)
     data = to_add.to_json()
-    data['exos']= []
-    data['experience']= 0
-    if to_add.Type == 'teacher': data['exos_owned'] = []
+    data['exos'] = []
+    data['experience'] = 0
+    if to_add.Type == 'teacher':
+        data['exos_owned'] = []
     user = user_class(database=db, **data)
-
-    # return user.to_json()
 
     if user_class.find_one_or_404(database=db, mask={"mail": user.mail}) is not None:
         raise HTTPException(
@@ -67,16 +66,14 @@ async def login(form_data: UserAuth, db=Depends(get_db)):
 
 @router.post('/logout')
 async def logout(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
-    blacklist_token = BlacklistToken(token=token, database=db)
-    blacklist_token.save()
     try:
-        # insert the token
+        blacklist_token = BlacklistToken(token=token, database=db)
+        blacklist_token.save()
         return {
-            'success': True,
-            'message': 'Successfully logged out.'
+            'detail': 'Déconnexion réussie'
         }
     except Exception as e:
-        raise HTTPException(500, 'Une erreur du serveur est survenue')
+        raise HTTPException(500, 'Une erreur du serveur est survenue') from e
 
 
 @router.get('/status', summary='Get details of currently logged in user')

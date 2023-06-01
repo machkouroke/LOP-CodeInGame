@@ -8,11 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.95.2"
-flask = "^2.3.2"
-flask-pymongo = "^2.3.0"
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
 python-dotenv = "^1.0.0"
-flask-bcrypt = "^1.0.1"
 passlib = "^1.7.4"
 python-multipart = "^0.0.6"
 sqlalchemy = "^2.0.15"

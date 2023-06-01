@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from starlette.websockets import WebSocket
 
-from api.dependencies.db import get_db
-from api.dependencies.user import get_current_user
+from api.src.dependencies.db import get_db
+from api.src.dependencies.auth import get_current_user
 from api.src.models.Exercise import Exercise, ExoId
 from api.src.models.objectid import PydanticObjectId
 
