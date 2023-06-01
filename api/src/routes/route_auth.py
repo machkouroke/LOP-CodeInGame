@@ -6,8 +6,8 @@ from api.src.dependencies.db import get_db
 from api.src.dependencies.auth import get_current_user, oauth2_scheme
 from api.src.authentication.jwt_encode import encode_auth_token
 from api.src.models.BlackListToken import BlacklistToken
-from api.src.models.DTO import UserAuth
-from api.src.models.User import User, Student, Teacher, UserAdd
+from api.src.models.DTO import UserAuth, UserAdd
+from api.src.models.User import User, Student, Teacher
 
 router = APIRouter()
 
@@ -76,6 +76,7 @@ async def logout(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
         raise HTTPException(500, 'Une erreur du serveur est survenue') from e
 
 
-@router.get('/status', summary='Get details of currently logged in user')
-async def get_status(user=Depends(get_current_user)):
-    return user
+@router.get('/status')
+async def get_status(user=Depends(get_current_user), db=Depends(get_db)):
+    user = User(**user, database=db)
+    return user.to_json(to_exclude={"database"})

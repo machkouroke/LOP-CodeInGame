@@ -2,34 +2,16 @@ import inspect
 from typing import Optional, Any, Annotated
 
 from fastapi.encoders import jsonable_encoder
-from flask_pymongo.wrappers import Database
 from pydantic import BaseModel, Field, SecretStr
+from pymongo.database import Database
 
 from api.src.dependencies.auth import get_hashed_password
 from api.src.models.Exercise import Exercise
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
 from api.src.utilities.utility_function import get_keys
-from api.src.utilities.utility_function  import field
+from api.src.utilities.utility_function import field
 
-
-
-
-
-
-
-class UserAdd(BaseModel):
-    name: str
-    surname: str
-    mail: str
-    password: str
-    Type: str = 'user'
-
-    def to_json(self, to_exclude: set = None) -> dict:
-        properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
-        for prop in properties:
-            getattr(self, prop)
-        return jsonable_encoder(self, exclude=to_exclude)
 
 
 class User(Model):
@@ -51,10 +33,10 @@ class User(Model):
     def get_n_participation(self):
         return len(self.exos)
 
-    @field("participated_exos")
+
     def participated_exos(self):
-        all= []
-        exos= self.get_all_exos(database=self.database)
+        all = []
+        exos = self.get_all_exos(database=self.database)
         for exo in exos:
             all.append({
                 'name': exo.name,
@@ -65,10 +47,44 @@ class User(Model):
 
     @field("rank")
     def get_rank(self):
-        user_sorted= sorted(User.find(database=self.database), key=lambda x: x.experience, reverse=True)
-        for i in range(len(user_sorted)):
-            if user_sorted[i].id== self.id:
-                return i+1
+        pipeline = [
+            {
+                '$addFields': {
+                    'nbr_participation': {
+                        '$size': '$exos'
+                    }
+                }
+            }, {
+                '$sort': {
+                    'experience': -1,
+                    'nbr_participation': -1,
+                    'name': 1
+                }
+            }, {
+                '$group': {
+                    '_id': '',
+                    'items': {
+                        '$push': '$$ROOT'
+                    }
+                }
+            }, {
+                '$unwind': {
+                    'path': '$items',
+                    'includeArrayIndex': 'items.rank'
+                }
+            }, {
+                '$match': {
+                    'items._id': self.id
+                }
+            }, {
+                '$project': {
+                    'items.rank': 1,
+                    '_id': 0
+                }
+            }
+        ]
+
+        return list(self.database.Users.aggregate(pipeline))[0]['items']['rank'] + 1
 
     def __eq__(self, other):
         return self.mail == other.mail
@@ -92,14 +108,12 @@ class User(Model):
 
     @classmethod
     def find(cls, database: Database) -> list:
-        all=[]
+        print('find')
+        all = []
         users = database.Users.find()
         for answer in users:
-            # answer['experience']= (answer['experience'])
-            # print(f"{type(answer['experience'])} {answer['name']}")
             user = User.return_user_by_type(answer)
             user.database = database
-            # user['database'] = database
             all.append(user)
         return all
 
@@ -118,7 +132,6 @@ class User(Model):
 
     def save(self):
         data = self.to_bson()
-        print(data)
         data["password"] = get_hashed_password(data["password"].get_secret_value())
         result = self.database.Users.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)

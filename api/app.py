@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.src.routes import route_users, route_exos, route_login, route_cli
+from api.src.routes import route_users, route_exos, route_auth, route_cli
 
 app = FastAPI()
 
@@ -23,7 +23,7 @@ async def lopsubmit(files: UploadFile):
 
 app.include_router(route_users.router, prefix='/users')
 app.include_router(route_exos.router, prefix='/exos')
-app.include_router(route_login.router, prefix='/auth')
+app.include_router(route_auth.router, prefix='/auth')
 app.include_router(route_cli.router, prefix='/cli')
 
 app.add_middleware(

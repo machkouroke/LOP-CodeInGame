@@ -44,7 +44,6 @@ class Exercise(Model):
 
     @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
-        print(database.Exercises.find_one(mask))
         if answer := database.Exercises.find_one(mask):
             exercise = Exercise(**get_keys(answer, list(Exercise.__fields__.keys())))
             exercise.database = database
