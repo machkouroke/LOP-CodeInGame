@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from werkzeug.exceptions import BadRequest
 
 from api.src.dependencies.auth import verify_password
 from api.src.dependencies.db import get_db
@@ -13,48 +12,40 @@ router = APIRouter()
 
 
 def class_retriever(data):
-    if not data.Type:
+    if not data.role:
         return User
-    return {"student": Student, "teacher": Teacher, "user": User}[data.Type]
+    return {"student": Student, "teacher": Teacher, "user": User}[data.role.value]
 
 
 @router.post('/register')
 async def create_user(to_add: UserAdd, db=Depends(get_db)):
-    user_class = class_retriever(to_add)
-    data = to_add.to_json()
-    data['exos'] = []
-    data['experience'] = 0
-    if to_add.Type == 'teacher':
-        data['exos_owned'] = []
-    user = user_class(database=db, **data)
-
-    if user_class.find_one_or_404(database=db, mask={"mail": user.mail}) is not None:
+    try:
+        user_class = class_retriever(to_add)
+        user = user_class(database=db, **to_add.dict())
+        if user_class.find_one(database=db, mask={"mail": user.mail}):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"L'email {user.mail} est déja utilisé")
+        user.save()
+        return {
+            "detail": {"auth_token": encode_auth_token(user.id)}
+        }
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"L'email {user.mail} est déja utilisé")
-    user.save()
-    return {
-        'success': True,
-        "message": f'{user.Type} {user.name} is created',
-        "data": {"auth_token": encode_auth_token(user.id), "user_id": str(user.id)}
-    }
-
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Une erreur du serveur est survenue: {e}"
+        )
 
 @router.post('/login')
 async def login(form_data: UserAuth, db=Depends(get_db)):
-    if not form_data.mail or not form_data.password:
-        raise BadRequest('mail or password is empty')
+
     user = User.find_one_or_404(database=db, mask={"mail": form_data.mail})
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email incorrect"
-        )
+
 
     if not verify_password(form_data.password, user.password.get_secret_value()):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect password"
+            detail="Mot de passe incorrect"
         )
     if auth_token := encode_auth_token(user.id):
         return {
@@ -62,6 +53,11 @@ async def login(form_data: UserAuth, db=Depends(get_db)):
             'message': 'Successfully logged in.',
             'auth_token': auth_token
         }
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Une erreur du serveur est survenue"
+        )
 
 
 @router.post('/logout')
@@ -78,5 +74,8 @@ async def logout(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
 
 @router.get('/status')
 async def get_status(user=Depends(get_current_user), db=Depends(get_db)):
-    user = User(**user, database=db)
-    return user.to_json(to_exclude={"database"})
+    try:
+        user = User(**user, database=db)
+        return user.dict(to_exclude={"database"})
+    except Exception as e:
+        raise HTTPException(500, 'Une erreur du serveur est survenue') from e

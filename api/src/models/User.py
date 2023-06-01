@@ -1,17 +1,18 @@
-import inspect
-from typing import Optional, Any, Annotated
+from typing import Optional, Any
 
-from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, Field, SecretStr
+from fastapi import HTTPException
+from pydantic import Field, SecretStr
 from pymongo.database import Database
+from starlette import status
 
 from api.src.dependencies.auth import get_hashed_password
-from api.src.models.Exercise import Exercise
+from api.src.enum.enums import ExerciseRelationKind, ROLE
+from api.src.models.DTO import ExerciseRelation
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
-from api.src.utilities.utility_function import get_keys
+from api.src.utilities.pipelines import pipelines
+from api.src.utilities.utility_function import get_keys, addToSet
 from api.src.utilities.utility_function import field
-
 
 
 class User(Model):
@@ -20,119 +21,76 @@ class User(Model):
     surname: str
     mail: str
     password: SecretStr
-    experience: Optional[float]
-    exos: Optional[list[PydanticObjectId]] = []
-    Type: str = 'user'
+    experience: float = 0
+    exercises: Optional[list[ExerciseRelation]] = []
+    role: ROLE = ROLE.USER
     database: Optional[Any] = None
 
     @field("fullname")
     def fullname(self):
-        return self.name + ' ' + self.surname
+        return f'{self.name} {self.surname}'
 
     @field("nbr_participation")
-    def get_n_participation(self):
-        return len(self.exos)
+    def get_number_of_subscription(self):
+        return len([exercise for exercise in self.exercises if exercise.kind == ExerciseRelationKind.SUBSCRIBER])
 
-
-    def participated_exos(self):
-        all = []
-        exos = self.get_all_exos(database=self.database)
-        for exo in exos:
-            all.append({
-                'name': exo.name,
-                'owner_name': exo.owner_name,
-                'published_year': exo.created_at.year
-            })
-        return all
+    def get_exercises(self, kind: ExerciseRelationKind = None) -> list[dict]:
+        if kind:
+            return [
+                self.database.Exercises.find_one({'_id': PydanticObjectId(exercise.exercise_id)})
+                for exercise in self.exercises if exercise.kind == kind
+            ]
+        else:
+            return [
+                self.database.Exercises.find_one({'_id': PydanticObjectId(exercise.exercise_id)})
+                for exercise in self.exercises
+            ]
 
     @field("rank")
     def get_rank(self):
-        pipeline = [
-            {
-                '$addFields': {
-                    'nbr_participation': {
-                        '$size': '$exos'
-                    }
-                }
-            }, {
-                '$sort': {
-                    'experience': -1,
-                    'nbr_participation': -1,
-                    'name': 1
-                }
-            }, {
-                '$group': {
-                    '_id': '',
-                    'items': {
-                        '$push': '$$ROOT'
-                    }
-                }
-            }, {
-                '$unwind': {
-                    'path': '$items',
-                    'includeArrayIndex': 'items.rank'
-                }
-            }, {
-                '$match': {
-                    'items._id': self.id
-                }
-            }, {
-                '$project': {
-                    'items.rank': 1,
-                    '_id': 0
-                }
-            }
-        ]
-
-        return list(self.database.Users.aggregate(pipeline))[0]['items']['rank'] + 1
+        return list(self.database.Users.aggregate(pipelines['get_rank']))[0]['items']['rank'] + 1
 
     def __eq__(self, other):
-        return self.mail == other.mail
+        return self.mail == other.mail and self.id == other.id
 
     def __hash__(self):
         return hash(self.mail)
 
     @staticmethod
-    def return_user_by_type(user: dict):
-        match user["Type"]:
-            case "user":
-                return User(**get_keys(user, list(User.__fields__.keys())))
-            case "student":
-                return Student(**get_keys(user, list(Student.__fields__.keys())))
-            case "teacher":
-                return Teacher(**get_keys(user, list(Teacher.__fields__.keys())))
+    def return_user_by_role(database: Database, user: dict):
+        match user["role"]:
+            case ROLE.USER:
+                return User(**get_keys(user, list(User.__fields__.keys())), database=database)
+            case ROLE.STUDENT:
+                return Student(**get_keys(user, list(Student.__fields__.keys())), database=database)
+            case ROLE.TEACHER:
+                return Teacher(**get_keys(user, list(Teacher.__fields__.keys())), database=database)
 
     @classmethod
     def all(cls, database: Database):
         return [User(**get_keys(user, list(User.__fields__.keys()))) for user in database.Users.find()]
 
     @classmethod
-    def find(cls, database: Database) -> list:
-        print('find')
-        all = []
-        users = database.Users.find()
-        for answer in users:
-            user = User.return_user_by_type(answer)
-            user.database = database
-            all.append(user)
-        return all
-
-    @classmethod
     def find_one_or_404(cls, database: Database, mask: dict):
-        answer = database.Users.find_one(mask)
-        if answer:
-            user = User.return_user_by_type(answer)
-            user.database = database
-            return user
+        if answer := database.Users.find_one(mask):
+            return User.return_user_by_role(user=answer, database=database)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Utilisateur non trouvé",
+            )
+    @classmethod
+    def find_one(cls, database: Database, mask: dict):
+        if result := database.Users.find_one(mask):
+            return User.return_user_by_role(user=result, database=database)
         else:
             return None
 
-    def get_password(self):
-        return self.password
 
     def save(self):
         data = self.to_bson()
         data["password"] = get_hashed_password(data["password"].get_secret_value())
+        data['role'] = data['role'].value
         result = self.database.Users.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
 
@@ -141,69 +99,55 @@ class User(Model):
 
     def update(self, data: dict):
         if "password" in data:
-            data["password"] = data["password"] = get_hashed_password(data["password"])
+            data["password"] = get_hashed_password(data["password"])
 
         self.database.Users.update_one({"_id": self.id},
                                        {"$set": data})
-        self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).to_json())
+        self.__init__(**User.find_one_or_404(self.database, {"_id": self.id}).dict())
 
     def addToSet(self, data: dict, database):
         database.Users.update_one(
             {'_id': self.id},
             {'$addToSet': data}
         )
-        new_data = User.find_one_or_404(database, {"_id": self.id}).to_json()
+        new_data = User.find_one_or_404(database, {"_id": self.id}).dict()
         self.__init__(**new_data)
         self.id = PydanticObjectId(new_data['id'])
         self.database = database
 
-    def participate(self, exo: Exercise):
-        data = {
-            'user': self.id,
-            'exo': exo.id,
-            'score': 0
-        }
-        self.database.Participations.insert_one(data)
-        self.database.Users.update_one({"_id": self.id}, {'$set': {'experience': self.experience + 20}})
-        self.addToSet({'exos': exo.id}, database=self.database)
-        exo.addToSet({'participators': self.id}, database=self.database)
-
-    def get_all_exos(self, database):
-        all = []
-        for exo_id in self.exos:
-            exo = Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
-            all.append(exo)
-        return all
+    def subscribe_to_exercise(self, exercise_id: PydanticObjectId):
+        data = ExerciseRelation(kind=ExerciseRelationKind.SUBSCRIBER, exercise_id=exercise_id)
+        addToSet(database=self.database,
+                 collection_name='Users',
+                 query={"_id": self.id},
+                 field='exercises',
+                 value={'exercises': data.dict()})
+        self.exercises += [data]
 
 
 class Student(User):
-    Type: str = 'student'
+    role: ROLE = ROLE.STUDENT
 
     @classmethod
     def all(cls, database):
-        users = database.Users.find({"Type": "student"})
+        users = database.Users.find({"role": ROLE.STUDENT.value})
         return [Student(**get_keys(user, list(Student.__fields__.keys()))) for user in users]
 
 
 class Teacher(User):
-    exos_owned: Optional[list[PydanticObjectId]] = []
-    Type: str = 'teacher'
+    role: ROLE = ROLE.TEACHER
 
-    def add_exo(self, exo_id: PydanticObjectId):
-        self.database.Users.update_one(
-            {'_id': self.id},
-            {'$addToSet': {'exos_owned': exo_id}}
-        )
-        self.exos_owned.append(exo_id)
+    def create_exercise(self, exercise_id: PydanticObjectId):
+        data = ExerciseRelation(kind=ExerciseRelationKind.CREATOR, exercise_id=exercise_id)
 
-    def get_own_exos(self, database):
-        all = []
-        for exo_id in self.exos_owned:
-            exo = Exercise.find_one_or_404(database=database, mask={'_id': exo_id})
-            all.append(exo)
-        return all
+        addToSet(database=self.database,
+                 collection_name='Users',
+                 query={"_id": self.id},
+                 field='exercises',
+                 value={'exercises': data.dict()})
+        self.exercises += [data]
 
     @classmethod
     def all(cls, database):
-        users = database.Users.find({"Type": "teacher"})
+        users = database.Users.find({"role": ROLE.TEACHER.value})
         return [Teacher(**get_keys(user, list(Teacher.__fields__.keys()))) for user in users]

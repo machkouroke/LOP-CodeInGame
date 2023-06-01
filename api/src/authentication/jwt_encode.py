@@ -2,31 +2,27 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 
-
 from api.config.settings import get_settings, Settings
 from api.src.models.objectid import PydanticObjectId
 
-
 settings: Settings = get_settings()
+
 
 def encode_auth_token(user_id: PydanticObjectId):
     """
     Generates the Auth Token
     :return: string
     """
-    try:
-        payload = {
-            'exp': datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
-            'iat': datetime.now(timezone.utc),
-            'sub': str(user_id)
-        }
-        return jwt.encode(
-            payload,
-            settings.SECRET_KEY,
-            algorithm=settings.ALGORITHM
-        )
-    except Exception as e:
-        return e
+    payload = {
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+        'iat': datetime.now(timezone.utc),
+        'sub': str(user_id)
+    }
+    return jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM
+    )
 
 
 def decode_auth_token(auth_token: str):
@@ -42,6 +38,3 @@ def decode_auth_token(auth_token: str):
         return 'Signature expired. Please log in again.'
     except jwt.InvalidTokenError:
         return 'Invalid token. Please log in again.'
-
-
-

@@ -1,6 +1,9 @@
 from datetime import timedelta
+from typing import Any
 
 from google.cloud.storage import Bucket
+from pymongo.database import Database
+
 
 def get_keys(dictionary: dict, keys: list) -> dict:
     keys += ["_id"]
@@ -29,6 +32,9 @@ def field(name: str):
         return wrapper
 
     return decorator
+
+def addToSet(database: Database, collection_name: str, query: dict, field: str, value: Any) -> None:
+    database[collection_name].update_one(query, {"$addToSet": {field: value}})
 
 
 class Firebase:

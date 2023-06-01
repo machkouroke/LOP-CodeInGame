@@ -1,58 +1,35 @@
-import inspect
 from datetime import datetime
-from typing import Optional
 
 from fastapi import HTTPException
-from fastapi.encoders import jsonable_encoder
 from flask_pymongo.wrappers import Database
-from pydantic import BaseModel
 
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId
-from api.src.utilities.utility_function import get_keys
 from api.src.utilities.utility_function import field
-
-
-class ExoId(BaseModel):
-    exo_id: str
-
-
-class ExoToAdd(BaseModel):
-    name: str
-    langage: str
-    Type: str
-
-    def to_json(self, to_exclude: set = None) -> dict:
-        if to_exclude is None:
-            to_exclude = set()
-        to_exclude.add("database")
-        properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
-        for prop in properties:
-            getattr(self, prop)
-        return jsonable_encoder(self, exclude=to_exclude)
+from api.src.utilities.utility_function import get_keys
 
 
 class Exercise(Model):
     name: str
     langage: str
     Type: str
-    owner_name: Optional[str]
-    participators: Optional[list[PydanticObjectId]] = []
-    created_at: Optional[datetime]
-    start: Optional[datetime]
-    end: Optional[datetime]
+    owner: PydanticObjectId
+    subscribers: list[PydanticObjectId] = []
+    created_at: datetime = datetime.now()
+    start: datetime = None
+    end: datetime = None
 
     @classmethod
-    def find_one_or_404(cls, database: Database, mask: dict):
+    def find_one_or_404(cls, database: Database, mask: dict) -> "Exercise":
         if answer := database.Exercises.find_one(mask):
             exercise = Exercise(**get_keys(answer, list(Exercise.__fields__.keys())))
             exercise.database = database
             return exercise
         else:
-            raise HTTPException(status_code=404, detail="Aucun exercice ne correspond à cet id")
+            raise HTTPException(status_code=404, detail="Exercise non trouvé")
 
-    def save(self, owner_name):
-        self.owner_name = owner_name
+    def save(self, owner: PydanticObjectId) -> None:
+        self.owner = owner
         data = self.to_bson()
         result = self.database.Exercises.insert_one(data)
         self.id = PydanticObjectId(result.inserted_id)
@@ -65,24 +42,13 @@ class Exercise(Model):
                                            {"$set": data})
         self.__init__(**Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json())
 
-    def addToSet(self, data: dict, database):
-        self.database.Exercises.update_one(
-            {'_id': self.id},
-            {'$addToSet': data}
-        )
-        new_data = Exercise.find_one_or_404(self.database, {"_id": self.id}).to_json()
-        self.__init__(**new_data)
-        self.id = PydanticObjectId(new_data['id'])
-        self.database = database
-
     @field("status")
-    def get_status(self):
+    def get_status(self) -> str:
         if self.start is None:
             return "Not Scheduled"
         elif datetime.now() < self.start:
             return "Not Started"
         elif self.start < datetime.now() < self.end:
             return "In Progress"
-        else:
-            return "Finished"
 
+        return "Finished"

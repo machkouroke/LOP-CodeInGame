@@ -22,6 +22,5 @@ class BlacklistToken(Model):
 
     @staticmethod
     def check_blacklist(auth_token, database):
-        # check whether auth token has been blacklisted
         res = database.Blacklist.find_one({'token': auth_token})
         return bool(res)

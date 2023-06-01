@@ -16,13 +16,12 @@ def home():
 async def lopsubmit(files: UploadFile):
     print(files)
     return {
-
         'hello': 1
     }
 
 
-app.include_router(route_users.router, prefix='/users')
-app.include_router(route_exos.router, prefix='/exos')
+# app.include_router(route_users.router, prefix='/users')
+# app.include_router(route_exos.router, prefix='/exercises')
 app.include_router(route_auth.router, prefix='/auth')
 app.include_router(route_cli.router, prefix='/cli')
 
