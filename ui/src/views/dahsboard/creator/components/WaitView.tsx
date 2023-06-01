@@ -87,7 +87,7 @@ function WaitView(props: {
                 {/*    endDate={endDate}*/}
                 {/*    name={"Début"}/>*/}
             </Flex>
-            <Flex alignItems={"flex-start"} justifyContent={"start"}>
+            <Flex alignItems={"flex-start"} justifyContent={"start"} mx={"10px"}>
                 <CompetitorsTable
                     tableData={participants}
                     title={"Participant ayant rejoint"}
