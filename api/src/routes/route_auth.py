@@ -33,14 +33,13 @@ async def create_user(to_add: UserAdd, db=Depends(get_db)):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Une erreur du serveur est survenue: {e}"
-        )
+            detail=f"Une erreur du serveur est survenue: {e}",
+        ) from e
+
 
 @router.post('/login')
 async def login(form_data: UserAuth, db=Depends(get_db)):
-
     user = User.find_one_or_404(database=db, mask={"mail": form_data.mail})
-
 
     if not verify_password(form_data.password, user.password.get_secret_value()):
         raise HTTPException(
@@ -49,9 +48,9 @@ async def login(form_data: UserAuth, db=Depends(get_db)):
         )
     if auth_token := encode_auth_token(user.id):
         return {
-            'success': True,
-            'message': 'Successfully logged in.',
-            'auth_token': auth_token
+            'detail': {
+                "auth_token": auth_token
+            }
         }
     else:
         raise HTTPException(

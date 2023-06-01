@@ -58,13 +58,14 @@ class User(Model):
 
     @staticmethod
     def return_user_by_role(database: Database, user: dict):
+        user['database'] = database
         match user["role"]:
-            case ROLE.USER:
-                return User(**get_keys(user, list(User.__fields__.keys())), database=database)
-            case ROLE.STUDENT:
-                return Student(**get_keys(user, list(Student.__fields__.keys())), database=database)
-            case ROLE.TEACHER:
-                return Teacher(**get_keys(user, list(Teacher.__fields__.keys())), database=database)
+            case ROLE.USER.value:
+                return User(**get_keys(user, list(User.__fields__.keys())))
+            case ROLE.STUDENT.value:
+                return Student(**get_keys(user, list(Student.__fields__.keys())))
+            case ROLE.TEACHER.value:
+                return Teacher(**get_keys(user, list(Teacher.__fields__.keys())))
 
     @classmethod
     def all(cls, database: Database):
