@@ -38,8 +38,7 @@ export default function CreatorBoard() {
 
     const content = () => {
         if (isLoading) {
-            return <Spinner mt={"5px"} ml={"20px"} size='lg'
-            />
+            return <Spinner mt={"5px"} ml={"20px"} size='lg' className={"center"}/>
         } else {
             const all = competitions as Exercise[]
 

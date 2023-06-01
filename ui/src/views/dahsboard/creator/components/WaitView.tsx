@@ -1,4 +1,3 @@
-import CountDown from "../../../../components/CountDown/CountDown";
 import CompetitorsTable from "../../competion/components/CompetitorsTable";
 import {Button, Flex, useColorModeValue} from "@chakra-ui/react";
 import React, {useEffect} from "react";
@@ -6,6 +5,7 @@ import moment from "moment";
 import {WEB_SOCKET_URL} from "../../../../config";
 import classnames from "classnames";
 import useWebSocket from "react-use-websocket";
+import CountDown from "../../../../components/CountDown/CountDown";
 
 
 function WaitView(props: {
@@ -62,9 +62,10 @@ function WaitView(props: {
     }, []);
 
     return (
-        <Flex alignItems={"center"} className={classnames({
+        <Flex alignItems={"start"} className={classnames({
             loading: isLoading,
-        })}>
+        })}
+        >
             <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"}>
                 <Button
                     bg={deleteButtonColor}
@@ -80,16 +81,23 @@ function WaitView(props: {
                 <CountDown
                     startDate={startDate}
                     endDate={endDate}
-                    name={"Début"}/>
+                />
+                {/*<CountDown*/}
+                {/*    startDate={startDate}*/}
+                {/*    endDate={endDate}*/}
+                {/*    name={"Début"}/>*/}
+            </Flex>
+            <Flex alignItems={"flex-start"} justifyContent={"start"}>
+                <CompetitorsTable
+                    tableData={participants}
+                    title={"Participant ayant rejoint"}
+                    style={{
+                        maxHeight: "500px",
+                        minWidth: "500px",
+                    }}
+                />
             </Flex>
 
-            <CompetitorsTable
-                tableData={participants}
-                title={"Participant ayant rejoint"}
-                style={{
-                    maxHeight: "500px",
-                }}
-            />
 
         </Flex>
     )

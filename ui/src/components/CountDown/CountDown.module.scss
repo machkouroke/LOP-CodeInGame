@@ -1,4 +1,5 @@
-.countdown-wrapper {
+
+.countdownWrapper {
   max-width: 800px;
   display: flex;
   flex-direction: row;
@@ -7,11 +8,9 @@
   margin: 40px 0;
 }
 
-.countdown-box {
-  background-color: #413c69;
+.countdownBox {
   font-size: 50px;
   font-weight: 700;
-  color: #dcd6f7;
   border-radius: 15px;
   width: 100px;
   height: 100px;
@@ -26,5 +25,4 @@
 .legend {
   font-size: 15px;
   font-weight: 1000;
-  color: #a6b1e1;
 }

@@ -5,9 +5,8 @@ import Footer from 'components/footer/FooterAdmin';
 import Navbar from 'components/navbar/NavbarAdmin';
 
 import {useState} from 'react';
-import {Redirect, Route, Switch} from 'react-router-dom';
-import CompetitionBoard from "../../views/dahsboard/competion";
-import WaitRoom from "../../views/dahsboard/waitroom";
+import {Route, Switch} from 'react-router-dom';
+
 import getRoutes from "../../routes";
 
 // Custom Chakra theme

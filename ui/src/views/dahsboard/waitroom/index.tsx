@@ -19,6 +19,7 @@ import inProgress from "../../../mocks/Competition";
 import Description from "./components/Description";
 import moment from "moment";
 import {useLocation} from "react-router-dom";
+import {useGetCompetitionsQuery} from "../../../services/competitionService";
 
 const moment1 = moment("2023-05-28T05:20:00");
 const moment2 = moment("2023-05-28T05:22:00");
@@ -27,6 +28,9 @@ export default function WaitRoom() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const location: any = useLocation()
     const competition = location.state.competition
+    const {data, isLoading, isError} = useGetCompetitionsQuery(competition)
+    console.log("competition", competition)
+    console.log("data", data)
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
             {/* Main Fields */}
@@ -56,12 +60,12 @@ export default function WaitRoom() {
                                     mb='5px'
                                     fontWeight='bold'
                                     me='14px'>
-                                    Problème des 8 reines
+                                    {competition.name}
                                 </Text>
                                 <Flex alignContent={"center"} justifyContent={"center"}>
                                     <CountDown startDate={moment1}
                                                   endDate={moment2}
-                                               name={"machkour"}/>
+                                               />
 
                                 </Flex>
                             </Card>

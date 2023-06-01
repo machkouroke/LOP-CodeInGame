@@ -21,6 +21,7 @@ import moment from "moment";
 export default function CompetitionBoard() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const user = useSelector(getUserInfo)
+    const lastSixCompetitions = user.exos.slice(0, 6)
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
             {/* Main Fields */}
