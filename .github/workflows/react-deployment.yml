@@ -13,31 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Create .env file for production
-        if: ${{ contains( github.event.ref, 'prod' ) }}
+
+      - name: Create .env
         uses: SpicyPizza/create-envfile@v1.3
         with:
-          envkey_REACT_APP_BASE_URL: ${{ secrets.BACKEND_PROD_URL}}
-          envkey_REACT_APP_PRODUCTION: true
-          directory: ./frontend
-      - name: Create .env file for development
-        if: ${{ contains( github.event.ref, 'main' ) }}
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_REACT_APP_IS_LOCAL: ${{ secrets.BACKEND_DEV_URL}}
-          envkey_REACT_APP_BASE_LOCAL: false
-          directory: ./frontend
+          envkey_REACT_APP_IS_LOCAL: false
+          envkey_REACT_APP_BASE_LOCAL: ${{ secrets.REACT_APP_IS_LOCAL}}
+          directory: ./ui
 
 
-      - name: Setup production environment
-        if: ${{ contains( github.event.ref, 'prod' ) }}
-        env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROD_PROJECT_ID }}
-        run: |
-          echo "Deployment to production environment"
-          echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID" >> $GITHUB_ENV
-      - name: Setup development environment
-        if: ${{ contains( github.event.ref, 'main' ) }}
+    
+      - name: Setup  environment
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
@@ -46,8 +32,11 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
+        working-directory: ./ui
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
+        working-directory: ./ui
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
+        working-directory: ./ui
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
