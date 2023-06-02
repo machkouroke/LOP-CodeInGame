@@ -31,8 +31,8 @@ export const userLogout = createAsyncThunk(
             return data
         } catch (error: any) {
             // return custom error message from API if any
-            if (error.response && error.response.data.message) {
-                return rejectWithValue(error.response.data.message)
+           if (error.response && error.response.data.detail) {
+                return rejectWithValue(error.response.data.detail)
             } else {
                 return rejectWithValue(error.message)
             }

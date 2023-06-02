@@ -119,6 +119,11 @@ class User(Model):
             )
         data = ExerciseRelation(kind=ExerciseRelationKind.SUBSCRIBER, exercise_id=exercise_id)
         addToSet(database=self.database,
+                 collection_name='Exercises',
+                 query={"_id": exercise_id},
+                 field='subscribers',
+                 value=self.id)
+        addToSet(database=self.database,
                  collection_name='Users',
                  query={"_id": self.id},
                  field='exercises',

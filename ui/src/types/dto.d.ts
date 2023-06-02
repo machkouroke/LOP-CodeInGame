@@ -8,7 +8,9 @@ declare global {
 
     }
     interface LoginResponse {
-        auth_token: string
+        detail: {
+            auth_token: string,
+        }
     }
 
     interface LoginRequest {
@@ -28,6 +30,6 @@ declare global {
     interface CompetitionPost {
         name: string,
         language: string,
-        Type: string,
+        kind: string,
     }
 }

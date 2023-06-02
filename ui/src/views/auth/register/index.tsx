@@ -28,6 +28,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
 import {userLogin} from "../../../thunks/login";
 import {registerUser} from "../../../thunks/register";
+import FormBottom from "../../../components/BoxAlert/FormBottom";
 
 function Register() {
     const dispatch = useDispatch()
@@ -65,7 +66,6 @@ function Register() {
     const history = useHistory()
 
     useEffect(() => {
-        console.log(success)
         if (success) {
         // @ts-ignore
 
@@ -88,6 +88,7 @@ function Register() {
             password: data.password
         })
     }
+    console.log(error)
     return (
         <DefaultAuth illustrationBackground={illustration} image={illustration}>
             <Flex
@@ -250,28 +251,11 @@ function Register() {
                                     />
                                 </InputRightElement>
                             </InputGroup>
-                            <Flex alignContent={"center"}>
-                                <Button
-                                    _hover={
-                                        {
-                                            bg: "brandScheme.500",
-                                            color: "white"
-                                        }
-                                    }
-                                    type={"submit"}
-                                    fontSize='sm'
-                                    variant='brand'
-                                    fontWeight='500'
-                                    w='100%'
-                                    h='50'
-                                    mb='24px'>
-                                    Créer un compte
-                                </Button>
-                                {loading &&
-                                    <Spinner mt={"5px"} ml={"20px"} size='lg'
-                                    />}
-
-                            </Flex>
+                             <FormBottom errorMessage={error}
+                                         successMessage={""}
+                                         mainButtonMessage={"Créer un compte"}
+                                         isLoading={loading}
+                             />
 
                         </FormControl>
 

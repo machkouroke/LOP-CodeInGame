@@ -18,7 +18,7 @@ function register(user_data: {
         surname: user_data.surname,
         mail: user_data.mail,
         password: user_data.password,
-        Type: "student"
+        role: "student"
     }
     const url = `${BASE_URL}/auth/register`
     return axios.post(url, body, option)
@@ -38,8 +38,8 @@ export const registerUser = createAsyncThunk(
             await register({name: name, surname: surname, mail: mail, password: password})
         } catch (error: any) {
             // return custom error message from backend if present
-            if (error.response && error.response.data.message) {
-                return rejectWithValue(error.response.data.message)
+            if (error.response && error.response.data.detail) {
+                return rejectWithValue(error.response.data.detail)
             } else {
                 return rejectWithValue(error.message)
             }

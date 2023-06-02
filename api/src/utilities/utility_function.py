@@ -38,6 +38,7 @@ def field(name: str):
 def handle_HTTP_Exception(func):
     async def wrapper(*args, **kwargs):
         try:
+            print("test")
             return await func(*args, **kwargs)
         except HTTPException as e:
             raise e

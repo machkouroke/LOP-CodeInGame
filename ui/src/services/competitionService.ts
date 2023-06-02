@@ -1,11 +1,12 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {BASE_URL} from "../config";
+import {ExerciseRelationKind} from "../types/enum";
 
 
-export const competitionApi = createApi({
-    reducerPath: 'competitionApi',
+export const exerciseApi = createApi({
+    reducerPath: 'exerciseApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${BASE_URL}`,
+        baseUrl: `${BASE_URL}/exercises`,
         prepareHeaders: (headers, {getState}) => {
             // @ts-ignore
             const token = getState().authentication.userToken
@@ -15,51 +16,50 @@ export const competitionApi = createApi({
             return headers
         },
     }),
-    tagTypes: ['Competition'],
+    tagTypes: ['Exercise'],
     endpoints: (builder) => ({
-        addCompetition: builder.mutation({
+        addExercise: builder.mutation({
             query: (data: CompetitionPost) => ({
-                url: '/exos/add',
+                url: '',
                 method: 'POST',
                 body: data,
             }),
-            invalidatesTags: ['Competition'],
+            invalidatesTags: ['Exercise'],
 
         }),
-        getTeachersCompetitions: builder.query({
-            query: () => ({
-                url: `/users/own_exos`,
+        getTeachersExercises: builder.query({
+            query: (user_id: string) => ({
+                url: `/${user_id}/users?kind=${ExerciseRelationKind.CREATOR}`,
             }),
             providesTags: (result = [], error, arg) => {
                 return [
-                    'Competition',
-                    ...result.map((competition: Exercise) => ({type: 'Competition', id: competition.id})),
+                    'Exercise',
+                    ...result.map((exercise: Exercise) => ({type: 'Exercise', id: exercise.id})),
                 ]
             }
         }),
 
-        participate: builder.mutation({
-            query: (exo_id: string) => ({
-                url: `/users/participate`,
-                method: 'POST',
-                body: {exo_id},
+        subscribe: builder.mutation({
+            query: (exercise_id: string) => ({
+                url: `/${exercise_id}/subscribe`,
+                method: 'PATCH',
             })
         }),
-        getCompetitions: builder.query({
-            query: (competition_id: string) => ({
-                url: `/exos/${competition_id}`,
+        getExercises: builder.query({
+            query: (exercise_id: string) => ({
+                url: `/exercises/${exercise_id}`,
             })
         }),
-        startCompetition: builder.mutation({
+        startExercises: builder.mutation({
             query: (data: CompetitionSchedule) => ({
-                url: `/exos/${data.id}/start`,
+                url: `/exercises/${data.id}/start`,
                 method: 'PATCH',
                 body: {
                     start: data.startDate,
                     end: data.endDate,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{type: 'Competition', id: arg.id}],
+            invalidatesTags: (result, error, arg) => [{type: 'Exercise', id: arg.id}],
 
         })
 
@@ -67,9 +67,9 @@ export const competitionApi = createApi({
 })
 
 export const {
-    useAddCompetitionMutation,
-    useGetTeachersCompetitionsQuery,
-    useParticipateMutation,
-    useGetCompetitionsQuery,
-    useStartCompetitionMutation
-} = competitionApi
+    useAddExerciseMutation,
+    useGetTeachersExercisesQuery,
+    useSubscribeMutation,
+    useGetExercisesQuery,
+    useStartExercisesMutation
+} = exerciseApi

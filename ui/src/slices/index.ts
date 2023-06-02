@@ -2,7 +2,7 @@ import nav from "./navigation";
 import auth from "./auth";
 import reg from "./registration";
 import {authApi} from "../services/authService";
-import {competitionApi} from "../services/competitionService";
+import {exerciseApi} from "../services/competitionService";
 
 
 export default {
@@ -11,5 +11,5 @@ export default {
     authentication: auth,
     registration: reg,
     [authApi.reducerPath]: authApi.reducer,
-    [competitionApi.reducerPath]: competitionApi.reducer,
+    [exerciseApi.reducerPath]: exerciseApi.reducer,
 };
