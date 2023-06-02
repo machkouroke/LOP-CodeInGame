@@ -18,13 +18,13 @@ import Card from 'components/card/Card';
 
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
-import {useAddCompetitionMutation} from "../../../../services/competitionService";
+import {useAddExerciseMutation} from "../../../../services/competitionService";
 import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
 export default function CreateCompetition(props: { [rest: string]: any }) {
     const {...rest} = props;
     const {register, handleSubmit} = useForm()
-    const [addCompetition, {isLoading}] = useAddCompetitionMutation()
+    const [addCompetition, {isLoading}] = useAddExerciseMutation()
     const [errorMessage, setErrorMessage] = useState(null)
     const [sucessMessage, setSucessMessage] = useState(null)
 
@@ -37,15 +37,15 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
             addCompetition(data)
                 .unwrap()
                 .then((res) => {
-                    setSucessMessage(  `ID: ${res.id_exercice}`)
+                    setSucessMessage(  `ID: ${res.detail.exercise_id}`)
                     setErrorMessage(null)
                 })
                 .catch((e) => {
-                    setErrorMessage(e)
+                    setErrorMessage(e.detail)
                 })
 
-        } catch (e) {
-            setErrorMessage(e)
+        } catch (e: any) {
+            setErrorMessage(e.detail)
             setSucessMessage(null)
         }
 

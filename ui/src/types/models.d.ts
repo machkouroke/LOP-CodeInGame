@@ -9,8 +9,8 @@ declare global {
         start: Date;
         end: Date;
         created_at?: Date;
-        status?: "Not Scheduled" | "Not Started" | "In Progress" | "Finished";
-        Type: string;
+        status?: ExerciseStatusType;
+        kind: string;
         id: string;
     }
     interface User {
@@ -23,7 +23,7 @@ declare global {
         exos?: string[],
         experience?: number,
         nbr_participation?: number,
-        Type?: string,
+        role?: ROLEType,
         rank?: number,
     }
 }

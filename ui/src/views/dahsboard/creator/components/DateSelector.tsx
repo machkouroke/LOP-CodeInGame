@@ -1,23 +1,22 @@
-import {Box, Button, Flex, FormLabel, Input, Text, useColorModeValue} from "@chakra-ui/react";
+import {Flex, FormLabel, Input, Text, useColorModeValue} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import moment from "moment";
-import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
-import {globalStyles} from "../../../../theme/styles";
-import {useAddCompetitionMutation, useStartCompetitionMutation} from "../../../../services/competitionService";
+
+import {useStartExercisesMutation} from "../../../../services/competitionService";
 import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
-export default function DateSelector(props: { competition: Exercise }) {
-    const {competition, ...rest} = props;
+export default function DateSelector(props: { exercise: Exercise }) {
+    const {exercise} = props;
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const brandStars = useColorModeValue("brand.500", "brand.400");
     const {register, handleSubmit} = useForm()
-    const [startCompetition, {isLoading}] = useStartCompetitionMutation()
-    const startDate = competition.start ? moment(competition.start) : moment()
-    const endDate = competition.end ? moment(competition.end) : moment()
+    const [startCompetition, {isLoading}] = useStartExercisesMutation()
+    const startDate = exercise.start ? moment(exercise.start) : moment()
+    const endDate = exercise.end ? moment(exercise.end) : moment()
 
     const [errorMessage, setErrorMessage] = useState(null)
-    const [sucessMessage, setSucessMessage] = useState(null)
+    const [successMessage, setSuccessMessage] = useState(null)
     const submitForm = (data: CompetitionSchedule) => {
         // @ts-ignore
         const startDate = moment(data.startDate + "T" + data.startTime, "YYYY-MM-DDTHH:mm:ss")
@@ -41,12 +40,12 @@ export default function DateSelector(props: { competition: Exercise }) {
             const competitionSchedule: CompetitionSchedule = {
                 startDate: startDate.add(5, "minutes").format("YYYY-MM-DDTHH:mm:ss"),
                 endDate: endDate.add(5, "minutes").format("YYYY-MM-DDTHH:mm:ss"),
-                id: competition.id
+                id: exercise.id
             }
             startCompetition(competitionSchedule)
                 .unwrap()
-                .then((res) => {
-                    setSucessMessage(`Compétition démarrée avec succès, veuillez patienter quelque instants pour voir la salle de compétition`)
+                .then(() => {
+                    setSuccessMessage(`Compétition démarrée avec succès, veuillez patienter quelque instants pour voir la salle de compétition`)
                     setErrorMessage(null)
                 })
                 .catch((e) => {
@@ -55,7 +54,7 @@ export default function DateSelector(props: { competition: Exercise }) {
 
         } catch (e: any) {
             setErrorMessage(e)
-            setSucessMessage(null)
+            setSuccessMessage(null)
         }
 
     }
@@ -148,7 +147,7 @@ export default function DateSelector(props: { competition: Exercise }) {
 
             <FormBottom
                 errorMessage={errorMessage}
-                successMessage={sucessMessage}
+                successMessage={successMessage}
                 isLoading={isLoading}
                 mainButtonMessage={"Lancer la compétition"}
             />

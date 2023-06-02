@@ -9,19 +9,17 @@ import CountDown from "../../../../components/CountDown/CountDown";
 
 
 function WaitView(props: {
-    competition: Exercise,
+    exercise: Exercise,
     modalIsOpen: boolean,
 }) {
-    const {competition, modalIsOpen} = props
+    const {exercise} = props
     const deleteButtonColor = useColorModeValue("red.500", "red.500")
-
-    const [error, setError] = React.useState<string | null>(null);
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
-    const startDate = moment(competition.start)
-    const endDate = moment(competition.end)
+    const startDate = moment(exercise.start)
+    const endDate = moment(exercise.end)
     // const participants = lastJsonMessage || []
     const [participants, setParticipants] = React.useState<any[]>([])
-    const {lastJsonMessage, getWebSocket, sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exos/participants`, {
+    const {sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exos/participants`, {
         share: true,
         filter: (message: {
             data: string
@@ -49,7 +47,7 @@ function WaitView(props: {
     useEffect(() => {
         const interval = setInterval(() => {
             sendJsonMessage({
-                id_exo: competition.id,
+                id_exo: exercise.id,
             })
 
 
@@ -82,10 +80,7 @@ function WaitView(props: {
                     startDate={startDate}
                     endDate={endDate}
                 />
-                {/*<CountDown*/}
-                {/*    startDate={startDate}*/}
-                {/*    endDate={endDate}*/}
-                {/*    name={"Début"}/>*/}
+
             </Flex>
             <Flex alignItems={"flex-start"} justifyContent={"start"} mx={"10px"}>
                 <CompetitorsTable

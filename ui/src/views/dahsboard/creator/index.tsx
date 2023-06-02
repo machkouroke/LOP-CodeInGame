@@ -16,7 +16,6 @@ import CompetitionCard from '../../../components/card/CompetitionCard';
 import Card from 'components/card/Card';
 
 import Modal from "../../../components/Modal/Modal";
-import inProgress from "../../../mocks/Competition";
 import MiniStatistics from "../../../components/card/MiniStatistics";
 import IconBox from "../../../components/icons/IconBox";
 import useColorIcon from "../../../hooks/useColorIcon";
@@ -26,12 +25,13 @@ import CreateCompetition from "./components/CreateCompetition";
 import ManageCompetition from "./components/ManageCompetition";
 import {getUserInfo} from "../../../slices/selector";
 import {useSelector} from "react-redux";
-import {useGetTeachersCompetitionsQuery} from "../../../services/competitionService";
+import {useGetTeachersExercisesQuery} from "../../../services/competitionService";
 import moment from "moment/moment";
 
 export default function CreatorBoard() {
     const user = useSelector(getUserInfo);
-    const {data: competitions, isLoading, isError, error, isFetching} = useGetTeachersCompetitionsQuery('');
+    const {data: exercises, isLoading, isError, error, isFetching} =
+        useGetTeachersExercisesQuery(user.id);
     const {isOpen: isOpenCreation, onOpen: onOpenCreation, onClose: onCloseCreation} = useDisclosure()
     const {isOpen: isOpenManage, onOpen: onOpenManage, onClose: onCloseManage} = useDisclosure()
     const [selected, setSelected] = React.useState<string | null>(null);
@@ -40,7 +40,7 @@ export default function CreatorBoard() {
         if (isLoading) {
             return <Spinner mt={"5px"} ml={"20px"} size='lg' className={"center"}/>
         } else {
-            const all = competitions as Exercise[]
+            const all = exercises as Exercise[]
 
             return all.map((item, index) => (
                 <CompetitionCard
@@ -71,7 +71,7 @@ export default function CreatorBoard() {
             </Modal>
             <ManageCompetition
                 isOpenManage={isOpenManage}
-                selected={competitions?.find((item: Exercise) => item.id === selected) || null}
+                selected={exercises?.find((item: Exercise) => item.id === selected) || null}
                 onCloseManage={onCloseManage}
                 isFetching={isFetching}
             />

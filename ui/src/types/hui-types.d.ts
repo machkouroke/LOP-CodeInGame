@@ -1,3 +1,5 @@
+import React from "react";
+
 export {};
 
 declare global {
@@ -10,13 +12,12 @@ declare global {
         layout: string;
         component: (
             props: any
-        ) => JSX.Element;
+        ) => React.ReactElement | null;
         path: string;
         fullpath: string;
         protected: boolean;
         roles: string[];
     }
-
 
 
     interface IAuthState {
@@ -26,6 +27,10 @@ declare global {
         success: boolean,
     }
 
-
+    type ExerciseRelationKindType = "subscriber" | "creator"
+    type ROLEType = "student" | "teacher" | "user"
+    type ExerciseKindType = "Salon privé" | "Exercice d'entrainement" | "Compétition"
+    type ProgramingLanguageType = "Python"
+    type ExerciseStatusType = "Not Scheduled" | "Not Started" | "In Progress" | "Finished"
 
 }
