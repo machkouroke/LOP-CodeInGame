@@ -21,12 +21,12 @@ import {useForm} from "react-hook-form";
 import {useAddExerciseMutation} from "../../../../services/competitionService";
 import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
-export default function CreateCompetition(props: { [rest: string]: any }) {
+export default function CreateExercise(props: { [rest: string]: any }) {
     const {...rest} = props;
     const {register, handleSubmit} = useForm()
     const [addCompetition, {isLoading}] = useAddExerciseMutation()
     const [errorMessage, setErrorMessage] = useState(null)
-    const [sucessMessage, setSucessMessage] = useState(null)
+    const [successMessage, setSuccessMessage] = useState(null)
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
 
@@ -37,7 +37,7 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
             addCompetition(data)
                 .unwrap()
                 .then((res) => {
-                    setSucessMessage(  `ID: ${res.detail.exercise_id}`)
+                    setSuccessMessage(  `ID: ${res.detail.exercise_id}`)
                     setErrorMessage(null)
                 })
                 .catch((e) => {
@@ -46,7 +46,7 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
 
         } catch (e: any) {
             setErrorMessage(e.detail)
-            setSucessMessage(null)
+            setSuccessMessage(null)
         }
 
     }
@@ -125,7 +125,7 @@ export default function CreateCompetition(props: { [rest: string]: any }) {
                                 <option value="Compétition">Compétition</option>
                             </Select>
                              <FormBottom errorMessage={errorMessage}
-                                         successMessage={sucessMessage}
+                                         successMessage={successMessage}
                                          mainButtonMessage={"Créer"}
                                          isLoading={isLoading}
                              />

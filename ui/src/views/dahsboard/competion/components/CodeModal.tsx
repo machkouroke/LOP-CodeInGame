@@ -4,11 +4,8 @@ import {
     Button,
     Flex,
     FormControl,
-    FormLabel,
     Input,
-    Link,
-    Select, Spinner,
-    Text,
+    Spinner,
     useColorModeValue
 } from '@chakra-ui/react';
 
@@ -17,17 +14,13 @@ import {
 import React, {useState} from "react";
 import Card from "../../../../components/card/Card";
 import {useForm} from "react-hook-form";
-import {registerUser} from "../../../../thunks/register";
-import {useAddCompetitionMutation, useParticipateMutation} from "../../../../services/competitionService";
-import {useDispatch} from "react-redux";
-import {next} from "../../../../slices/navigation";
+import {useSubscribeMutation} from "../../../../services/competitionService";
 import {useHistory} from "react-router-dom";
 import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
 
 export default function CodeModal(props: { [x: string]: any }) {
     const {...rest} = props;
-    const [participate, {isLoading}] = useParticipateMutation()
-    const dispatch = useDispatch()
+    const [subscribe, {isLoading}] = useSubscribeMutation()
     const history = useHistory()
 
     let mainText = useColorModeValue('black', 'white');
@@ -43,9 +36,9 @@ export default function CodeModal(props: { [x: string]: any }) {
 
     const submitForm = (data: { exo_id: string }) => {
         try {
-            participate(data.exo_id)
+            subscribe(data.exo_id)
                 .unwrap()
-                .then((res) => {
+                .then(() => {
 
                     setErrorMessage(null)
                     history.push('/competition/waitroom', {competition: data.exo_id})

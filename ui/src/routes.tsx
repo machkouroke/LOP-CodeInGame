@@ -3,7 +3,7 @@ import DashboardLayout from "./layouts/admin";
 import CompetitionLayout from "./layouts/competition";
 import MainDashboard from "./views/dahsboard/default";
 import CreatorBoard from "./views/dahsboard/creator";
-import CompetitionBoard from "./views/dahsboard/competion";
+import ExerciseBoard from "./views/dahsboard/competion";
 import WaitRoom from "./views/dahsboard/waitroom";
 import SignIn from "./views/auth/signIn";
 import Register from "./views/auth/register";
@@ -78,7 +78,7 @@ const routes: RoutesType[] = [
         layout: '/competition',
         path: '',
         fullpath: '/competition',
-        component: CompetitionBoard,
+        component: ExerciseBoard,
         protected: true,
         roles: []
     },

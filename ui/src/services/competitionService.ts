@@ -29,7 +29,7 @@ export const exerciseApi = createApi({
         }),
         getTeachersExercises: builder.query({
             query: (user_id: string) => ({
-                url: `/${user_id}/users?kind=${ExerciseRelationKind.CREATOR}`,
+                url: `/${user_id}/users?kind=${ExerciseRelationKind.SUBSCRIBER}`,
             }),
             providesTags: (result = [], error, arg) => {
                 return [

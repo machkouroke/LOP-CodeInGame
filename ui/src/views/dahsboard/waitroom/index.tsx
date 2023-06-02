@@ -19,7 +19,7 @@ import inProgress from "../../../mocks/Competition";
 import Description from "./components/Description";
 import moment from "moment";
 import {useLocation} from "react-router-dom";
-import {useGetCompetitionsQuery} from "../../../services/competitionService";
+import {useGetExercisesQuery} from "../../../services/competitionService";
 
 const moment1 = moment("2023-05-28T05:20:00");
 const moment2 = moment("2023-05-28T05:22:00");
@@ -28,7 +28,7 @@ export default function WaitRoom() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const location: any = useLocation()
     const competition = location.state.competition
-    const {data, isLoading, isError} = useGetCompetitionsQuery(competition)
+    const {data, isLoading, isError} = useGetExercisesQuery(competition)
     console.log("competition", competition)
     console.log("data", data)
     return (

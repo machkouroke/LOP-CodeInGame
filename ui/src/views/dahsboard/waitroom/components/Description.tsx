@@ -24,7 +24,7 @@ $$x=\\frac{1}{2} + 1 \\ y=2$$
             <CompetitionCard
                 name={competition.name}
                 author={competition.owner_name}
-                bidders={competition.participators}
+                bidders={competition.subscribers}
                 image={competition.image}
                 timeleft={moment(competition.end).diff(moment(), 'days')}
                 download='#'

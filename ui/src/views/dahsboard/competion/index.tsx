@@ -18,7 +18,7 @@ import {useSelector} from "react-redux";
 import {getUserInfo} from "../../../slices/selector";
 import moment from "moment";
 
-export default function CompetitionBoard() {
+export default function ExerciseBoard() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const user = useSelector(getUserInfo)
     const lastSixCompetitions = user.exos.slice(0, 6)
@@ -50,7 +50,7 @@ export default function CompetitionBoard() {
                                     <CompetitionCard
                                         name={item.name}
                                         author={item.owner_name}
-                                        bidders={item.participators}
+                                        bidders={item.subscribers}
                                         image={item.image}
                                         timeleft={moment(item.end).diff(moment(), 'days')}
                                         download='#'
@@ -68,7 +68,7 @@ export default function CompetitionBoard() {
                                      <CompetitionCard
                                         name={item.name}
                                         author={item.owner_name}
-                                        bidders={item.participators}
+                                        bidders={item.subscribers}
                                         image={item.image}
                                         timeleft={moment(item.end).diff(moment(), 'days')}
                                         download='#'

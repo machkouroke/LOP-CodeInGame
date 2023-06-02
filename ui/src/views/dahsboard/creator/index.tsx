@@ -21,7 +21,7 @@ import IconBox from "../../../components/icons/IconBox";
 import useColorIcon from "../../../hooks/useColorIcon";
 
 import {BsPlusCircleFill} from "react-icons/bs";
-import CreateCompetition from "./components/CreateCompetition";
+import CreateExercise from "./components/CreateExercise";
 import ManageCompetition from "./components/ManageCompetition";
 import {getUserInfo} from "../../../slices/selector";
 import {useSelector} from "react-redux";
@@ -41,13 +41,13 @@ export default function CreatorBoard() {
             return <Spinner mt={"5px"} ml={"20px"} size='lg' className={"center"}/>
         } else {
             const all = exercises as Exercise[]
-
+            console.log(all)
             return all.map((item, index) => (
                 <CompetitionCard
                     hoverable={true}
                     name={item.name}
                     author={item.owner_name}
-                    bidders={item.participators}
+                    bidders={item.subscribers}
                     image={item.image}
                     timeleft={moment(item.created_at).format('DD/MM/YYYY')}
                     onClick={() => {
@@ -67,7 +67,7 @@ export default function CreatorBoard() {
         <>
 
             <Modal isOpen={isOpenCreation} onClose={onCloseCreation}>
-                <CreateCompetition/>
+                <CreateExercise/>
             </Modal>
             <ManageCompetition
                 isOpenManage={isOpenManage}

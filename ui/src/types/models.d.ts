@@ -1,16 +1,18 @@
+import {ExerciseKindType} from "./hui-types";
+
 export {};
 
 declare global {
      interface Exercise {
         name: string;
         owner_name: string;
-        participators: string[];
+        subscribers: string[];
         image?: any,
         start: Date;
         end: Date;
         created_at?: Date;
         status?: ExerciseStatusType;
-        kind: string;
+        kind: ExerciseKindType;
         id: string;
     }
     interface User {
