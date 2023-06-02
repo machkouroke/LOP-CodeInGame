@@ -41,7 +41,6 @@ export default function CreatorBoard() {
             return <Spinner mt={"5px"} ml={"20px"} size='lg' className={"center"}/>
         } else {
             const all = exercises as Exercise[]
-            console.log(all)
             return all.map((item, index) => (
                 <CompetitionCard
                     hoverable={true}

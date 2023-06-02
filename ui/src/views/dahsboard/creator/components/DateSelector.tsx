@@ -11,7 +11,7 @@ export default function DateSelector(props: { exercise: Exercise }) {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const brandStars = useColorModeValue("brand.500", "brand.400");
     const {register, handleSubmit} = useForm()
-    const [startCompetition, {isLoading}] = useStartExercisesMutation()
+    const [startExercise, {isLoading}] = useStartExercisesMutation()
     const startDate = exercise.start ? moment(exercise.start) : moment()
     const endDate = exercise.end ? moment(exercise.end) : moment()
 
@@ -42,18 +42,23 @@ export default function DateSelector(props: { exercise: Exercise }) {
                 endDate: endDate.add(5, "minutes").format("YYYY-MM-DDTHH:mm:ss"),
                 id: exercise.id
             }
-            startCompetition(competitionSchedule)
+            console.log(competitionSchedule)
+            startExercise(competitionSchedule)
                 .unwrap()
                 .then(() => {
-                    setSuccessMessage(`Compétition démarrée avec succès, veuillez patienter quelque instants pour voir la salle de compétition`)
+                    setSuccessMessage(`Compétition démarrée avec succès, veuillez 
+                    patienter quelque instants pour voir la salle de compétition`)
                     setErrorMessage(null)
                 })
                 .catch((e) => {
-                    setErrorMessage(e)
+
+                    console.log(e)
+                    setErrorMessage(e.detail)
                 })
 
         } catch (e: any) {
-            setErrorMessage(e)
+            console.log(e)
+            setErrorMessage(e.detail)
             setSuccessMessage(null)
         }
 
@@ -74,6 +79,7 @@ export default function DateSelector(props: { exercise: Exercise }) {
                 <Flex>
                     <Input
                         isRequired={true}
+
                         variant='auth'
                         fontSize='sm'
                         ms={{base: "0px", md: "0px"}}
@@ -87,6 +93,7 @@ export default function DateSelector(props: { exercise: Exercise }) {
                     />
                     <Input
                         isRequired={true}
+
                         variant='auth'
                         fontSize='sm'
                         ms={{base: "0px", md: "0px"}}
@@ -149,7 +156,7 @@ export default function DateSelector(props: { exercise: Exercise }) {
                 errorMessage={errorMessage}
                 successMessage={successMessage}
                 isLoading={isLoading}
-                mainButtonMessage={"Lancer la compétition"}
+                mainButtonMessage={"Lancer la compétition (5 minutes de délai)"}
             />
 
 

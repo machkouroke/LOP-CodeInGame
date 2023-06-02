@@ -29,7 +29,7 @@ export const exerciseApi = createApi({
         }),
         getTeachersExercises: builder.query({
             query: (user_id: string) => ({
-                url: `/${user_id}/users?kind=${ExerciseRelationKind.SUBSCRIBER}`,
+                url: `/${user_id}/users?kind=${ExerciseRelationKind.CREATOR}`,
             }),
             providesTags: (result = [], error, arg) => {
                 return [
@@ -47,12 +47,12 @@ export const exerciseApi = createApi({
         }),
         getExercises: builder.query({
             query: (exercise_id: string) => ({
-                url: `/exercises/${exercise_id}`,
+                url: `/${exercise_id}`,
             })
         }),
         startExercises: builder.mutation({
             query: (data: CompetitionSchedule) => ({
-                url: `/exercises/${data.id}/start`,
+                url: `/${data.id}/start`,
                 method: 'PATCH',
                 body: {
                     start: data.startDate,

@@ -20,6 +20,7 @@ import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useAddExerciseMutation} from "../../../../services/competitionService";
 import FormBottom from "../../../../components/BoxAlert/FormBottom";
+import {ExerciseKind, ProgramingLanguage} from "../../../../types/enum";
 
 export default function CreateExercise(props: { [rest: string]: any }) {
     const {...rest} = props;
@@ -37,7 +38,7 @@ export default function CreateExercise(props: { [rest: string]: any }) {
             addCompetition(data)
                 .unwrap()
                 .then((res) => {
-                    setSuccessMessage(  `ID: ${res.detail.exercise_id}`)
+                    setSuccessMessage(`ID: ${res.detail.exercise_id}`)
                     setErrorMessage(null)
                 })
                 .catch((e) => {
@@ -96,11 +97,12 @@ export default function CreateExercise(props: { [rest: string]: any }) {
                                 mb='24px'
                                 fontWeight='500'
                                 size='lg'
-                                {...register('langage')}
-
-
+                                {...register('language')}
                             >
-                                <option value="Python">Python</option>
+                                {
+                                    Object.values(ProgramingLanguage).map((value) => {
+                                        return <option value={value}>{value}</option>
+                                    })}
                             </Select>
 
                             <FormLabel
@@ -117,18 +119,18 @@ export default function CreateExercise(props: { [rest: string]: any }) {
                                 mb='24px'
                                 fontWeight='500'
                                 size='lg'
-                                {...register('Type')}
-                            >
-                                <option value="Salle Privé">Salle Privé</option>
+                                {...register('kind')}
+                            >{
+                                    Object.values(ExerciseKind).map((value) => {
+                                        return <option value={value}>{value}</option>
+                                    })}
 
-                                <option value="Exercice">Exercice</option>
-                                <option value="Compétition">Compétition</option>
                             </Select>
-                             <FormBottom errorMessage={errorMessage}
-                                         successMessage={successMessage}
-                                         mainButtonMessage={"Créer"}
-                                         isLoading={isLoading}
-                             />
+                            <FormBottom errorMessage={errorMessage}
+                                        successMessage={successMessage}
+                                        mainButtonMessage={"Créer"}
+                                        isLoading={isLoading}
+                            />
 
 
                         </FormControl>

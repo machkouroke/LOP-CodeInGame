@@ -3,7 +3,7 @@ import {
     Flex,
 
     Text,
-    useColorModeValue
+    useColorModeValue, useToast
 } from '@chakra-ui/react';
 import Modal from "../../../../components/Modal/Modal";
 
@@ -17,6 +17,7 @@ import React from "react";
 import DateSelector from "./DateSelector";
 import WaitView from "./WaitView";
 import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
+import {CopyIcon} from "@chakra-ui/icons";
 
 export default function ManageExercise(props: {
     isOpenManage: boolean,
@@ -33,6 +34,7 @@ export default function ManageExercise(props: {
     } = props;
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
+    const toast = useToast()
 
 
     return (
@@ -43,10 +45,28 @@ export default function ManageExercise(props: {
                     {selected?.name}
                 </Text>
                 <SmoothBox w={"100%"} bg={"#2831a0"}>
+
                     <b>Code Exercice</b> <Text>
-                    {selected?.id}
+                    <Flex alignItems={"center"}>
+                        {selected?.id}
+                        <CopyIcon
+                            ml={"10px"}
+                            cursor={"pointer"}
+                            onClick={() => {
+                                navigator.clipboard.writeText(selected?.id || "").then(r =>
+                                    toast({
+                                        position: "top",
+                                        title: "Code copié",
+                                        status: "success",
+                                    })
+                                )
+                            }}
+                        ></CopyIcon>
+                    </Flex>
                 </Text>
+
                 </SmoothBox>
+
                 <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
                     <Flex flexDirection='column' mt='28px' width={"100%"}>
                         {selected?.status !== "Not Scheduled" &&

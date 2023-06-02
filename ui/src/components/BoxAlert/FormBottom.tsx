@@ -37,8 +37,9 @@ export default function FormBottom(props: {
             }
                 <Flex alignContent={"center"}>
                     <Button
+
                         type={"submit"}
-                        disabled={isLoading}
+                        disabled={isLoading || successMessage !== null}
                         fontSize='sm'
                         variant='brand'
                         fontWeight='500'

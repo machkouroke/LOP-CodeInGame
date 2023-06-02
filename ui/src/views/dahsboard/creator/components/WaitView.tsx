@@ -19,7 +19,7 @@ function WaitView(props: {
     const endDate = moment(exercise.end)
     // const participants = lastJsonMessage || []
     const [participants, setParticipants] = React.useState<any[]>([])
-    const {sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exos/participants`, {
+    const {sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exercises/subscribers`, {
         share: true,
         filter: (message: {
             data: string
@@ -47,7 +47,7 @@ function WaitView(props: {
     useEffect(() => {
         const interval = setInterval(() => {
             sendJsonMessage({
-                id_exo: exercise.id,
+                exercise_id: exercise.id,
             })
 
 
