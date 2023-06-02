@@ -3,7 +3,7 @@ from typing import Any
 
 from google.cloud.storage import Bucket
 from pymongo.database import Database
-
+from fastapi import HTTPException, status
 
 def get_keys(dictionary: dict, keys: list) -> dict:
     keys += ["_id"]
@@ -32,6 +32,22 @@ def field(name: str):
         return wrapper
 
     return decorator
+
+
+
+def handle_HTTP_Exception(func):
+    async def wrapper(*args, **kwargs):
+        try:
+            return await func(*args, **kwargs)
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            print(e)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Une erreur du serveur est survenue: {e}",
+            ) from e
+    return wrapper
 
 def addToSet(database: Database, collection_name: str, query: dict, field: str, value: Any) -> None:
     database[collection_name].update_one(query, {"$addToSet": {field: value}})

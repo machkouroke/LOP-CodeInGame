@@ -1,10 +1,9 @@
 import inspect
 from datetime import datetime
 
-from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
-from api.src.enum.enums import ExerciseRelationKind, ROLE
+from api.src.enum.enums import ExerciseRelationKind, ROLE, ProgramingLanguage, ExerciseKind
 from api.src.models.objectid import PydanticObjectId
 
 
@@ -24,17 +23,12 @@ class UserAdd(BaseModel):
     password: str
     role: ROLE
 
-    def to_json(self, to_exclude: set = None) -> dict:
-        properties = [prop_name for prop_name, prop in inspect.getmembers(self.__class__) if isinstance(prop, property)]
-        for prop in properties:
-            getattr(self, prop)
-        return jsonable_encoder(self, exclude=to_exclude)
 
 
 class ExoToAdd(BaseModel):
     name: str
-    langage: str
-    Type: str
+    language: ProgramingLanguage
+    kind: ExerciseKind
 
 
 
@@ -52,3 +46,7 @@ class UserAuth(DTOModel):
 class ExerciseRelation(DTOModel):
     kind: ExerciseRelationKind
     exercise_id: PydanticObjectId
+    def dict(self, *args, **kwargs):
+        return super().dict( exclude={"database"}) | {'kind': self.kind.value}
+
+

@@ -1,41 +1,47 @@
-# from datetime import datetime
-#
-# from fastapi import APIRouter, Depends, HTTPException, status, WebSocket
-# from pymongo.database import Database
-#
-# from api.src.dependencies.db import get_db
-# from api.src.dependencies.auth import get_current_user
-# from api.src.models.DTO import ExoStart
-# from api.src.models.Exercise import Exercise, ExoToAdd
-# from api.src.models.User import Teacher, User
-# from api.src.models.objectid import PydanticObjectId
-#
-# from datetime import timezone
-#
-# router = APIRouter()
-#
-#
-# @router.post('/add')
-# def add_exercise(exo_to_add: ExoToAdd, user=Depends(get_current_user), db=Depends(get_db)):
-#     if user.Type != 'teacher':
-#         raise HTTPException(
-#             status_code=status.HTTP_400_BAD_REQUEST,
-#             detail="Vous n'êtes pas autorisé à faire cette operation",
-#         )
-#     data = exo_to_add.to_json()
-#     data['created_at'] = datetime.now(timezone.utc)
-#     data['subscribers'] = []
-#     exo = Exercise(database=db, **data)
-#     exo.save(owner_name=f'{user.name} {user.surname}')
-#     teacher = Teacher(database=db, **user.to_json())
-#     teacher.id = user.id
-#     teacher.add_exo(exo.id)
-#
-#     return {
-#         'success': True,
-#         "message": 'Exercice bien ajouté',
-#         'id_exercice': exo.id,
-#     }
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import ValidationError
+
+from api.src.dependencies.db import get_db
+from api.src.dependencies.utilities import get_current_user_object
+from api.src.enum.enums import ROLE
+from api.src.models.DTO import ExoToAdd
+from api.src.models.Exercise import Exercise
+from api.src.models.User import Teacher, UserModel
+from api.src.models.objectid import PydanticObjectId
+from api.src.utilities.utility_function import handle_HTTP_Exception
+
+router = APIRouter()
+
+
+@handle_HTTP_Exception
+@router.post('/{exercise_id}/subscribe', summary="Permet de s'inscrire à un exercice")
+def subscribe(exercise_id: str, user: UserModel = Depends(get_current_user_object)):
+    user.subscribe_to_exercise(
+        Exercise.find_one_or_404(database=user.database, mask={'_id': PydanticObjectId(exercise_id)}).id
+    )
+    return {
+        'detail': 'Souscription réussie'
+    }
+
+
+@handle_HTTP_Exception
+@router.post('')
+def add_exercise(exo_to_add: ExoToAdd, user: UserModel = Depends(get_current_user_object), db=Depends(get_db)):
+    if user.role != ROLE.TEACHER:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Vous n'êtes pas autorisé à faire cette operation",
+        )
+    data = exo_to_add.dict()
+    exo = Exercise(database=db, **data)
+    exo.save(owner=user.id)
+    user.create_exercise(exo.id)
+    return {
+        'detail': {
+            "exercise_id": exo.id
+        }
+    }
+
 #
 #
 # @router.patch('/{id_exo}/start')

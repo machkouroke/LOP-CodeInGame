@@ -1,3 +1,5 @@
+from typing import Any
+
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -14,7 +16,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 password_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Database = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Database = Depends(get_db)) -> dict[str, Any]:
     if BlacklistToken.check_blacklist(auth_token=token, database=db):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

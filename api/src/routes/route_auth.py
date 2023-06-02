@@ -1,42 +1,44 @@
+import traceback
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from api.src.authentication.jwt_encode import encode_auth_token
+from api.src.dependencies.auth import oauth2_scheme
 from api.src.dependencies.auth import verify_password
 from api.src.dependencies.db import get_db
-from api.src.dependencies.auth import get_current_user, oauth2_scheme
-from api.src.authentication.jwt_encode import encode_auth_token
+from api.src.dependencies.utilities import get_current_user_object
 from api.src.models.BlackListToken import BlacklistToken
 from api.src.models.DTO import UserAuth, UserAdd
-from api.src.models.User import User, Student, Teacher
+from api.src.models.User import User, Student, Teacher, UserModel
+from api.src.utilities.utility_function import handle_HTTP_Exception
 
 router = APIRouter()
 
 
-def class_retriever(data):
+def class_retriever(data: UserAdd) -> UserModel:
     if not data.role:
         return User
     return {"student": Student, "teacher": Teacher, "user": User}[data.role.value]
 
 
+@handle_HTTP_Exception
 @router.post('/register')
 async def create_user(to_add: UserAdd, db=Depends(get_db)):
-    try:
-        user_class = class_retriever(to_add)
-        user = user_class(database=db, **to_add.dict())
-        if user_class.find_one(database=db, mask={"mail": user.mail}):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"L'email {user.mail} est déja utilisé")
-        user.save()
-        return {
-            "detail": {"auth_token": encode_auth_token(user.id)}
-        }
-    except Exception as e:
+    user_class = class_retriever(to_add)
+    user = user_class(database=db, **to_add.dict())
+    if user_class.find_one(database=db, mask={"mail": user.mail}):
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Une erreur du serveur est survenue: {e}",
-        ) from e
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"L'email {user.mail} est déja utilisé")
+    user.save()
+    return {
+        "detail": {"auth_token": encode_auth_token(user.id)}
+    }
 
 
+
+
+@handle_HTTP_Exception
 @router.post('/login')
 async def login(form_data: UserAuth, db=Depends(get_db)):
     user = User.find_one_or_404(database=db, mask={"mail": form_data.mail})
@@ -55,7 +57,7 @@ async def login(form_data: UserAuth, db=Depends(get_db)):
     else:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Une erreur du serveur est survenue"
+            detail="Une erreur du serveur est survenue lors de la génération du token"
         )
 
 
@@ -72,9 +74,9 @@ async def logout(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
 
 
 @router.get('/status')
-async def get_status(user=Depends(get_current_user), db=Depends(get_db)):
+async def get_status(user: UserModel = Depends(get_current_user_object)):
     try:
-        user = User(**user, database=db)
         return user.dict(to_exclude={"database"})
     except Exception as e:
-        raise HTTPException(500, 'Une erreur du serveur est survenue') from e
+        # print(e)
+        raise e
