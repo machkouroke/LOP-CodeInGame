@@ -8,12 +8,10 @@ from api.src.models.DTO import ExoToAdd, ExoStart
 from api.src.models.Exercise import Exercise
 from api.src.models.User import UserModel, User
 from api.src.models.objectid import PydanticObjectId
-from api.src.utilities.utility_function import handle_HTTP_Exception
 
 router = APIRouter()
 
 
-@handle_HTTP_Exception
 @router.patch('/{exercise_id}/subscribe', summary="Permet de s'inscrire à un exercice")
 def subscribe(exercise_id: str, user: UserModel = Depends(get_current_user_object)):
     user.subscribe_to_exercise(
@@ -26,7 +24,6 @@ def subscribe(exercise_id: str, user: UserModel = Depends(get_current_user_objec
     }
 
 
-@handle_HTTP_Exception
 @router.post('', summary="Permet d'ajouter un exercice")
 def add_exercise(exo_to_add: ExoToAdd, user: UserModel = Depends(get_current_user_object), db=Depends(get_db)):
     if user.role != ROLE.TEACHER:
@@ -45,7 +42,6 @@ def add_exercise(exo_to_add: ExoToAdd, user: UserModel = Depends(get_current_use
     }
 
 
-@handle_HTTP_Exception
 @router.patch('/{id_exo}/start')
 def start_exercise(id_exo: str, start: ExoStart, user: UserModel = Depends(get_current_user_object),
                    db=Depends(get_db)):
@@ -67,7 +63,6 @@ def start_exercise(id_exo: str, start: ExoStart, user: UserModel = Depends(get_c
         }
     }
 
-@handle_HTTP_Exception
 @router.delete('/{id_exo}')
 def delete_exercise(id_exo: str, user: UserModel = Depends(get_current_user_object), db=Depends(get_db)):
     exo: Exercise = Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(id_exo)})

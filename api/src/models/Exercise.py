@@ -1,8 +1,7 @@
 from datetime import datetime
 
 from fastapi import HTTPException
-from flask_pymongo.wrappers import Database
-
+from pymongo.database import Database
 from api.src.enum.enums import ExerciseKind, ProgramingLanguage
 from api.src.models.Model import Model
 from api.src.models.objectid import PydanticObjectId

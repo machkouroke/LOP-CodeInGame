@@ -21,7 +21,6 @@ def class_retriever(data: UserAdd) -> UserModel:
     return {"student": Student, "teacher": Teacher, "user": User}[data.role.value]
 
 
-@handle_HTTP_Exception
 @router.post('/register')
 async def create_user(to_add: UserAdd, db=Depends(get_db)):
     user_class = class_retriever(to_add)
