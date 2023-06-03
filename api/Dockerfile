@@ -4,7 +4,7 @@ WORKDIR /app
 
 ADD . /app/api
 COPY pyproject.toml /app
-
+COPY .env /app
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 
 RUN pip3 install poetry
