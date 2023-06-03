@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {
     Box,
     Flex,
     Grid,
-    Text,
     useColorModeValue,
-    SimpleGrid,
+    SimpleGrid, Skeleton,
 } from '@chakra-ui/react';
 
 // Custom components
@@ -15,11 +14,15 @@ import Card from 'components/card/Card';
 
 import tableDataTopCreators from '../competion/variables/tableDataTopCreators';
 import CountDown from "../../../components/CountDown/CountDown";
-import inProgress from "../../../mocks/Competition";
 import Description from "./components/Description";
 import moment from "moment";
 import {useLocation} from "react-router-dom";
 import {useGetExercisesQuery} from "../../../services/competitionService";
+import competition from "../../../mocks/Competition";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
+import useWebSocket from "react-use-websocket";
+import {WEB_SOCKET_URL} from "../../../config";
 
 const moment1 = moment("2023-05-28T05:20:00");
 const moment2 = moment("2023-05-28T05:22:00");
@@ -27,10 +30,52 @@ export default function WaitRoom() {
     // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const location: any = useLocation()
-    const competition = location.state.competition
-    const {data, isLoading, isError} = useGetExercisesQuery(competition)
-    console.log("competition", competition)
-    console.log("data", data)
+    const exercise_id = location.state.exercise
+    const {data, isLoading, isError} = useGetExercisesQuery(exercise_id)
+    const exercise = data as Exercise
+    const [participants, setParticipants] = React.useState<any[]>([])
+    const [isLoadingParticipants, setIsLoadingParticipants] = React.useState<boolean>(true);
+
+    const {sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exercises/subscribers`, {
+        share: true,
+        filter: (message: {
+            data: string
+        }) => {
+            return JSON.stringify(JSON.parse(message.data)) !== JSON.stringify(participants)
+        },
+        onOpen: () => {
+            console.log('Connexion WebSocket établie');
+        },
+        onError: (event) => {
+            console.log('Erreur WebSocket : ', event)
+        },
+        onMessage: (event) => {
+            setIsLoadingParticipants(false)
+            if (event.data) {
+                const data = JSON.parse(event.data)
+                if (JSON.stringify(data) !== JSON.stringify(participants)) {
+                    setParticipants([...data]);
+                }
+            }
+        }
+    });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            sendJsonMessage({
+                exercise_id: exercise_id,
+            })
+
+
+        }, 1000)
+
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, []);
+    console.log(participants)
+
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
             {/* Main Fields */}
@@ -45,47 +90,39 @@ export default function WaitRoom() {
 
                         <SimpleGrid mt='45px'
                                     mb='20px' columns={{base: 1, md: 1}} gap='20px'>
-                            <Card>
-                                <Text
-                                    color={textColor}
-                                    textAlign={{base: 'center'}}
-                                    fontSize={{
-                                        base: 'xl',
-                                        md: 'lg',
-                                        lg: 'lg',
-                                        xl: 'lg',
-                                        '2xl': 'md',
-                                        '3xl': 'lg'
-                                    }}
-                                    mb='5px'
-                                    fontWeight='bold'
-                                    me='14px'>
-                                    {competition.name}
-                                </Text>
-                                <Flex alignContent={"center"} justifyContent={"center"}>
-                                    <CountDown startDate={moment1}
-                                                  endDate={moment2}
-                                               />
+                            <Skeleton isLoaded={!isLoading} h={"100%"} borderRadius={"10px"}>
 
-                                </Flex>
-                            </Card>
-                            <Card px='0px' mb='20px'>
+                                <Card>
 
-                                <CompetitorsTable tableData={tableDataTopCreators}
-                                                  title={"Participant ayant  réjoint"}/>
-                            </Card>
+                                    <Flex alignContent={"center"} justifyContent={"center"}>
+                                        {!isLoading && <CountDown startDate={moment(exercise.start)}
+                                                                  endDate={moment(exercise.end)}
+                                        />}
+
+                                    </Flex>
+                                </Card>
+                            </Skeleton>
+                            <Skeleton isLoaded={!isLoadingParticipants} h={"100%"} borderRadius={"10px"}>
+
+                                <Card px='0px' mb='20px'>
+                                    <CompetitorsTable tableData={participants}
+                                                      title={"Participant ayant  réjoint"}/>
+                                </Card>
+                            </Skeleton>
 
 
                         </SimpleGrid>
 
                     </Flex>
                 </Flex>
-                <Flex mt='45px' flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
-                    <Description competition={inProgress[0]}/>
+                <Skeleton isLoaded={!isLoading} borderRadius={"10px"}>
+
+                    <Flex mt='45px' flexDirection='column' gridArea={{xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3'}}>
+                        {!isLoading && <Description competition={exercise}/>}
 
 
-
-                </Flex>
+                    </Flex>
+                </Skeleton>
             </Grid>
         </Box>
     );

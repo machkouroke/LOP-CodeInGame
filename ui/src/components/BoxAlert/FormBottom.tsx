@@ -12,6 +12,7 @@ export default function FormBottom(props: {
     const {errorMessage, successMessage, isLoading, children, mainButtonMessage} = props
     const errorColor = useColorModeValue("red.500", "red.300")
     const successColor = useColorModeValue("green.500", "green.300")
+    console.log("successMessage", successMessage)
     return (<>
             {errorMessage &&
                 <SmoothBox

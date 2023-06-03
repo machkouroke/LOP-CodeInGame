@@ -182,7 +182,7 @@ export default function DateSelector(props: {
             <Button
                 bg={deleteButtonColor}
 
-                type={"submit"}
+
                 disabled={isLoadingStart || isLoadingDeletion || successMessage !== null}
                 fontSize='sm'
                 variant='brand'

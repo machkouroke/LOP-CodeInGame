@@ -17,6 +17,7 @@ import {useForm} from "react-hook-form";
 import {useSubscribeMutation} from "../../../../services/competitionService";
 import {useHistory} from "react-router-dom";
 import SmoothBox from "../../../../components/SmoothBox/SmoothBox";
+import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
 export default function CodeModal(props: { [x: string]: any }) {
     const {...rest} = props;
@@ -35,24 +36,22 @@ export default function CodeModal(props: { [x: string]: any }) {
 
 
     const submitForm = (data: { exo_id: string }) => {
-        try {
-            subscribe(data.exo_id)
-                .unwrap()
-                .then(() => {
 
-                    setErrorMessage(null)
-                    history.push('/competition/waitroom', {competition: data.exo_id})
+        subscribe(data.exo_id)
+            .unwrap()
+            .then(() => {
 
-                })
-                .catch((e) => {
-                    setErrorMessage(e)
-                })
-        } catch (e: any) {
-            setErrorMessage(e)
-        }
+                setErrorMessage(null)
+                history.push('/competition/waitroom', {exercise: data.exo_id})
+
+            })
+            .catch((e) => {
+                console.log("e", e)
+                setErrorMessage(e.data.detail)
+            })
+
 
     }
-    // Chakra Color Mode
     return (
         <Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
 
@@ -68,7 +67,7 @@ export default function CodeModal(props: { [x: string]: any }) {
                 transitionDuration=' 0.25s, 0.25s, 0.25s, 0s'
                 transition-property='box-shadow, background-color, filter, border'
                 borderRadius="lg"
-                w={{base: '100%', lg: '50%'}}
+                w={{base: '100%'}}
                 p={4}
                 mt={4}
                 textAlign={{base: 'center'}}
@@ -93,34 +92,14 @@ export default function CodeModal(props: { [x: string]: any }) {
                                 size='lg'
                                 {...register("exo_id")}
                             />
-                            {errorMessage &&
-                                <SmoothBox
-                                    bg='#2c36cd'
-                                    mb={"10px"}
+                            <FormBottom
+                                successMessage={null}
+                                errorMessage={errorMessage}
+                                isLoading={isLoading}
+                                mainButtonMessage={"Rejoindre la compétition"}
 
-                                    textAlign={"center"}
+                            />
 
-                                    color='white'>
-                                    Une erreur est survenue
-                                </SmoothBox>
-                            }
-
-                            <Flex alignContent={"center"}>
-
-                                <Button
-                                    type='submit'
-                                    fontSize='sm'
-                                    variant='brand'
-                                    fontWeight='500'
-                                    w='100%'
-                                    h='50'
-                                    mb='24px'>
-                                    Réjoindre
-                                </Button>
-                                {isLoading &&
-                                    <Spinner mt={"5px"} ml={"20px"} size='lg'
-                                    />}
-                            </Flex>
                         </FormControl>
 
                     </form>

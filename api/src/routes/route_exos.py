@@ -88,6 +88,7 @@ def get_exercice(id_exo: str, db=Depends(get_db)):
     return Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(id_exo)})
 
 
+
 @router.websocket('/subscribers')
 async def get_participants(websocket: WebSocket, db=Depends(get_db)):
     await websocket.accept()
@@ -112,7 +113,9 @@ def get_subscriber(database: Database, id_exo: str):
     ]
 
 @router.get('/{user_id}/users', summary='Permet de récupérer les exercices d\'un utilisateur')
-def get_user_exercises(user_id: str, kind: ExerciseRelationKind, db=Depends(get_db)):
+def get_user_exercises(user_id: str,
+                       kind: ExerciseRelationKind,
+                       db=Depends(get_db)):
     user = User.find_one_or_404(database=db, mask={'_id': PydanticObjectId(user_id)})
     return [
         Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(exo_id.exercise_id)}).dict(

@@ -252,7 +252,7 @@ function Register() {
                                 </InputRightElement>
                             </InputGroup>
                              <FormBottom errorMessage={error}
-                                         successMessage={""}
+                                         successMessage={null}
                                          mainButtonMessage={"Créer un compte"}
                                          isLoading={loading}
                              />

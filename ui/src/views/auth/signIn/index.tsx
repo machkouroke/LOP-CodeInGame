@@ -214,7 +214,7 @@ function SignIn() {
                                 </NavLink>
                             </Flex>
                            <FormBottom errorMessage={error}
-                                         successMessage={""}
+                                         successMessage={null}
                                          mainButtonMessage={"Connexion"}
                                          isLoading={loading}
                              />

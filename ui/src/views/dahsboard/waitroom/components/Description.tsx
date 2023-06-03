@@ -26,7 +26,7 @@ $$x=\\frac{1}{2} + 1 \\ y=2$$
                 author={competition.owner_name}
                 bidders={competition.subscribers}
                 image={competition.image}
-                timeleft={moment(competition.end).diff(moment(), 'days')}
+                timeleft={moment(competition.created_at).format("DD MMM YYYY à HH:mm")}
                 download='#'
             />
             <Flex px='20px' py='5px' direction={"column"}>
