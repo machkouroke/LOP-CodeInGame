@@ -1,19 +1,24 @@
-import {Flex, FormLabel, Input, Text, useColorModeValue} from "@chakra-ui/react";
+import {Button, Flex, FormLabel, Input, Spinner, Text, useColorModeValue} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import moment from "moment";
 
-import {useStartExercisesMutation} from "../../../../services/competitionService";
+import {useDeleteExerciseMutation, useStartExercisesMutation} from "../../../../services/competitionService";
 import FormBottom from "../../../../components/BoxAlert/FormBottom";
 
-export default function DateSelector(props: { exercise: Exercise }) {
-    const {exercise} = props;
+export default function DateSelector(props: {
+    exercise: Exercise,
+    onClose: () => void,
+}) {
+    const {exercise, onClose} = props;
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const brandStars = useColorModeValue("brand.500", "brand.400");
     const {register, handleSubmit} = useForm()
-    const [startExercise, {isLoading}] = useStartExercisesMutation()
+    const [startExercise, {isLoading: isLoadingStart}] = useStartExercisesMutation()
+    const [deleteExercise, {isLoading: isLoadingDeletion}] = useDeleteExerciseMutation()
     const startDate = exercise.start ? moment(exercise.start) : moment()
     const endDate = exercise.end ? moment(exercise.end) : moment()
+    const deleteButtonColor = useColorModeValue("red.500", "red.500")
 
     const [errorMessage, setErrorMessage] = useState(null)
     const [successMessage, setSuccessMessage] = useState(null)
@@ -63,7 +68,22 @@ export default function DateSelector(props: { exercise: Exercise }) {
         }
 
     }
+    const deleteExerciseHandler = () => {
+        if (window.confirm("Êtes-vous sûr de vouloir supprimer cette compétition ?") === true) {
 
+            deleteExercise(exercise.id)
+                .unwrap()
+                .then(() => {
+                    setSuccessMessage("Exercice supprimé avec succès")
+                    setErrorMessage(null)
+                    onClose()
+                })
+                .catch((e) => {
+                    console.log(e)
+                    setErrorMessage(e.detail)
+                })
+        }
+    }
     return (
         <form onSubmit={handleSubmit(submitForm)}>
             <div>
@@ -155,10 +175,27 @@ export default function DateSelector(props: { exercise: Exercise }) {
             <FormBottom
                 errorMessage={errorMessage}
                 successMessage={successMessage}
-                isLoading={isLoading}
+                isLoading={isLoadingStart || isLoadingDeletion}
                 mainButtonMessage={"Lancer la compétition (5 minutes de délai)"}
-            />
 
+            />
+            <Button
+                bg={deleteButtonColor}
+
+                type={"submit"}
+                disabled={isLoadingStart || isLoadingDeletion || successMessage !== null}
+                fontSize='sm'
+                variant='brand'
+                fontWeight='500'
+                w='100%'
+                h='50'
+                onClick={deleteExerciseHandler}
+                mb='24px'>
+                {
+                    isLoadingDeletion ? <Spinner mt={"5px"} ml={"20px"} size='lg'
+                    /> : "Supprimer exercice\n"
+                }
+            </Button>
 
         </form>
     )

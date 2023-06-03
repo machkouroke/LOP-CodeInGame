@@ -7,7 +7,7 @@ import {
     Grid,
     SimpleGrid,
     Icon,
-    useDisclosure, Spinner,
+    useDisclosure, Spinner, AlertIcon, Alert,
 } from '@chakra-ui/react';
 
 // Custom components
@@ -41,23 +41,50 @@ export default function CreatorBoard() {
             return <Spinner mt={"5px"} ml={"20px"} size='lg' className={"center"}/>
         } else {
             const all = exercises as Exercise[]
-            return all.map((item, index) => (
-                <CompetitionCard
-                    hoverable={true}
-                    name={item.name}
-                    author={item.owner_name}
-                    bidders={item.subscribers}
-                    image={item.image}
-                    timeleft={moment(item.created_at).format('DD/MM/YYYY')}
-                    onClick={() => {
-                        setSelected(item.id);
-                        onOpenManage();
-                    }}
-                    download='#'
-                    className={classnames({
-                        loading: isFetching
-                    })}
-                />))
+            if (all.length === 0) {
+                return <Alert status='info'
+                              variant='subtle'
+                              flexDirection='column'
+                              alignItems='center'
+                              justifyContent='center'
+                              textAlign='center'
+                              borderRadius={10}
+                              width={"100%"}
+                              gridArea={{xl: '1 / 1 / 2 / 3', '2xl': '1 / 1 / 2 / 2'}}
+                              height='200px'>
+                    <AlertIcon/>
+                    Vous n'avez pas encore d'exercices
+                </Alert>
+            }
+            return (<Flex flexDirection='column'
+                          gridArea={{xl: '1 / 1 / 2 / 3', '2xl': '1 / 1 / 2 / 2'}}>
+                <Flex direction='column'>
+
+                    <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
+                        {all.map((item, index) => (
+                            <CompetitionCard
+                                hoverable={true}
+                                name={item.name}
+                                author={item.owner_name}
+                                bidders={item.subscribers}
+                                image={item.image}
+                                timeleft={moment(item.created_at).format('DD/MM/YYYY')}
+                                onClick={() => {
+                                    setSelected(item.id);
+                                    onOpenManage();
+                                }}
+                                download='#'
+                                className={classnames({
+                                    loading: isFetching
+                                })}
+                            />))}
+
+
+                    </SimpleGrid>
+
+                </Flex>
+            </Flex>)
+
 
         }
     }
@@ -83,18 +110,7 @@ export default function CreatorBoard() {
                     gap={{base: '20px', xl: '20px'}}
                     display={{base: 'block', xl: 'grid'}}>
 
-                    <Flex flexDirection='column'
-                          gridArea={{xl: '1 / 1 / 2 / 3', '2xl': '1 / 1 / 2 / 2'}}>
-                        <Flex direction='column'>
-
-                            <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
-                                {content()}
-
-
-                            </SimpleGrid>
-
-                        </Flex>
-                    </Flex>
+                    {content()}
                     <Flex flexDirection='column' order={{base: 1,}}
                           mt={{base: '20px', xl: '0px'}}
 

@@ -1,24 +1,40 @@
 import CompetitorsTable from "../../competion/components/CompetitorsTable";
-import {Button, Flex, useColorModeValue} from "@chakra-ui/react";
+import {Button, Flex, Spinner, useColorModeValue} from "@chakra-ui/react";
 import React, {useEffect} from "react";
 import moment from "moment";
 import {WEB_SOCKET_URL} from "../../../../config";
 import classnames from "classnames";
 import useWebSocket from "react-use-websocket";
 import CountDown from "../../../../components/CountDown/CountDown";
+import {useDeleteExerciseMutation} from "../../../../services/competitionService";
 
 
 function WaitView(props: {
     exercise: Exercise,
     modalIsOpen: boolean,
+    onClose: () => void,
 }) {
-    const {exercise} = props
+    const {exercise, onClose} = props
     const deleteButtonColor = useColorModeValue("red.500", "red.500")
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
     const startDate = moment(exercise.start)
     const endDate = moment(exercise.end)
-    // const participants = lastJsonMessage || []
+    const [deleteExercise, {isLoading: isLoadingDeletion}] = useDeleteExerciseMutation()
+
     const [participants, setParticipants] = React.useState<any[]>([])
+    const deleteExerciseHandler = () => {
+        if (window.confirm("Êtes-vous sûr de vouloir supprimer cette compétition ?") === true) {
+            deleteExercise(exercise.id)
+                .unwrap()
+                .then(() => {
+
+                    onClose()
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+        }
+    }
     const {sendJsonMessage} = useWebSocket(`${WEB_SOCKET_URL}/exercises/subscribers`, {
         share: true,
         filter: (message: {
@@ -66,7 +82,9 @@ function WaitView(props: {
         >
             <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"}>
                 <Button
+                    disabled={moment().isBetween(startDate, endDate)}
                     bg={deleteButtonColor}
+                    onClick={deleteExerciseHandler}
                     type={"submit"}
                     fontSize='sm'
                     variant='brand'
@@ -74,7 +92,10 @@ function WaitView(props: {
                     w='100%'
                     h='50'
                     mb='24px'>
-                    Supprimer exercice
+                    {
+                        isLoadingDeletion ? <Spinner mt={"5px"} ml={"20px"} size='lg'
+                        /> : "Supprimer exercice\n"
+                    }
                 </Button>
                 <CountDown
                     startDate={startDate}

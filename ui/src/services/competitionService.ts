@@ -27,6 +27,14 @@ export const exerciseApi = createApi({
             invalidatesTags: ['Exercise'],
 
         }),
+        deleteExercise: builder.mutation({
+            query: (exercice_id: string) => ({
+                url: `/${exercice_id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Exercise'],
+
+        }),
         getTeachersExercises: builder.query({
             query: (user_id: string) => ({
                 url: `/${user_id}/users?kind=${ExerciseRelationKind.CREATOR}`,
@@ -71,5 +79,6 @@ export const {
     useGetTeachersExercisesQuery,
     useSubscribeMutation,
     useGetExercisesQuery,
-    useStartExercisesMutation
+    useStartExercisesMutation,
+    useDeleteExerciseMutation,
 } = exerciseApi

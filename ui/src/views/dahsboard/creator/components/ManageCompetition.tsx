@@ -70,9 +70,16 @@ export default function ManageExercise(props: {
                 <Flex w='100%' flexDirection={{base: 'column', lg: 'row'}} px="10px">
                     <Flex flexDirection='column' mt='28px' width={"100%"}>
                         {selected?.status !== "Not Scheduled" &&
-                            <WaitView exercise={selected} modalIsOpen={isOpenManage}/>}
+                            <WaitView
+                                exercise={selected}
+                                modalIsOpen={isOpenManage}
+                                onClose={onCloseManage}
+                            />}
 
-                        {selected?.status === "Not Scheduled" && <DateSelector exercise={selected}/>}
+                        {selected?.status === "Not Scheduled" &&
+                            <DateSelector exercise={selected}
+                                          onClose={onCloseManage}
+                            />}
 
 
                     </Flex>
