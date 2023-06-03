@@ -1,5 +1,6 @@
 from typing import Any
 
+import bson
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -33,6 +34,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Database = Depends
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Nous n'avons pas pu vous authentifier",
+        ) from e
+    except bson.errors.InvalidId as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Votre token est invalide",
         ) from e
     user = db.Users.find_one({'_id': user_id})
     if user is None:
