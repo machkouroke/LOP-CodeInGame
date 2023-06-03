@@ -18,7 +18,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_REACT_APP_IS_LOCAL: false
-          envkey_REACT_APP_BASE_LOCAL: ${{ secrets.REACT_APP_BASE}}
+          envkey_REACT_APP_BASE: ${{ secrets.REACT_APP_BASE}}
           directory: ./ui
 
 
