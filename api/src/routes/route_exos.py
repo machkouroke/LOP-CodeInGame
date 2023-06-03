@@ -67,6 +67,21 @@ def start_exercise(id_exo: str, start: ExoStart, user: UserModel = Depends(get_c
         }
     }
 
+@handle_HTTP_Exception
+@router.delete('/{id_exo}')
+def delete_exercise(id_exo: str, user: UserModel = Depends(get_current_user_object), db=Depends(get_db)):
+    exo: Exercise = Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(id_exo)})
+    if exo.owner != user.id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Vous n'êtes pas le propriétaire de cet exercice",
+        )
+    exo.delete()
+    return {
+        'detail': {
+            "exercise_id": id_exo
+        }
+    }
 
 @router.get('/{id_exo}')
 def get_exercice(id_exo: str, db=Depends(get_db)):

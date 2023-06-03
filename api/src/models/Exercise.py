@@ -41,6 +41,7 @@ class Exercise(Model):
         self.id = PydanticObjectId(result.inserted_id)
 
     def delete(self):
+        self.database.Users.update_many({}, {"$pull": {"exercises": {"exercise_id": self.id}}})
         self.database.Exercises.delete_one({"_id": self.id})
 
     def update(self, data: dict):
