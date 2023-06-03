@@ -22,7 +22,7 @@ declare global {
         mail: string,
         password: string,
         fullname?: string,
-        exercises?: string[],
+        exercises?: ExerciseRelation[],
         experience?: number,
         nbr_participation?: number,
         role?: ROLEType,

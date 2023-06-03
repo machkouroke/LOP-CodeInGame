@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // Chakra imports
@@ -7,8 +6,7 @@ import {Box, Flex, Grid, Text, useColorModeValue, SimpleGrid} from '@chakra-ui/r
 // Custom components
 import Banner from './components/Banner';
 import CompetitorsTable from './components/CompetitorsTable';
-import HistoryItem from './components/HistoryItem';
-import CompetitionCard from '../../../components/card/CompetitionCard';
+import ExerciseCard from '../../../components/card/ExerciseCard';
 import Card from 'components/card/Card';
 
 
@@ -16,7 +14,7 @@ import tableDataTopCreators from './variables/tableDataTopCreators';
 import inProgress from "../../../mocks/Competition";
 import {useSelector} from "react-redux";
 import {getUserInfo} from "../../../slices/selector";
-import moment from "moment";
+import UserHistory from "./components/UserHistory";
 
 export default function ExerciseBoard() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -47,12 +45,10 @@ export default function ExerciseBoard() {
                         <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
                             {
                                 inProgress.map((item, index) => (
-                                    <CompetitionCard
-                                        name={item.name}
-                                        author={item.owner_name}
-                                        bidders={item.subscribers}
-                                        image={item.image}
-                                        timeleft={moment(item.end).diff(moment(), 'days')}
+                                    <ExerciseCard
+                                        hoverable={true}
+
+                                        exercise={item}
                                         download='#'
                                     />))
                             }
@@ -65,12 +61,10 @@ export default function ExerciseBoard() {
                         <SimpleGrid columns={{base: 1, md: 3}} gap='20px' mb={{base: '20px', xl: '0px'}}>
                             {
                                 inProgress.map((item, index) => (
-                                     <CompetitionCard
-                                        name={item.name}
-                                        author={item.owner_name}
-                                        bidders={item.subscribers}
-                                        image={item.image}
-                                        timeleft={moment(item.end).diff(moment(), 'days')}
+                                    <ExerciseCard
+                                        hoverable={true}
+
+                                        exercise={item}
                                         download='#'
                                     />))
                             }
@@ -93,15 +87,7 @@ export default function ExerciseBoard() {
                             </Text>
                         </Flex>
 
-                        {inProgress.map((item, index) => (
-
-                            <HistoryItem
-                                name={item.name}
-                                author={item.owner_name}
-                                date={item.created_at}
-
-                            />
-                        ))}
+                       <UserHistory exercises={lastSixCompetitions} />
                     </Card>
                 </Flex>
             </Grid>

@@ -7,6 +7,7 @@ declare global {
         rank?: number,
 
     }
+
     interface LoginResponse {
         detail: {
             auth_token: string,
@@ -31,5 +32,10 @@ declare global {
         name: string,
         language: string,
         kind: string,
+    }
+
+    interface ExerciseRelation {
+        kind: ExerciseRelationKindType,
+        exercise_id: string,
     }
 }

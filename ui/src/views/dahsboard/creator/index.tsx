@@ -12,7 +12,7 @@ import {
 
 // Custom components
 
-import CompetitionCard from '../../../components/card/CompetitionCard';
+import ExerciseCard from '../../../components/card/ExerciseCard';
 import Card from 'components/card/Card';
 
 import Modal from "../../../components/Modal/Modal";
@@ -26,7 +26,6 @@ import ManageCompetition from "./components/ManageCompetition";
 import {getUserInfo} from "../../../slices/selector";
 import {useSelector} from "react-redux";
 import {useGetTeachersExercisesQuery} from "../../../services/competitionService";
-import moment from "moment/moment";
 
 export default function CreatorBoard() {
     const user = useSelector(getUserInfo);
@@ -62,13 +61,9 @@ export default function CreatorBoard() {
 
                     <SimpleGrid columns={{base: 1, md: 3}} gap='20px'>
                         {all.map((item, index) => (
-                            <CompetitionCard
+                            <ExerciseCard
+                                exercise={item}
                                 hoverable={true}
-                                name={item.name}
-                                author={item.owner_name}
-                                bidders={item.subscribers}
-                                image={item.image}
-                                timeleft={moment(item.created_at).format('DD/MM/YYYY')}
                                 onClick={() => {
                                     setSelected(item.id);
                                     onOpenManage();

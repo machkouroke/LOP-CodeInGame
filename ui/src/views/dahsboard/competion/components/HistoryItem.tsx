@@ -1,10 +1,10 @@
 import React from 'react';
 // Chakra imports
-import { Flex, Icon, Image, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Image, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
 import Card from 'components/card/Card';
+import moment from "moment";
 // Assets
-import { FaEthereum } from 'react-icons/fa';
 
 export default function NFT(props: {
 	image?: string;
@@ -51,7 +51,7 @@ export default function NFT(props: {
 					</Flex>
 
 					<Text ms='auto' fontWeight='700' fontSize='sm' color={textColorDate}>
-						{date.getFullYear()}
+						{moment((date as Date)).format("DD/MM/YYYY")}
 					</Text>
 				</Flex>
 			</Flex>

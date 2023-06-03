@@ -1,9 +1,8 @@
-import CompetitionCard from "../../../../components/card/CompetitionCard";
+import ExerciseCard from "../../../../components/card/ExerciseCard";
 import React from "react";
 import Card from "../../../../components/card/Card";
 import {Flex, Text, useColorModeValue} from "@chakra-ui/react";
 import MarkdownRender from "../../../../theme/markdown-config";
-import moment from "moment";
 
 export default function Description(props: {
                                         competition: Exercise
@@ -21,12 +20,8 @@ $$x=\\frac{1}{2} + 1 \\ y=2$$
     const textColor = useColorModeValue('navy.700', 'white');
     return (
         <Card p='20px'>
-            <CompetitionCard
-                name={competition.name}
-                author={competition.owner_name}
-                bidders={competition.subscribers}
-                image={competition.image}
-                timeleft={moment(competition.created_at).format("DD MMM YYYY à HH:mm")}
+            <ExerciseCard
+                exercise={competition}
                 download='#'
             />
             <Flex px='20px' py='5px' direction={"column"}>

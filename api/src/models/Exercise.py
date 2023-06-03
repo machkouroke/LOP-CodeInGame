@@ -20,7 +20,8 @@ class Exercise(Model):
     end: datetime = None
 
     def dict(self, *args, **kwargs):
-        return super().dict( exclude={"database"}) | {"language": self.language.value, "kind": self.kind.value}
+        return super().dict(exclude={"database"}) | {"language": self.language.value, "kind": self.kind.value}
+
     def to_bson(self, to_exclude=None):
         return super().to_bson(to_exclude=to_exclude) | {"language": self.language.value, "kind": self.kind.value}
 
@@ -58,7 +59,17 @@ class Exercise(Model):
             return "In Progress"
 
         return "Finished"
+
     @field("owner_name")
     def get_owner_name(self) -> str:
         user = self.database.Users.find_one({"_id": self.owner})
         return f"{user['name']} {user['surname']}"
+
+    @classmethod
+    def find(cls, database, mask: dict = None) -> list["Exercise"]:
+        if mask is None:
+            mask = {}
+
+        return [Exercise(**get_keys(exercise, list(Exercise.__fields__.keys())) | {"database": database}) for exercise
+                in
+                database.Exercises.find(mask)]

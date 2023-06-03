@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status, WebSocket
+from fastapi import APIRouter, Depends, HTTPException, status, WebSocket, Body
 from pymongo.database import Database
 
 from api.src.dependencies.db import get_db
 from api.src.dependencies.utilities import get_current_user_object
-from api.src.enum.enums import ROLE, ExerciseRelationKind
+from api.src.enum.enums import ROLE, ExerciseRelationKind, ExerciseKind
 from api.src.models.DTO import ExoToAdd, ExoStart
 from api.src.models.Exercise import Exercise
 from api.src.models.User import UserModel, User
@@ -81,6 +81,15 @@ def delete_exercise(id_exo: str, user: UserModel = Depends(get_current_user_obje
 @router.get('/{id_exo}')
 def get_exercice(id_exo: str, db=Depends(get_db)):
     return Exercise.find_one_or_404(database=db, mask={'_id': PydanticObjectId(id_exo)})
+
+@router.options('')
+def get_specific_exercice(exercises: dict,
+                          db=Depends(get_db)):
+    print(exercises)
+    return Exercise.find(database=db, mask= {'_id': {'$in': [PydanticObjectId(_id) for _id in exercises['data']]}})
+@router.get('')
+def get_all_exercice(kind: ExerciseKind | None = None,  db=Depends(get_db)):
+    return Exercise.find(database=db, mask={"kind": kind.value} if kind else {})
 
 
 

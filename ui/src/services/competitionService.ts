@@ -27,6 +27,36 @@ export const exerciseApi = createApi({
             invalidatesTags: ['Exercise'],
 
         }),
+        getAllExercises: builder.query({
+            query: (kind: string | null) => ({
+                url: '',
+                params: {
+                    kind: kind
+                }
+            }),
+            providesTags: (result = [], error, arg) => {
+                return [
+                    'Exercise',
+                    ...result.map((exercise: Exercise) => ({type: 'Exercise', id: exercise.id})),
+                ]
+            }
+        }),
+        getSpecificExercises: builder.query({
+            query: (exercise_list: String[]) => ({
+                url: ``,
+                method: 'OPTIONS',
+                body: {
+                    data: exercise_list
+                }
+            }),
+             providesTags: (result = [], error, arg) => {
+                return [
+                    'Exercise',
+                    ...result.map((exercise: Exercise) => ({type: 'Exercise', id: exercise.id})),
+                ]
+            }
+        })
+        ,
         deleteExercise: builder.mutation({
             query: (exercice_id: string) => ({
                 url: `/${exercice_id}`,
@@ -81,4 +111,7 @@ export const {
     useGetExercisesQuery,
     useStartExercisesMutation,
     useDeleteExerciseMutation,
+    useGetAllExercisesQuery,
+    useGetSpecificExercisesQuery
+
 } = exerciseApi

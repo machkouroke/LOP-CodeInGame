@@ -1,36 +1,26 @@
 // Chakra imports
-import {AvatarGroup, Avatar, Box, Button, Flex, Icon, Image, Link, Text, useColorModeValue} from '@chakra-ui/react';
+import {AvatarGroup, Avatar,  Button, Flex,  Link, Text, useColorModeValue} from '@chakra-ui/react';
 // Custom components
 import Card from 'components/card/Card';
-// Assets
-import {useState} from 'react';
-import {IoHeart, IoHeartOutline} from 'react-icons/io5';
-import SmoothBox from "../SmoothBox/SmoothBox";
 
-export default function CompetitionCard(props: {
-    image: string;
-    name: string;
-    author: string;
+import SmoothBox from "../SmoothBox/SmoothBox";
+import moment from "moment/moment";
+
+export default function ExerciseCard(props: {
+    exercise: Exercise;
     onClick?: () => void;
     hoverable?: boolean;
-    bidders: string[];
     download: string;
-    timeleft: string | number;
     to_come?: boolean;
     className?: string;
 }) {
     const {
-        image,
-        name,
-        author,
-        bidders,
+        exercise,
         download,
-        timeleft,
         hoverable,
         onClick,
         className
     } = props;
-    const [like, setLike] = useState(false);
     const textColor = useColorModeValue('navy.700', 'white');
     const textColorBid = useColorModeValue('brand.500', 'white');
     const hoverColor = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
@@ -43,7 +33,7 @@ export default function CompetitionCard(props: {
               onClick={onClick}
               className={className}
         >
-            <Flex direction={{base: 'column'}} justifyContent={{base: 'space-between'}}>
+            <Flex direction={{base: 'column'}} justifyContent={{base: 'space-between'}} >
 
                 <Flex flexDirection='column' justify='space-between' h='100%'>
                     <Flex
@@ -70,7 +60,16 @@ export default function CompetitionCard(props: {
                                 mb='5px'
                                 fontWeight='bold'
                                 me='14px'>
-                                {name}
+                                {exercise.name}
+                            </Text>
+                            <Text
+                                color='secondaryGray.300'
+                                fontSize={{
+                                    base: 'sm'
+                                }}
+                                fontWeight='400'
+                                me='14px'>
+                                {exercise.owner_name}
                             </Text>
                             <Text
                                 color='secondaryGray.600'
@@ -79,7 +78,8 @@ export default function CompetitionCard(props: {
                                 }}
                                 fontWeight='400'
                                 me='14px'>
-                                {author}
+                                {exercise.kind}
+
                             </Text>
                         </Flex>
                         <AvatarGroup
@@ -95,8 +95,9 @@ export default function CompetitionCard(props: {
                             }}
                             fontSize='12px'>
 
-                            {bidders.length > 0 ? bidders.map((avt, key) => <Avatar key={key} name={"Machkour Oke"}
-                                                                                    src={"https://picsum.photos/200"}/>) :
+                            {exercise.subscribers.length > 0 ? exercise.subscribers.map((avt, key) => <Avatar key={key}
+                                                                                                 name={"Machkour Oke"}
+                                                                                                 src={"https://picsum.photos/200"}/>) :
                                 <SmoothBox bg={"rgba(44,54,205,0.67)"}>Aucun Participants</SmoothBox>}
                         </AvatarGroup>
                     </Flex>
@@ -118,7 +119,8 @@ export default function CompetitionCard(props: {
                         }}
                         mt='25px'>
                         <Text fontWeight='700' fontSize='sm' color={textColorBid}>
-                            Posté le <Text fontWeight='100' fontSize='sm'>{timeleft}</Text>
+                            Posté le <Text fontWeight='100'
+                                           fontSize='sm'>{moment(exercise.created_at).format("DD MMM YYYY à HH:mm")}</Text>
                         </Text>
                         <Link
                             href={download}

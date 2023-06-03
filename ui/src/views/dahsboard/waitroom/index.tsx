@@ -74,7 +74,7 @@ export default function WaitRoom() {
             clearInterval(interval)
         }
     }, []);
-    console.log(participants)
+    console.log(exercise)
 
     return (
         <Box pt={{base: '180px', md: '80px', xl: '80px'}}>
